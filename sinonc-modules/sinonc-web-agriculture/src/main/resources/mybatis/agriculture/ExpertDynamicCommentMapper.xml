@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.ExpertDynamicCommentMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.ExpertDynamicComment" id="ExpertDynamicCommentResult">
+        <result property="commentId" column="comment_id"/>
+        <result property="dynamicId" column="dynamic_id"/>
+        <result property="content" column="content"/>
+        <result property="memberId" column="member_id"/>
+        <result property="nikeName" column="nike_name"/>
+        <result property="replyTo" column="reply_to"/>
+        <result property="createTime" column="create_time"/>
+        <result property="sysName" column="sys_name"/>
+    </resultMap>
+
+    <sql id="selectExpertDynamicCommentVo">
+        select comment_id,
+               content,
+               member_id,
+               dynamic_id,
+               nike_name,
+               reply_to,
+               create_time,
+               sys_name
+        from expert_dynamic_comment
+    </sql>
+
+    <select id="selectExpertDynamicCommentList" parameterType="com.sinonc.agriculture.domain.ExpertDynamicComment"
+            resultMap="ExpertDynamicCommentResult">
+        <include refid="selectExpertDynamicCommentVo"/>
+        <where>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="dynamicId != null ">and dynamic_id = #{dynamicId}</if>
+            <if test="replyTo != null ">and reply_to = #{replyTo}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name = #{sysName}</if>
+        </where>
+    </select>
+
+    <select id="selectExpertDynamicCommentById" parameterType="Long" resultMap="ExpertDynamicCommentResult">
+        <include refid="selectExpertDynamicCommentVo"/>
+        where comment_id = #{commentId}
+    </select>
+
+    <insert id="insertExpertDynamicComment" parameterType="com.sinonc.agriculture.domain.ExpertDynamicComment"
+            useGeneratedKeys="true" keyProperty="commentId">
+        insert into expert_dynamic_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''">content,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="dynamicId != null ">dynamic_id,</if>
+            <if test="nikeName != null and nikeName != ''">nike_name,</if>
+            <if test="replyTo != null ">reply_to,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="sysName != null  and sysName != ''">sys_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="dynamicId != null ">#{dynamicId},</if>
+            <if test="nikeName != null and nikeName != ''">#{nikeName},</if>
+            <if test="replyTo != null ">#{replyTo},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="sysName != null  and sysName != ''">#{sysName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateExpertDynamicComment" parameterType="com.sinonc.agriculture.domain.ExpertDynamicComment">
+        update expert_dynamic_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="dynamicId != null ">dynamic_id = #{dynamicId},</if>
+            <if test="nikeName != null and nikeName != ''">nike_name = #{nikeName},</if>
+            <if test="replyTo != null ">reply_to = #{replyTo},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="sysName != null  and sysName != ''">sys_name = #{sysName},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteExpertDynamicCommentById" parameterType="Long">
+        delete
+        from expert_dynamic_comment
+        where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteExpertDynamicCommentByIds" parameterType="String">
+        delete from expert_dynamic_comment where comment_id in
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+
+</mapper>

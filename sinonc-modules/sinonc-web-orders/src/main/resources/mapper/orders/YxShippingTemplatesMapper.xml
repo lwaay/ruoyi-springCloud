@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.YxShippingTemplatesMapper">
+
+    <resultMap type="com.sinonc.orders.domain.YxShippingTemplates" id="YxShippingTemplatesResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="regionInfo" column="region_info"/>
+        <result property="appoint" column="appoint"/>
+        <result property="appointInfo" column="appoint_info"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="isDel" column="is_del"/>
+        <result property="sort" column="sort"/>
+    </resultMap>
+
+    <sql id="selectYxShippingTemplatesVo">
+        select id,
+               `name`,
+               `type`,
+               region_info,
+               appoint,
+               appoint_info,
+               create_time,
+               update_time,
+               entity_id,
+               shop_id,
+               is_del,
+               sort
+        from yx_shipping_templates
+    </sql>
+
+    <select id="selectYxShippingTemplatesList" parameterType="com.sinonc.orders.domain.YxShippingTemplates"
+            resultMap="YxShippingTemplatesResult">
+        <include refid="selectYxShippingTemplatesVo"/>
+        <where>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="regionInfo != null  and regionInfo != ''">
+                and region_info = #{regionInfo}
+            </if>
+            <if test="appoint != null ">
+                and appoint = #{appoint}
+            </if>
+            <if test="appointInfo != null  and appointInfo != ''">
+                and appoint_info = #{appointInfo}
+            </if>
+            <if test="isDel != null ">
+                and is_del = #{isDel}
+            </if>
+            <if test="shopId !=null">
+                and shop_id = #{shopId}
+            </if>
+            <if test="entityId != null">
+                and entity_id = #{entityId}
+            </if>
+            <if test="sort != null ">
+                and sort = #{sort}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectYxShippingTemplatesById" parameterType="Integer" resultMap="YxShippingTemplatesResult">
+        <include refid="selectYxShippingTemplatesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertYxShippingTemplates" parameterType="com.sinonc.orders.domain.YxShippingTemplates" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into yx_shipping_templates
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="regionInfo != null">region_info,
+            </if>
+            <if test="appoint != null">appoint,
+            </if>
+            <if test="appointInfo != null">appoint_info,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="entityId !=null">
+                entity_id,
+            </if>
+            <if test="shopId !=null">
+                shop_id,
+            </if>
+            <if test="isDel != null">is_del,
+            </if>
+            <if test="sort != null">sort,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="regionInfo != null">#{regionInfo},
+            </if>
+            <if test="appoint != null">#{appoint},
+            </if>
+            <if test="appointInfo != null">#{appointInfo},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="entityId !=null">
+                #{entityId},
+            </if>
+            <if test="shopId !=null">
+                #{shopId},
+            </if>
+            <if test="isDel != null">#{isDel},
+            </if>
+            <if test="sort != null">#{sort},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateYxShippingTemplates" parameterType="com.sinonc.orders.domain.YxShippingTemplates">
+        update yx_shipping_templates
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name =
+                #{name},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="regionInfo != null">region_info =
+                #{regionInfo},
+            </if>
+            <if test="appoint != null">appoint =
+                #{appoint},
+            </if>
+            <if test="appointInfo != null">appoint_info =
+                #{appointInfo},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="entityId !=null">
+                entity_id = #{entityId},
+            </if>
+            <if test="shopId !=null">
+                shop_id = #{shopId},
+            </if>
+            <if test="isDel != null">is_del =
+                #{isDel},
+            </if>
+            <if test="sort != null">sort =
+                #{sort},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteYxShippingTemplatesById" parameterType="Integer">
+        delete
+        from yx_shipping_templates
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteYxShippingTemplatesByIds" parameterType="String">
+        delete from yx_shipping_templates where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

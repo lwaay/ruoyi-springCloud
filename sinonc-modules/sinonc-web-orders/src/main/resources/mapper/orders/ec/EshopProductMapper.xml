@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.EshopProductMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.EshopProduct" id="EshopProductResult">
+        <result property="eshopId" column="eshop_id"/>
+        <result property="platform" column="platform"/>
+        <result property="name" column="name"/>
+        <result property="title" column="title"/>
+        <result property="saleCount" column="sale_count"/>
+        <result property="salePrice" column="sale_price"/>
+        <result property="price" column="price"/>
+        <result property="shopAddr" column="shop_addr"/>
+        <result property="images" column="images"/>
+        <result property="weight" column="weight"/>
+        <result property="factoryAddr" column="factory_addr"/>
+        <result property="factoryName" column="factory_name"/>
+        <result property="saleTime" column="sale_time"/>
+        <result property="url" column="url"/>
+        <result property="productType" column="product_type"/>
+        <result property="specialtyType" column="specialty_type"/>
+        <result property="brand" column="brand"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="reptileStatus" column="reptile_status"/>
+    </resultMap>
+
+    <sql id="selectEshopProductVo">
+        select eshop_id,
+               platform,
+               name,
+               title,
+               sale_count,
+               sale_price,
+               price,
+               shop_addr,
+               images,
+               weight,
+               factory_addr,
+               factory_name,
+               sale_time,
+               url,
+               product_type,
+               specialty_type,
+               brand,
+               goods_id,
+               reptile_status
+        from eshop_product
+    </sql>
+
+    <select id="selectEshopProductList" parameterType="com.sinonc.orders.ec.domain.EshopProduct"
+            resultMap="EshopProductResult">
+        <include refid="selectEshopProductVo"/>
+        <where>
+            <if test="platform != null ">and platform = #{platform}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="saleCount != null ">and sale_count = #{saleCount}</if>
+            <if test="salePrice != null ">and sale_price = #{salePrice}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="shopAddr != null ">and shop_addr = #{shopAddr}</if>
+            <if test="images != null  and images != ''">and images = #{images}</if>
+            <if test="weight != null  and weight != ''">and weight = #{weight}</if>
+            <if test="factoryAddr != null  and factoryAddr != ''">and factory_addr = #{factoryAddr}</if>
+            <if test="factoryName != null  and factoryName != ''">and factory_name like concat('%',
+                #{factoryName},'%')
+            </if>
+            <if test="saleTime != null ">and sale_time = #{saleTime}</if>
+            <if test="url != null  and url != ''">and url = #{url}</if>
+            <if test="productType != null  and productType != ''">and product_type = #{productType}</if>
+            <if test="specialtyType != null  and specialtyType != ''">and specialty_type = #{specialtyType}</if>
+            <if test="brand != null  and brand != ''">and brand = #{brand}</if>
+            <if test="goodsId != null  and goodsId != ''">and goods_id = #{goodsId}</if>
+            <if test="reptileStatus != null  and reptileStatus != ''">and reptile_status = #{reptileStatus}</if>
+            <if test="beginDate != null">and date_format(sale_time,"%Y-%m-%d-%d") &gt;= date_format(#{beginDate},"%Y-%m-%d-%d")</if>
+            <if test="endDate != null">and date_format(#{endDate},"%Y-%m-%d-%d") &gt;= date_format(sale_time,"%Y-%m-%d-%d")</if>
+           </where>
+           ORDER BY eshop_id DESC
+    </select>
+
+    <select id="selectProductList" parameterType="com.sinonc.orders.ec.domain.EshopProduct" resultMap="EshopProductResult">
+        <include refid="selectEshopProductVo"/>
+        <where>
+            Locate("梁平",concat(shop_addr,factory_addr,factory_name,title))
+            <if test="platform != null ">and platform = #{platform}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="saleCount != null ">and sale_count = #{saleCount}</if>
+            <if test="salePrice != null ">and sale_price = #{salePrice}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="shopAddr != null ">and shop_addr = #{shopAddr}</if>
+            <if test="images != null  and images != ''">and images = #{images}</if>
+            <if test="weight != null  and weight != ''">and weight = #{weight}</if>
+            <if test="factoryAddr != null  and factoryAddr != ''">and factory_addr = #{factoryAddr}</if>
+            <if test="factoryName != null  and factoryName != ''">and factory_name like concat('%',
+                #{factoryName},'%')
+            </if>
+            <if test="saleTime != null ">and sale_time = #{saleTime}</if>
+            <if test="url != null  and url != ''">and url = #{url}</if>
+            <if test="productType != null  and productType != ''">and product_type = #{productType}</if>
+            <if test="specialtyType != null  and specialtyType != ''">and specialty_type = #{specialtyType}</if>
+            <if test="brand != null  and brand != ''">and brand = #{brand}</if>
+            <if test="goodsId != null  and goodsId != ''">and goods_id = #{goodsId}</if>
+            <if test="reptileStatus != null  and reptileStatus != ''">and reptile_status = #{reptileStatus}</if>
+            <if test="beginDate != null">and date_format(sale_time,"%Y-%m-%d-%d") &gt;= date_format(#{beginDate},"%Y-%m-%d-%d")</if>
+            <if test="endDate != null">and date_format(#{endDate},"%Y-%m-%d-%d") &gt;= date_format(sale_time,"%Y-%m-%d-%d")</if>
+        </where>
+
+    </select>
+
+    <select id="selectEshopProductById" parameterType="Long" resultMap="EshopProductResult">
+        <include refid="selectEshopProductVo"/>
+        where eshop_id = #{eshopId}
+    </select>
+
+    <insert id="insertEshopProduct" parameterType="com.sinonc.orders.ec.domain.EshopProduct" useGeneratedKeys="true"
+            keyProperty="eshopId">
+        insert into eshop_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platform != null">platform,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="saleCount != null">sale_count,</if>
+            <if test="salePrice != null">sale_price,</if>
+            <if test="price != null">price,</if>
+            <if test="shopAddr != null ">shop_addr,</if>
+            <if test="images != null and images != ''">images,</if>
+            <if test="weight != null and weight != ''">weight,</if>
+            <if test="factoryAddr != null and factoryAddr != ''">factory_addr,</if>
+            <if test="factoryName != null and factoryName != ''">factory_name,</if>
+            <if test="saleTime != null">sale_time,</if>
+            <if test="url != null and url != ''">url,</if>
+            <if test="productType != null and productType != ''">product_type,</if>
+            <if test="specialtyType != null  and specialtyType != ''">specialty_type,</if>
+            <if test="brand != null and brand != ''">brand,</if>
+            <if test="goodsId != null  and goodsId != ''">goods_id,</if>
+            <if test="reptileStatus != null  and reptileStatus != ''">reptile_status</if>
+
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platform != null">#{platform},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="saleCount != null">#{saleCount},</if>
+            <if test="salePrice != null">#{salePrice},</if>
+            <if test="price != null">#{price},</if>
+            <if test="shopAddr != null ">#{shopAddr},</if>
+            <if test="images != null and images != ''">#{images},</if>
+            <if test="weight != null and weight != ''">#{weight},</if>
+            <if test="factoryAddr != null and factoryAddr != ''">#{factoryAddr},</if>
+            <if test="factoryName != null and factoryName != ''">#{factoryName},</if>
+            <if test="saleTime != null">#{saleTime},</if>
+            <if test="url != null and url != ''">#{url},</if>
+            <if test="productType != null and productType != ''">#{productType},</if>
+            <if test="specialtyType != null and specialtyType != ''">#{specialtyType},</if>
+            <if test="brand != null and brand != ''">#{brand},</if>
+            <if test="goodsId != null  and goodsId != ''">#{goodsId},</if>
+            <if test="reptileStatus != null  and reptileStatus != ''">#{reptileStatus}</if>
+
+
+        </trim>
+    </insert>
+
+    <update id="updateEshopProduct" parameterType="com.sinonc.orders.ec.domain.EshopProduct">
+        update eshop_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platform != null">platform = #{platform},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="saleCount != null">sale_count = #{saleCount},</if>
+            <if test="salePrice != null">sale_price = #{salePrice},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="shopAddr != null">shop_addr = #{shopAddr},</if>
+            <if test="images != null and images != ''">images = #{images},</if>
+            <if test="weight != null and weight != ''">weight = #{weight},</if>
+            <if test="factoryAddr != null and factoryAddr != ''">factory_addr = #{factoryAddr},</if>
+            <if test="factoryName != null and factoryName != ''">factory_name = #{factoryName},</if>
+            <if test="saleTime != null">sale_time = #{saleTime},</if>
+            <if test="url != null and url != ''">url = #{url},</if>
+            <if test="productType != null and productType != ''">product_type = #{productType},</if>
+            <if test="specialtyType != null and specialtyType != ''">specialty_type = #{specialtyType},</if>
+            <if test="brand != null and brand != ''">brand = #{brand},</if>
+            <if test="goodsId != null  and goodsId != ''">goods_id = #{goodsId},</if>
+            <if test="reptileStatus != null  and reptileStatus != ''">and reptile_status = #{reptileStatus}</if>
+
+        </trim>
+        where eshop_id = #{eshopId}
+    </update>
+
+    <delete id="deleteEshopProductById" parameterType="Long">
+        delete
+        from eshop_product
+        where eshop_id = #{eshopId}
+    </delete>
+
+    <delete id="deleteEshopProductByIds" parameterType="String">
+        delete from eshop_product where eshop_id in
+        <foreach item="eshopId" collection="array" open="(" separator="," close=")">
+            #{eshopId}
+        </foreach>
+    </delete>
+
+    <select id="groupByTypeAndTime" resultType="com.sinonc.orders.ec.dto.GroupByTypeTimeDto"
+            parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+            et.type_name as type,
+            Round(sum(ep.sale_price) / 10000, 2) AS salePrice,
+            DATE_FORMAT(ep.sale_time, "%y%m") AS `month`
+        FROM
+            eshop_product_type et
+        LEFT JOIN eshop_product ep ON FIND_IN_SET(
+            ep.product_type,
+            et.product_type
+        )
+        <where>
+            <if test="typeIds == null or typeIds.length == 0">
+                and et.default_type = 0
+            </if>
+            <if test="typeIds != null and typeIds.length>0">
+                and et.type_id in
+                <foreach item="typeId" collection="typeIds" open="(" separator="," close=")">
+                    #{typeId}
+                </foreach>
+            </if>
+            <if test="startTime != '' and startTime !=null ">
+                and date_format(ep.sale_time,'%Y-%m-%d') &gt;= #{startTime}
+            </if>
+            <if test="endTime != '' and endTime !=null ">
+                and #{endTime} &gt;= date_format(ep.sale_time,'%Y-%m-%d')
+            </if>
+        </where>
+        GROUP BY
+            et.type_name,DATE_FORMAT(ep.sale_time,"%y%m")
+    </select>
+
+
+    <!--根据类别与时间分组汇总查询销售量-->
+    <select id="groupSaleAmountByTypeAndTime" resultType="com.sinonc.orders.ec.dto.GroupByTypeTimeDto"
+            parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+        DATE_FORMAT(sale_time,'%Y-%m') AS MONTH,Round(SUM(sale_price)/10000,2) AS salePrice
+        FROM eshop_product
+        WHERE 1=1
+--         and goods_id IS NOT NULL
+        <if test="isFilter == 1">
+            and (factory_addr like '%百色%' or
+            factory_name like '%百色%' or
+            shop_addr like '%百色%')
+        </if>
+        <if test="typeNames != null and typeNames.size()>0">
+            and
+            <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                title like concat("%",#{typeName},"%")
+                or brand like concat("%",#{typeName},"%")
+                or product_type like concat("%",#{typeName},"%")
+            </foreach>
+        </if>
+        <if test="date != '' and date != null ">
+            and #{date} like concat(date_format(sale_time,'%Y'),'%')
+        </if>
+        <if test="startTime != '' and startTime !=null ">
+             AND DATE_FORMAT(sale_time,'%Y-%m-%d') &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime !=null ">
+            and #{endTime} &gt;= date_format(sale_time,'%Y-%m-%d')
+        </if>
+        GROUP BY DATE_FORMAT(sale_time,'%Y-%m')
+    </select>
+
+
+    <select id="selectByTypeIds" resultMap="EshopProductResult" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+            ep.*
+        FROM
+            eshop_product_type et
+        LEFT JOIN eshop_product ep ON FIND_IN_SET(
+            ep.product_type,
+            et.product_type
+        )
+        <where>
+            <if test="typeIds == null or typeIds.length == 0">
+                and et.default_type = 0
+            </if>
+            <if test="typeIds != null and typeIds.length>0">
+                and et.type_id in
+                <foreach item="typeId" collection="typeIds" open="(" separator="," close=")">
+                    #{typeId}
+                </foreach>
+            </if>
+            <if test="startTime != '' and startTime !=null ">
+                and date_format(ep.sale_time,'%Y-%m-%d') &gt;= #{startTime}
+            </if>
+            <if test="endTime != '' and endTime !=null ">
+                and #{endTime} &gt;= date_format(ep.sale_time,'%Y-%m-%d')
+            </if>
+        </where>
+        order by ${key} desc
+        limit 0,100
+    </select>
+
+    <select id="selectByTypeNames" resultMap="EshopProductResult" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+            SUM(sale_count) AS sale_count,
+            SUM(sale_price) AS sale_price,
+            goods_id,
+            title,
+            ROUND(AVG(price), 2) AS price,
+            platform
+        FROM
+            eshop_product
+        <where>
+            <if test="isFilter == 1">
+                and (factory_addr like '%百色%' or
+                factory_name like '%百色%' or
+                shop_addr like '%百色%')
+            </if>
+            <if test="typeNames != null and typeNames.size()>0">
+                and
+                <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                    LOCATE(#{typeName}, CONCAT(`title`,brand,product_type)) > 0
+                </foreach>
+            </if>
+            <if test="startTime != '' and startTime !=null ">
+                and date_format(sale_time,'%Y-%m-%d') &gt;= #{startTime}
+            </if>
+            <if test="endTime != '' and endTime !=null ">
+                and #{endTime} &gt;= date_format(sale_time,'%Y-%m-%d')
+            </if>
+        </where>
+        GROUP BY
+            platform,goods_id,title
+        order by ${key} desc
+        limit 0,20
+    </select>
+
+    <select id="selectByShop" resultMap="EshopProductResult" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+        if(char_length (t1.`name`) > 6, CONCAT(LEFT(t1.`name`,2),'****',RIGHT(t1.`name`,3)),t1.`name`) AS title,
+        SUM(t1.sale_count)      AS sale_count,
+        SUM(t1.sale_price)      AS sale_price
+        FROM (
+        SELECT sale_count, sale_price, goods_id, `name`, price, platform
+        FROM eshop_product
+        <where>
+            <if test="isFilter == 1">
+                and (factory_addr like '%百色%' or
+                factory_name like '%百色%' or
+                shop_addr like '%百色%')
+            </if>
+            <if test="typeNames != null and typeNames.size()>0">
+                and
+                <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                    LOCATE(#{typeName}, CONCAT(`title`,brand,product_type)) > 0
+                </foreach>
+            </if>
+            <if test="startTime != '' and startTime !=null ">
+                and date_format(sale_time,'%Y-%m-%d') &gt;= #{startTime}
+            </if>
+            <if test="endTime != '' and endTime !=null ">
+                and #{endTime} &gt;= date_format(sale_time,'%Y-%m-%d')
+            </if>
+        </where>
+
+        ) t1
+        GROUP BY t1.`name`
+        order by #{key} desc
+        limit 0,10
+    </select>
+
+    <select id="getShopRealTimeStatisticData" resultType="com.sinonc.orders.ec.vo.RealTimeStatisticVo">
+        SELECT (e1.sale - e2.sale)                   AS todaySales,
+               (e1.cout - e2.cout)                   AS todayOrders,
+               ((e1.sale - e2.sale) / e2.sale * 100) AS yesterdaySalesRate,
+               ((e1.cout - e2.cout) / e2.cout * 100) AS yesterdayOrdersRate
+        FROM eshop_product_sale e1,
+             eshop_product_sale e2
+        WHERE e1.goods_type = #{productType}
+          AND e2.goods_type = #{productType}
+          AND date_format(e1.create_time, '%Y-%m-%d-%d') = curdate()
+          AND date_format(e2.create_time, '%Y-%m-%d-%d') = date_add(curdate(), interval -1 day)
+        ORDER BY e1.create_time, e2.create_time DESC LIMIT 1
+    </select>
+
+    <select id="selectBrandListByName" resultType="string" parameterType="string">
+        SELECT brand from eshop_product
+        where brand like concat("%",#{name},"%")
+        GROUP BY brand
+    </select>
+
+    <select id="selectProductByGoodsId" resultMap="EshopProductResult" parameterType="Long">
+        <include refid="selectEshopProductVo"/>
+        where goods_id = #{goodsId}
+        order by eshop_id desc limit 1
+    </select>
+</mapper>

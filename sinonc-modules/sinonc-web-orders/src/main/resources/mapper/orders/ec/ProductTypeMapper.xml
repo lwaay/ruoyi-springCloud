@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.ProductTypeMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.ProductType" id="ProductTypeResult">
+        <result property="typeId" column="type_id"/>
+        <result property="typeName" column="type_name"/>
+        <result property="isFilter" column="is_filter"/>
+        <result property="productType" column="product_type"/>
+        <result property="status" column="status"/>
+        <result property="defaultType" column="default_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+    </resultMap>
+
+    <sql id="selectProductTypeVo">
+        select type_id, type_name,is_filter, product_type, status, default_type, create_time, create_by  from eshop_product_type
+    </sql>
+
+    <select id="selectProductTypeList" parameterType="com.sinonc.orders.ec.domain.ProductType" resultMap="ProductTypeResult">
+        <include refid="selectProductTypeVo"/>
+        <where>
+            <if test="typeName != null  and typeName != ''">
+                and type_name like concat('%', #{typeName}, '%')
+            </if>
+            <if test="isFilter != null  and isFilter != ''">
+                and is_filter like concat('%', #{isFilter}, '%')
+            </if>
+            <if test="productType != null  and productType != ''">
+                and product_type = #{productType}
+            </if>
+            <if test="status != null  and status != ''">
+                and status = #{status}
+            </if>
+            <if test="defaultType != null ">
+                and default_type = #{defaultType}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProductTypeById" parameterType="Long" resultMap="ProductTypeResult">
+        <include refid="selectProductTypeVo"/>
+        where type_id = #{typeId}
+    </select>
+
+    <insert id="insertProductType" parameterType="com.sinonc.orders.ec.domain.ProductType" useGeneratedKeys="true"
+            keyProperty="typeId">
+        insert into eshop_product_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">type_name,
+            </if>
+            <if test="isFilter != null">is_filter,
+            </if>
+            <if test="productType != null">product_type,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="defaultType != null">default_type,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">#{typeName},
+            </if>
+            <if test="isFilter != null">#{isFilter},
+            </if>
+            <if test="productType != null">#{productType},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="defaultType != null">#{defaultType},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProductType" parameterType="com.sinonc.orders.ec.domain.ProductType">
+        update eshop_product_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeName != null">type_name =
+                #{typeName},
+            </if>
+            <if test="isFilter != null">is_filter = #{isFilter},
+            </if>
+            <if test="productType != null">product_type =
+                #{productType},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="defaultType != null">default_type =
+                #{defaultType},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+        </trim>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteProductTypeById" parameterType="Long">
+        delete
+        from eshop_product_type where type_id = #{typeId}
+    </delete>
+
+    <delete id="deleteProductTypeByIds" parameterType="String">
+        delete from eshop_product_type where type_id in
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+
+    <select id="selectProductTypeByIds" parameterType="string" resultType="string">
+        select product_type from eshop_product_type
+        where type_id in
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </select>
+
+    <select id="selectListDefault" resultMap="ProductTypeResult">
+        <include refid="selectProductTypeVo"/>
+        where default_type = 0 and status = 0
+    </select>
+
+</mapper>

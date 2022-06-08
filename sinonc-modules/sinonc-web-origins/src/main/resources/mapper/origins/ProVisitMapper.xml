@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.ProVisitMapper">
+
+    <resultMap type="com.sinonc.origins.api.domain.ProVisit" id="ProVisitResult">
+        <result property="visitId" column="visit_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="visitProduct" column="visit_product"/>
+        <result property="visitShopname" column="visit_shopName"/>
+        <result property="visitTime" column="visit_time"/>
+        <result property="visitCity" column="visit_city"/>
+    </resultMap>
+
+    <sql id="selectProVisitVo">
+        select visit_id, product_id, visit_product, visit_shopName, visit_time, visit_city from pro_visit
+    </sql>
+
+    <select id="selectProVisitList" parameterType="com.sinonc.origins.api.domain.ProVisit" resultMap="ProVisitResult">
+        <include refid="selectProVisitVo"/>
+        <where>
+            <if test="productId != null ">
+                and product_id = #{productId}
+            </if>
+            <if test="visitProduct != null  and visitProduct != ''">
+                and visit_product like concat('%',#{visitProduct}, '%')
+            </if>
+            <if test="visitShopname != null  and visitShopname != ''">
+                and visit_shopName like concat('%', #{visitShopname}, '%')
+            </if>
+            <if test="visitTime != null ">
+                and visit_time = #{visitTime}
+            </if>
+            <if test="visitCity != null  and visitCity != ''">
+                and visit_city = #{visitCity}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProVisitById" parameterType="Long" resultMap="ProVisitResult">
+        <include refid="selectProVisitVo"/>
+        where visit_id = #{visitId}
+    </select>
+
+    <insert id="insertProVisit" parameterType="com.sinonc.origins.api.domain.ProVisit" useGeneratedKeys="true"
+            keyProperty="visitId">
+        insert into pro_visit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,
+            </if>
+            <if test="visitProduct != null">visit_product,
+            </if>
+            <if test="visitShopname != null">visit_shopName,
+            </if>
+            <if test="visitTime != null">visit_time,
+            </if>
+            <if test="visitCity != null">visit_city,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},
+            </if>
+            <if test="visitProduct != null">#{visitProduct},
+            </if>
+            <if test="visitShopname != null">#{visitShopname},
+            </if>
+            <if test="visitTime != null">#{visitTime},
+            </if>
+            <if test="visitCity != null">#{visitCity},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProVisit" parameterType="com.sinonc.origins.api.domain.ProVisit">
+        update pro_visit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id =
+                #{productId},
+            </if>
+            <if test="visitProduct != null">visit_product =
+                #{visitProduct},
+            </if>
+            <if test="visitShopname != null">visit_shopName =
+                #{visitShopname},
+            </if>
+            <if test="visitTime != null">visit_time =
+                #{visitTime},
+            </if>
+            <if test="visitCity != null">visit_city =
+                #{visitCity},
+            </if>
+        </trim>
+        where visit_id = #{visitId}
+    </update>
+
+    <delete id="deleteProVisitById" parameterType="Long">
+        delete
+        from pro_visit where visit_id = #{visitId}
+    </delete>
+
+    <delete id="deleteProVisitByIds" parameterType="String">
+        delete from pro_visit where visit_id in
+        <foreach item="visitId" collection="array" open="(" separator="," close=")">
+            #{visitId}
+        </foreach>
+    </delete>
+
+
+    <select id="getVisitCount" resultType="java.lang.Long" parameterType="long" >
+        select count(*) from  pro_visit
+        where
+            product_id=#{productId}
+    </select>
+
+    <select id="getAllVisitCount" resultType="java.lang.Long" >
+        select count(*) from  pro_visit
+    </select>
+
+    <select id="selectVisitCountByCode" resultType="java.lang.Long" parameterType="string">
+        select count(0) from pro_visit pv
+        LEFT JOIN pro_product_info pi on pv.product_id = pi.product_id
+        <where>
+            <if test="baseArea != null and baseArea != ''">
+                and pi.base_area = #{baseArea}
+            </if>
+        </where>
+    </select>
+</mapper>

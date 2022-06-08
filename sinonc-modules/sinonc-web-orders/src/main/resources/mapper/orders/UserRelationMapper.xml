@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.UserRelationMapper">
+    <resultMap id="resultMap" type="com.sinonc.orders.domain.UserRelation">
+        <result column="shop_id" property="shopId"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="farmId" column="farm_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="shopName" column="shop_name"/>
+    </resultMap>
+
+    <select id="selectByDeptId" resultMap="resultMap">
+        select area_code, farm_id, shop_id, shop_id_p, dept_id, shop_name, dept_name
+        from user_relation_view
+        where dept_id = #{value}
+    </select>
+
+    <select id="selectByShopId" resultMap="resultMap">
+        select area_code, farm_id, shop_id, shop_id_p, dept_id, shop_name, dept_name
+        from user_relation_view
+        where shop_id = #{value}
+    </select>
+
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.ProductLikeMapper">
+
+    <resultMap type="ProductLike" id="ProductLikeResult">
+                    <result property="productIdP" column="product_id_p"/>
+                    <result property="productName" column="product_name"/>
+                    <result property="likeNum" column="like_num"/>
+                    <result property="createTime" column="create_time"/>
+            </resultMap>
+
+    <sql id="selectProductLikeVo">
+        select product_id_p, product_name, like_num, create_time        from product_like
+    </sql>
+
+    <select id="selectProductLikeList" parameterType="ProductLike" resultMap="ProductLikeResult">
+        <include refid="selectProductLikeVo"/>
+        <where>
+                                                                        <if test="productIdP != null ">
+                            and product_id_p = #{productIdP}
+                        </if>
+                                                                                                            <if test="productName != null  and productName != ''">
+                            and product_name like concat('%', #{productName}, '%')
+                        </if>
+                                                                                                            <if test="likeNum != null ">
+                            and like_num = #{likeNum}
+                        </if>
+                                                                                    </where>
+    </select>
+
+    <select id="selectProductLikeById" parameterType="Long" resultMap="ProductLikeResult">
+        <include refid="selectProductLikeVo"/>
+        where product_id_p = #{productIdP}
+    </select>
+
+    <insert id="insertProductLike" parameterType="ProductLike">
+        insert into product_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                <if test="productIdP != null">product_id_p,
+                    </if>
+                                                                <if test="productName != null">product_name,
+                    </if>
+                                                                <if test="likeNum != null">like_num,
+                    </if>
+                                                                <if test="createTime != null">create_time,
+                    </if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                <if test="productIdP != null">#{productIdP},
+                    </if>
+                                                                <if test="productName != null">#{productName},
+                    </if>
+                                                                <if test="likeNum != null">#{likeNum},
+                    </if>
+                                                                <if test="createTime != null">#{createTime},
+                    </if>
+                                    </trim>
+    </insert>
+
+    <update id="updateProductLike" parameterType="ProductLike">
+        update product_like
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="productName != null">product_name =
+                        #{productName},
+                    </if>
+                                                                <if test="likeNum != null">like_num =
+                        #{likeNum},
+                    </if>
+                                                                <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                                    </trim>
+        where product_id_p = #{productIdP}
+    </update>
+
+    <delete id="deleteProductLikeById" parameterType="Long">
+        delete
+        from product_like where product_id_p = #{productIdP}
+    </delete>
+
+    <delete id="deleteProductLikeByIds" parameterType="String">
+        delete from product_like where product_id_p in
+        <foreach item="productIdP" collection="array" open="(" separator="," close=")">
+            #{productIdP}
+        </foreach>
+    </delete>
+
+</mapper>

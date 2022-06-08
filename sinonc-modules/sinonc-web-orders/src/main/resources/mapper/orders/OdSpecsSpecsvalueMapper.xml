@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdSpecsSpecsvalueMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdSpecsSpecsvalue" id="OdSpecsSpecsvalueResult">
+        <result property="specsValueId"    column="specsValueId"    />
+        <result property="specsIdP"    column="specs_id_p"    />
+        <result property="specsValueIdp"    column="specs_value_idP"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="number"    column="number"    />
+    </resultMap>
+
+	<sql id="selectOdSpecsSpecsvalueVo">
+        select specsValueId, specs_id_p, specs_value_idP, create_time, create_by,number from od_specs_specsvalue
+    </sql>
+
+    <select id="selectOdSpecsSpecsvalueList" parameterType="com.sinonc.orders.domain.OdSpecsSpecsvalue" resultMap="OdSpecsSpecsvalueResult">
+        <include refid="selectOdSpecsSpecsvalueVo"/>
+        <where>
+            <if test="specsValueId != null "> and specsValueId = #{specsValueId}</if>
+             <if test="specsIdP != null "> and specs_id_p = #{specsIdP}</if>
+             <if test="specsValueIdp != null "> and specs_value_idP = #{specsValueIdp}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+            <if test="number != null  and number != '' "> and number = #{number}</if>
+         </where>
+    </select>
+
+    <select id="selectOdSpecsSpecsvalueById" parameterType="Long" resultMap="OdSpecsSpecsvalueResult">
+        <include refid="selectOdSpecsSpecsvalueVo"/>
+        where specsValueId = #{specsValueId}
+    </select>
+
+    <insert id="insertOdSpecsSpecsvalue" parameterType="com.sinonc.orders.domain.OdSpecsSpecsvalue" useGeneratedKeys="true" keyProperty="specsValueId">
+        insert into od_specs_specsvalue
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="specsIdP != null  ">specs_id_p,</if>
+			<if test="specsValueIdp != null  ">specs_value_idP,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="number != null  and number != ''  ">number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="specsIdP != null  ">#{specsIdP},</if>
+			<if test="specsValueIdp != null  ">#{specsValueIdp},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="number != null  and number != ''  ">#{number},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOdSpecsSpecsvalue" parameterType="com.sinonc.orders.domain.OdSpecsSpecsvalue">
+        update od_specs_specsvalue
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="specsIdP != null  ">specs_id_p = #{specsIdP},</if>
+            <if test="specsValueIdp != null  ">specs_value_idP = #{specsValueIdp},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="number != null  and number != ''  ">number = #{number},</if>
+        </trim>
+        where specsValueId = #{specsValueId}
+    </update>
+
+	<delete id="deleteOdSpecsSpecsvalueById" parameterType="Long">
+        delete from od_specs_specsvalue where specsValueId = #{specsValueId}
+    </delete>
+
+    <delete id="deleteOdSpecsSpecsvalueBySpecsValueIdP" parameterType="Long">
+        delete from od_specs_specsvalue where specs_value_idP = #{specsValueIdP}
+    </delete>
+
+    <delete id="deleteOdSpecsSpecsvalueByIds" parameterType="String">
+        delete from od_specs_specsvalue where specsValueId in
+        <foreach item="specsValueId" collection="array" open="(" separator="," close=")">
+            #{specsValueId}
+        </foreach>
+    </delete>
+
+    <select id="selectSpecsSpecsValueBySpecsId" parameterType="Long" resultMap="OdSpecsSpecsvalueResult">
+        <include refid="selectOdSpecsSpecsvalueVo"/>
+        where specs_id_p = #{specsId}
+    </select>
+
+</mapper>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.MemberInfoMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.MemberInfo" id="MemberInfoResult">
+        <result property="memberId"    column="member_id"    />
+        <result property="nikeName"    column="nike_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="personalSignature"    column="personal_signature"    />
+        <result property="headImg"    column="head_img"    />
+        <result property="mobilePhone"    column="mobile_phone"    />
+        <result property="city"    column="city"    />
+        <result property="experience"    column="experience"    />
+        <result property="role"    column="role"    />
+        <result property="unionid"    column="unionid"    />
+        <result property="mpOpenid"    column="mp_openid"    />
+        <result property="appOpenid"    column="app_openid"    />
+        <result property="sysUuid"    column="sys_uuid"    />
+        <result property="focusTags"    column="focus_tags"    />
+        <result property="expertTags"    column="expert_tags"    />
+        <result property="score" column="score"/>
+        <result property="rank" column="rank"/>
+        <result property="status" column="status"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="regSys" column="reg_sys"/>
+        <result property="invitationMember" column="invitation_member"/>
+
+        <result property="sectionIds" column="section_ids"/>
+    </resultMap>
+
+    <sql id="selectMemberInfoVo">
+        select member_id,
+               nike_name,
+               sex,
+               birthday,
+               personal_signature,
+               head_img,
+               mobile_phone,
+               city,
+               experience,
+               role,
+               unionid,
+               mp_openid,
+               app_openid,
+               sys_uuid,
+               focus_tags,
+               expert_tags,
+               score,
+               rank,
+               status,
+               last_login_time,
+               create_time,
+               update_time,
+               create_by,
+               update_by,
+               reg_sys,
+               invitation_member,
+               section_ids
+        from member_info
+    </sql>
+
+    <select id="selectMemberInfoList" parameterType="com.sinonc.agriculture.domain.MemberInfo" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        <where>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="nikeName != null  and nikeName != ''">and nike_name like concat('%', #{nikeName}, '%')</if>
+            <if test="sex != null ">and sex = #{sex}</if>
+            <if test="birthday != null ">and birthday = #{birthday}</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">and mobile_phone = #{mobilePhone}</if>
+            <if test="city != null  and city != ''">and city = #{city}</if>
+            <if test="experience != null ">and experience = #{experience}</if>
+            <if test="role != null ">and role = #{role}</if>
+            <if test="unionid != null  and unionid != ''">and unionid = #{unionid}</if>
+            <if test="mpOpenid != null  and mpOpenid != ''">and mp_openid = #{mpOpenid}</if>
+            <if test="appOpenid != null  and appOpenid != ''"> and app_openid = #{appOpenid}</if>
+            <if test="sysUuid != null  and sysUuid != ''"> and sys_uuid = #{sysUuid}</if>
+            <if test="focusTags != null  and focusTags != ''"> and focus_tags = #{focusTags}</if>
+            <if test="expertTags != null  and expertTags != ''"> and expert_tags = #{expertTags}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="rank != null "> and rank = #{rank}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="regSys != null  and regSys != ''"> and reg_sys = #{regSys}</if>
+            <if test="invitationMember!= null">and invitation_member = #{invitationMember}</if>
+        </where>
+    </select>
+
+    <select id="selectMemberInfoById" parameterType="Long" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        where member_id = #{memberId}
+    </select>
+    <select id="selectMemberInfoByUnionId" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        where unionid = #{unionId}
+    </select>
+    <select id="selectMemberInfoByPhone" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        where mobile_phone = #{phone}
+    </select>
+    <select id="selectMemberInfoByIds" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        <foreach collection="array" item="item" open=" where member_id in (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectCountByPhone" resultType="java.lang.Integer">
+        select count(1)
+        from member_info
+        where mobile_phone = #{value}
+    </select>
+    <select id="selectMemberInfoBySysUUID" resultMap="MemberInfoResult">
+        <include refid="selectMemberInfoVo"/>
+        where sys_uuid = #{value}
+    </select>
+
+    <insert id="insertMemberInfo" parameterType="com.sinonc.agriculture.domain.MemberInfo" useGeneratedKeys="true"
+            keyProperty="memberId">
+        insert into member_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nikeName != null  and nikeName != ''">nike_name,</if>
+            <if test="sex != null ">sex,</if>
+            <if test="birthday != null ">birthday,</if>
+            <if test="personalSignature != null  and personalSignature != ''">personal_signature,</if>
+            <if test="headImg != null  and headImg != ''">head_img,</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone,</if>
+            <if test="city != null  and city != ''">city,</if>
+            <if test="experience != null ">experience,</if>
+            <if test="role != null ">role,</if>
+            <if test="unionid != null  and unionid != ''">unionid,</if>
+            <if test="mpOpenid != null  and mpOpenid != ''">mp_openid,</if>
+            <if test="appOpenid != null  and appOpenid != ''">app_openid,</if>
+            <if test="sysUuid != null  and sysUuid != ''">sys_uuid,</if>
+            <if test="focusTags != null  and focusTags != ''">focus_tags,</if>
+            <if test="expertTags != null  and expertTags != ''">expert_tags,</if>
+            <if test="score != null ">score,</if>
+            <if test="rank != null ">rank,</if>
+            <if test="status != null ">status,</if>
+            <if test="lastLoginTime != null ">last_login_time,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="regSys != null  and regSys != ''">reg_sys,</if>
+            <if test="invitationMember != null ">invitation_member,</if>
+
+            <if test="sectionIds != null  and sectionIds != ''">section_ids,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nikeName != null  and nikeName != ''">#{nikeName},</if>
+            <if test="sex != null ">#{sex},</if>
+            <if test="birthday != null ">#{birthday},</if>
+            <if test="personalSignature != null  and personalSignature != ''">#{personalSignature},</if>
+            <if test="headImg != null  and headImg != ''">#{headImg},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">#{mobilePhone},</if>
+            <if test="city != null  and city != ''">#{city},</if>
+            <if test="experience != null ">#{experience},</if>
+            <if test="role != null ">#{role},</if>
+            <if test="unionid != null  and unionid != ''">#{unionid},</if>
+            <if test="mpOpenid != null  and mpOpenid != ''">#{mpOpenid},</if>
+            <if test="appOpenid != null  and appOpenid != ''">#{appOpenid},</if>
+            <if test="sysUuid != null  and sysUuid != ''">#{sysUuid},</if>
+            <if test="focusTags != null  and focusTags != ''">#{focusTags},</if>
+            <if test="expertTags != null  and expertTags != ''">#{expertTags},</if>
+            <if test="score != null ">#{score},</if>
+            <if test="rank != null ">#{rank},</if>
+            <if test="status != null ">#{status},</if>
+            <if test="lastLoginTime != null ">#{lastLoginTime},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="regSys != null  and regSys != ''">#{regSys},</if>
+            <if test="invitationMember != null ">#{invitationMember},</if>
+
+            <if test="sectionIds != null  and sectionIds != ''">#{sectionIds},</if>
+        </trim>
+    </insert>
+
+    <update id="updateMemberInfo" parameterType="com.sinonc.agriculture.domain.MemberInfo">
+        update member_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nikeName != null  and nikeName != ''">nike_name = #{nikeName},</if>
+            <if test="sex != null ">sex = #{sex},</if>
+            <if test="birthday != null ">birthday = #{birthday},</if>
+            <if test="personalSignature != null  and personalSignature != ''">personal_signature = #{personalSignature},</if>
+            <if test="headImg != null  and headImg != ''">head_img = #{headImg},</if>
+            <if test="mobilePhone != null  and mobilePhone != ''">mobile_phone = #{mobilePhone},</if>
+            <if test="city != null  and city != ''">city = #{city},</if>
+            <if test="experience != null ">experience = #{experience},</if>
+            <if test="role != null ">role = #{role},</if>
+            <if test="unionid != null  and unionid != ''">unionid = #{unionid},</if>
+            <if test="mpOpenid != null  and mpOpenid != ''">mp_openid = #{mpOpenid},</if>
+            <if test="appOpenid != null  and appOpenid != ''">app_openid = #{appOpenid},</if>
+            <if test="sysUuid != null  and sysUuid != ''">sys_uuid = #{sysUuid},</if>
+            <if test="focusTags != null  and focusTags != ''">focus_tags = #{focusTags},</if>
+            <if test="expertTags != null  and expertTags != ''">expert_tags = #{expertTags},</if>
+            <if test="score != null ">score = #{score},</if>
+            <if test="rank != null ">rank = #{rank},</if>
+            <if test="status != null ">status = #{status},</if>
+            <if test="lastLoginTime != null ">last_login_time = #{lastLoginTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="regSys != null  and regSys != ''">reg_sys = #{regSys},</if>
+            <if test="invitationMember != null">invitation_member = #{invitationMember},</if>
+
+            <if test="sectionIds != null  and sectionIds != ''">section_ids = #{sectionIds},</if>
+        </trim>
+        where member_id = #{memberId}
+    </update>
+
+    <delete id="deleteMemberInfoById" parameterType="Long">
+        delete from member_info where member_id = #{memberId}
+    </delete>
+
+    <delete id="deleteMemberInfoByIds" parameterType="String">
+        delete from member_info where member_id in
+        <foreach item="memberId" collection="array" open="(" separator="," close=")">
+            #{memberId}
+        </foreach>
+    </delete>
+
+</mapper>

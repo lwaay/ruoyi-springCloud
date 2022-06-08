@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.ExpertInfoModifyMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.ExpertInfoModify" id="ExpertInfoModifyResult">
+        <result property="expertmodId" column="expertmod_id"/>
+        <result property="expertIdP" column="expert_id_p"/>
+        <result property="memberId" column="member_id"/>
+        <result property="idenCard" column="iden_card"/>
+        <result property="personalPhoto" column="personal_photo"/>
+        <result property="realName" column="real_name"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="cropCode" column="crop_code"/>
+        <result property="regionCode" column="region_code"/>
+        <result property="personalProfile" column="personal_profile"/>
+        <result property="verifyStatus" column="verify_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="sysName" column="sys_name"/>
+
+        <result property="jobCompany" column="job_company"/>
+    </resultMap>
+
+    <sql id="selectExpertInfoModifyVo">
+        select expertmod_id, expert_id_p, member_id, iden_card, personal_photo, real_name, phone, email, area_code, crop_code, region_code, personal_profile, verify_status, create_time, update_time, create_by, update_by, sys_name,job_company from expert_info_modify
+    </sql>
+
+    <select id="selectExpertInfoModifyList" parameterType="com.sinonc.agriculture.domain.ExpertInfoModify"
+            resultMap="ExpertInfoModifyResult">
+        <include refid="selectExpertInfoModifyVo"/>
+        <where>
+            <if test="expertIdP != null ">and expert_id_p = #{expertIdP}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="idenCard != null  and idenCard != ''">and iden_card = #{idenCard}</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">and personal_photo = #{personalPhoto}</if>
+            <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="areaCode != null  and areaCode != ''">and area_code = #{areaCode}</if>
+            <if test="cropCode != null  and cropCode != ''">and crop_code = #{cropCode}</if>
+            <if test="regionCode != null  and regionCode != ''">and region_code = #{regionCode}</if>
+            <if test="personalProfile != null  and personalProfile != ''">and personal_profile = #{personalProfile}</if>
+            <if test="verifyStatus != null ">and verify_status = #{verifyStatus}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name like concat('%', #{sysName}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectExpertInfoModifyById" parameterType="Long" resultMap="ExpertInfoModifyResult">
+        <include refid="selectExpertInfoModifyVo"/>
+        where expertmod_id = #{expertmodId}
+    </select>
+
+    <insert id="insertExpertInfoModify" parameterType="com.sinonc.agriculture.domain.ExpertInfoModify"
+            useGeneratedKeys="true" keyProperty="expertmodId">
+        insert into expert_info_modify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="expertIdP != null ">expert_id_p,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="idenCard != null  and idenCard != ''">iden_card,</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">personal_photo,</if>
+            <if test="realName != null  and realName != ''">real_name,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="areaCode != null  and areaCode != ''">area_code,</if>
+            <if test="cropCode != null  and cropCode != ''">crop_code,</if>
+            <if test="regionCode != null  and regionCode != ''">region_code,</if>
+            <if test="personalProfile != null  and personalProfile != ''">personal_profile,</if>
+            <if test="verifyStatus != null ">verify_status,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="sysName != null  and sysName != ''">sys_name,</if>
+
+            <if test="jobCompany != null  and jobCompany != ''">job_company,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="expertIdP != null ">#{expertIdP},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="idenCard != null  and idenCard != ''">#{idenCard},</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">#{personalPhoto},</if>
+            <if test="realName != null  and realName != ''">#{realName},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="areaCode != null  and areaCode != ''">#{areaCode},</if>
+            <if test="cropCode != null  and cropCode != ''">#{cropCode},</if>
+            <if test="regionCode != null  and regionCode != ''">#{regionCode},</if>
+            <if test="personalProfile != null  and personalProfile != ''">#{personalProfile},</if>
+            <if test="verifyStatus != null ">#{verifyStatus},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="sysName != null  and sysName != ''">#{sysName},</if>
+
+            <if test="jobCompany != null  and jobCompany != ''">#{jobCompany},</if>
+        </trim>
+    </insert>
+
+    <update id="updateExpertInfoModify" parameterType="com.sinonc.agriculture.domain.ExpertInfoModify">
+        update expert_info_modify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="expertIdP != null ">expert_id_p = #{expertIdP},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="idenCard != null  and idenCard != ''">iden_card = #{idenCard},</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">personal_photo = #{personalPhoto},</if>
+            <if test="realName != null  and realName != ''">real_name = #{realName},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="areaCode != null  and areaCode != ''">area_code = #{areaCode},</if>
+            <if test="cropCode != null  and cropCode != ''">crop_code = #{cropCode},</if>
+            <if test="regionCode != null  and regionCode != ''">region_code = #{regionCode},</if>
+            <if test="personalProfile != null  and personalProfile != ''">personal_profile = #{personalProfile},</if>
+            <if test="verifyStatus != null ">verify_status = #{verifyStatus},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="sysName != null  and sysName != ''">sys_name = #{sysName},</if>
+
+            <if test="jobCompany != null  and jobCompany != ''">job_company = #{jobCompany},</if>
+        </trim>
+        where expertmod_id = #{expertmodId}
+    </update>
+
+    <delete id="deleteExpertInfoModifyById" parameterType="Long">
+        delete from expert_info_modify where expertmod_id = #{expertmodId}
+    </delete>
+
+    <delete id="deleteExpertInfoModifyByIds" parameterType="String">
+        delete from expert_info_modify where expertmod_id in
+        <foreach item="expertmodId" collection="array" open="(" separator="," close=")">
+            #{expertmodId}
+        </foreach>
+    </delete>
+
+</mapper>

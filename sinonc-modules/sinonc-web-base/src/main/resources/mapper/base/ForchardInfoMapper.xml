@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.ForchardInfoMapper">
+
+    <resultMap type="ForchardInfo" id="ForchardInfoResult">
+        <result property="orchId" column="orch_id"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="orchName" column="orch_name"/>
+        <result property="orchAddress" column="orch_address"/>
+        <result property="orchPic" column="orch_pic"/>
+        <result property="fruIds" column="fru_ids"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectForchardInfoVo">
+        select orch_id, entity_id, orch_name, orch_address, orch_pic, fru_ids, create_time, update_time        from forchard_info
+    </sql>
+
+    <select id="selectForchardInfoList" parameterType="ForchardInfo" resultMap="ForchardInfoResult">
+        <include refid="selectForchardInfoVo"/>
+        <where>
+            <if test="entityId != null ">
+                and entity_id = #{entityId}
+            </if>
+            <if test="orchName != null  and orchName != ''">
+                and orch_name like concat('%', #{orchName}, '%')
+            </if>
+            <if test="orchAddress != null  and orchAddress != ''">
+                and orch_address = #{orchAddress}
+            </if>
+            <if test="orchPic != null  and orchPic != ''">
+                and orch_pic = #{orchPic}
+            </if>
+            <if test="fruIds != null  and fruIds != ''">
+                and fru_ids = #{fruIds}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectForchardInfoById" parameterType="Long" resultMap="ForchardInfoResult">
+        <include refid="selectForchardInfoVo"/>
+        where orch_id = #{orchId}
+    </select>
+
+    <insert id="insertForchardInfo" parameterType="ForchardInfo" useGeneratedKeys="true"
+            keyProperty="orchId">
+        insert into forchard_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">entity_id,
+            </if>
+            <if test="orchName != null">orch_name,
+            </if>
+            <if test="orchAddress != null">orch_address,
+            </if>
+            <if test="orchPic != null">orch_pic,
+            </if>
+            <if test="fruIds != null">fru_ids,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">#{entityId},
+            </if>
+            <if test="orchName != null">#{orchName},
+            </if>
+            <if test="orchAddress != null">#{orchAddress},
+            </if>
+            <if test="orchPic != null">#{orchPic},
+            </if>
+            <if test="fruIds != null">#{fruIds},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateForchardInfo" parameterType="ForchardInfo">
+        update forchard_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entityId != null">entity_id =
+                #{entityId},
+            </if>
+            <if test="orchName != null">orch_name =
+                #{orchName},
+            </if>
+            <if test="orchAddress != null">orch_address =
+                #{orchAddress},
+            </if>
+            <if test="orchPic != null">orch_pic =
+                #{orchPic},
+            </if>
+            <if test="fruIds != null">fru_ids =
+                #{fruIds},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where orch_id = #{orchId}
+    </update>
+
+    <delete id="deleteForchardInfoById" parameterType="Long">
+        delete
+        from forchard_info where orch_id = #{orchId}
+    </delete>
+
+    <delete id="deleteForchardInfoByIds" parameterType="String">
+        delete from forchard_info where orch_id in
+        <foreach item="orchId" collection="array" open="(" separator="," close=")">
+            #{orchId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.QuestionAnswerMapper">
+    
+    <resultMap type="com.sinonc.agriculture.domain.QuestionAnswer" id="QuestionAnswerResult">
+        <result property="answerId"    column="answer_id"    />
+        <result property="nikeName"    column="nike_name"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="questionId"    column="question_id"    />
+        <result property="content"    column="content"    />
+        <result property="img"    column="img"    />
+        <result property="favorCount"    column="favor_count"    />
+        <result property="opposeCount"    column="oppose_count"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="bestFlag"    column="best_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="sysName"    column="sys_name"    />
+    </resultMap>
+
+    <sql id="selectQuestionAnswerVo">
+        select answer_id, nike_name, member_id, question_id, content, img, favor_count, oppose_count, area_code, area_name, best_flag, create_time, update_time, sys_name from question_answer
+    </sql>
+
+    <select id="selectQuestionAnswerList" parameterType="com.sinonc.agriculture.domain.QuestionAnswer" resultMap="QuestionAnswerResult">
+        <include refid="selectQuestionAnswerVo"/>
+        <where>  
+            <if test="nikeName != null  and nikeName != ''"> and nike_name like concat('%', #{nikeName}, '%')</if>
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="questionId != null "> and question_id = #{questionId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="areaCode != null  and areaCode != ''"> and area_code = #{areaCode}</if>
+            <if test="areaName != null  and areaName != ''"> and area_name like concat('%', #{areaName}, '%')</if>
+            <if test="bestFlag != null "> and best_flag = #{bestFlag}</if>
+            <if test="sysName != null  and sysName != ''"> and sys_name like concat('%', #{sysName}, '%')</if>
+        </where>
+        order by favor_count desc,create_time desc
+    </select>
+    
+    <select id="selectQuestionAnswerById" parameterType="Long" resultMap="QuestionAnswerResult">
+        <include refid="selectQuestionAnswerVo"/>
+        where answer_id = #{answerId}
+    </select>
+        
+    <insert id="insertQuestionAnswer" parameterType="com.sinonc.agriculture.domain.QuestionAnswer" useGeneratedKeys="true" keyProperty="answerId">
+        insert into question_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nikeName != null  and nikeName != ''">nike_name,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="questionId != null ">question_id,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="img != null  and img != ''">img,</if>
+            <if test="favorCount != null ">favor_count,</if>
+            <if test="opposeCount != null ">oppose_count,</if>
+            <if test="areaCode != null  and areaCode != ''">area_code,</if>
+            <if test="areaName != null  and areaName != ''">area_name,</if>
+            <if test="bestFlag != null ">best_flag,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="sysName != null  and sysName != ''">sys_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nikeName != null  and nikeName != ''">#{nikeName},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="questionId != null ">#{questionId},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="img != null  and img != ''">#{img},</if>
+            <if test="favorCount != null ">#{favorCount},</if>
+            <if test="opposeCount != null ">#{opposeCount},</if>
+            <if test="areaCode != null  and areaCode != ''">#{areaCode},</if>
+            <if test="areaName != null  and areaName != ''">#{areaName},</if>
+            <if test="bestFlag != null ">#{bestFlag},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="sysName != null  and sysName != ''">#{sysName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateQuestionAnswer" parameterType="com.sinonc.agriculture.domain.QuestionAnswer">
+        update question_answer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nikeName != null  and nikeName != ''">nike_name = #{nikeName},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="questionId != null ">question_id = #{questionId},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="img != null  and img != ''">img = #{img},</if>
+            <if test="favorCount != null ">favor_count = #{favorCount},</if>
+            <if test="opposeCount != null ">oppose_count = #{opposeCount},</if>
+            <if test="areaCode != null  and areaCode != ''">area_code = #{areaCode},</if>
+            <if test="areaName != null  and areaName != ''">area_name = #{areaName},</if>
+            <if test="bestFlag != null ">best_flag = #{bestFlag},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="sysName != null  and sysName != ''">sys_name = #{sysName},</if>
+        </trim>
+        where answer_id = #{answerId}
+    </update>
+
+    <delete id="deleteQuestionAnswerById" parameterType="Long">
+        delete from question_answer where answer_id = #{answerId}
+    </delete>
+
+    <delete id="deleteQuestionAnswerByIds" parameterType="String">
+        delete from question_answer where answer_id in
+        <foreach item="answerId" collection="array" open="(" separator="," close=")">
+            #{answerId}
+        </foreach>
+    </delete>
+
+    <select id="getQuestionAnswerByMemberId" parameterType="long" resultType="java.util.Map">
+        SELECT *
+        FROM question_answer
+        WHERE member_id = #{memberId}
+    </select>
+    <select id="selectBestAnswer" resultMap="QuestionAnswerResult">
+        <include refid="selectQuestionAnswerVo"/>
+        where question_id = #{value} and best_flag = 1
+    </select>
+</mapper>

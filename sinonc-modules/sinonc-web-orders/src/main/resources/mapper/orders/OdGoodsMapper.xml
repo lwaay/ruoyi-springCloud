@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdGoodsMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdGoods" id="OdGoodsResult">
+        <result property="goodsId" column="goods_id"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="farmId" column="farm_id"/>
+        <result property="fruId" column="fru_id"/>
+        <result property="fareIdP" column="fare_id_p"/>
+        <result property="productId" column="product_id"/>
+        <result property="name" column="name"/>
+        <result property="image" column="image"/>
+        <result property="video" column="video"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="saleAble" column="sale_able"/>
+        <result property="discount" column="discount"/>
+        <result property="finalPrice" column="final_price"/>
+        <result property="costPrice" column="cost_price"/>
+        <result property="specsIds" column="specs_ids"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isRecommend" column="is_recommend"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="sumGoodsCount" column="sum_goods_count"/>
+
+    </resultMap>
+
+    <sql id="selectOdGoodsVo">
+        select goods_id, brand_id, shop_id,category_id, farm_id, fru_id, fare_id_p, product_id, name, image, video, type, content, sale_able, discount, final_price, cost_price, specs_ids, create_by, create_time, update_by, update_time, is_recommend, del_flag, remark        from od_goods
+    </sql>
+
+    <select id="selectOdGoodsList" parameterType="com.sinonc.orders.domain.OdGoods" resultMap="OdGoodsResult">
+        <include refid="selectOdGoodsVo"/>
+        <where>
+            <if test="brandId != null ">
+                and brand_id = #{brandId}
+            </if>
+            <if test="shopId != null ">
+                and shop_id = #{shopId}
+            </if>
+            <if test="categoryId != null ">
+                and category_id = #{categoryId}
+            </if>
+            <if test="farmId != null ">
+                and farm_id = #{farmId}
+            </if>
+            <if test="fruId != null ">
+                and fru_id = #{fruId}
+            </if>
+            <if test="fareIdP != null ">
+                and fare_id_p = #{fareIdP}
+            </if>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="image != null  and image != ''">
+                and image = #{image}
+            </if>
+            <if test="video != null  and video != ''">
+                and video = #{video}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="content != null  and content != ''">
+                and content = #{content}
+            </if>
+            <if test="saleAble != null ">
+                and sale_able = #{saleAble}
+            </if>
+            <if test="discount != null  and discount != ''">
+                and discount = #{discount}
+            </if>
+            <if test="finalPrice != null ">
+                and final_price = #{finalPrice}
+            </if>
+            <if test="costPrice != null ">
+                and cost_price = #{costPrice}
+            </if>
+            <if test="specsIds != null  and specsIds != ''">
+                and specs_ids = #{specsIds}
+            </if>
+            <if test="isRecommend != null  and isRecommend != ''">
+                and is_recommend = #{isRecommend}
+            </if>
+            and del_flag = 0
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <select id="selectOdGoodsListLimit" parameterType="com.sinonc.orders.domain.OdGoods" resultMap="OdGoodsResult">
+        <include refid="selectOdGoodsVo"/>
+        <where>
+            <if test="brandId != null ">
+                and brand_id = #{brandId}
+            </if>
+            <if test="shopId != null ">
+                and shop_id = #{shopId}
+            </if>
+            <if test="categoryId != null ">
+                and category_id = #{categoryId}
+            </if>
+            <if test="farmId != null ">
+                and farm_id = #{farmId}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+
+            <if test="saleAble != null ">
+                and sale_able = #{saleAble}
+            </if>
+            <if test="isRecommend != null  and isRecommend != ''">
+                and is_recommend = #{isRecommend}
+            </if>
+        </where>
+        limit #{limitsize}
+    </select>
+
+
+    <select id="selectRxOdGoodsByShopId" parameterType="com.sinonc.orders.domain.OdGoods" resultMap="OdGoodsResult">
+        SELECT
+            sum(goods_count) AS sum_goods_count,
+            goods_id_p as goods_id,
+            ANY_VALUE(goods_type) as type,
+            ANY_VALUE(goods_img) as image,
+            ANY_VALUE(goods_name)  as  name,
+            ANY_VALUE(goods_price) as final_price
+        FROM
+            od_order_item LEFT JOIN od_goods ON od_order_item.goods_id_p=od_goods.goods_id
+        WHERE
+            shop_id_p = #{shopId}
+            <if test="saleAble != null ">
+                and od_goods.sale_able = #{saleAble}
+            </if>
+        GROUP BY
+            goods_id_p
+        ORDER BY
+            sum_goods_count DESC
+        LIMIT #{limitsize}
+    </select>
+
+    <select id="selectOdGoodsById" parameterType="Long" resultMap="OdGoodsResult">
+        <include refid="selectOdGoodsVo"/>
+        where goods_id = #{goodsId}
+    </select>
+
+    <insert id="insertOdGoods" parameterType="com.sinonc.orders.domain.OdGoods" useGeneratedKeys="true"
+            keyProperty="goodsId">
+        insert into od_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">brand_id,
+            </if>
+            <if test="shopId != null">shop_id,
+            </if>
+            <if test="categoryId != null">category_id,
+            </if>
+            <if test="farmId != null">farm_id,
+            </if>
+            <if test="fruId != null">fru_id,
+            </if>
+            <if test="fareIdP != null">fare_id_p,
+            </if>
+            <if test="productId != null">product_id,
+            </if>
+            <if test="name != null">name,
+            </if>
+            <if test="image != null and image != ''">image,
+            </if>
+            <if test="video != null">video,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="content != null">content,
+            </if>
+            <if test="saleAble != null">sale_able,
+            </if>
+            <if test="discount != null">discount,
+            </if>
+            <if test="finalPrice != null">final_price,
+            </if>
+            <if test="costPrice != null">cost_price,
+            </if>
+            <if test="specsIds != null">specs_ids,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="isRecommend != null">is_recommend,
+            </if>
+            <if test="delFlag != null">del_flag,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">#{brandId},
+            </if>
+            <if test="shopId != null">#{shopId},
+            </if>
+            <if test="categoryId != null">#{categoryId},
+            </if>
+            <if test="farmId != null">#{farmId},
+            </if>
+            <if test="fruId != null">#{fruId},
+            </if>
+            <if test="fareIdP != null">#{fareIdP},
+            </if>
+            <if test="productId != null">#{productId},
+            </if>
+            <if test="name != null">#{name},
+            </if>
+            <if test="image != null and image != ''">#{image},
+            </if>
+            <if test="video != null">#{video},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="content != null">#{content},
+            </if>
+            <if test="saleAble != null">#{saleAble},
+            </if>
+            <if test="discount != null">#{discount},
+            </if>
+            <if test="finalPrice != null">#{finalPrice},
+            </if>
+            <if test="costPrice != null">#{costPrice},
+            </if>
+            <if test="specsIds != null">#{specsIds},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="isRecommend != null">#{isRecommend},
+            </if>
+            <if test="delFlag != null">#{delFlag},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOdGoods" parameterType="com.sinonc.orders.domain.OdGoods">
+        update od_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandId != null">brand_id =
+                #{brandId},
+            </if>
+            <if test="shopId != null">shop_id =
+                #{shopId},
+            </if>
+            <if test="categoryId != null">category_id =
+                #{categoryId},
+            </if>
+            <if test="farmId != null">farm_id =
+                #{farmId},
+            </if>
+            <if test="fruId != null">fru_id =
+                #{fruId},
+            </if>
+            <if test="fareIdP != null">fare_id_p =
+                #{fareIdP},
+            </if>
+            <if test="productId != null">product_id =
+                #{productId},
+            </if>
+            <if test="name != null">name =
+                #{name},
+            </if>
+            <if test="image != null and image != ''">image =
+                #{image},
+            </if>
+            <if test="video != null">video =
+                #{video},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="content != null">content =
+                #{content},
+            </if>
+            <if test="saleAble != null">sale_able =
+                #{saleAble},
+            </if>
+            <if test="discount != null">discount =
+                #{discount},
+            </if>
+            <if test="finalPrice != null">final_price =
+                #{finalPrice},
+            </if>
+            <if test="costPrice != null">cost_price =
+                #{costPrice},
+            </if>
+            <if test="specsIds != null">specs_ids =
+                #{specsIds},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="isRecommend != null">is_recommend =
+                #{isRecommend},
+            </if>
+            <if test="delFlag != null">del_flag =
+                #{delFlag},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+        </trim>
+        where goods_id = #{goodsId}
+    </update>
+
+    <delete id="deleteOdGoodsById" parameterType="Long">
+        delete
+        from od_goods where goods_id = #{goodsId}
+    </delete>
+
+    <delete id="deleteOdGoodsByIds" parameterType="String">
+        update od_goods set del_flag = 1  where goods_id in
+        <foreach item="goodsId" collection="array" open="(" separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </delete>
+<!--    <delete id="deleteOdGoodsByIds" parameterType="String">-->
+<!--        delete from od_goods where goods_id in-->
+<!--        <foreach item="goodsId" collection="array" open="(" separator="," close=")">-->
+<!--            #{goodsId}-->
+<!--        </foreach>-->
+<!--    </delete>-->
+
+</mapper>

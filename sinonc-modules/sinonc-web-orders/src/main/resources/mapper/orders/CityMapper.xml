@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.CityMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.City" id="CityResult">
+        <result property="id"    column="id"    />
+        <result property="pid"    column="pid"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+	<sql id="selectCityVo">
+        select id, pid, name from pro_city
+    </sql>
+
+    <select id="selectProvice" resultMap="CityResult">
+        <include refid="selectCityVo"></include>
+        <where>
+            and pid=0
+        </where>
+    </select>
+    <select id="selectCity" resultMap="CityResult" parameterType="int">
+        <include refid="selectCityVo"></include>
+        <where>
+           and  pid=#{pid}
+        </where>
+
+    </select>
+
+</mapper>

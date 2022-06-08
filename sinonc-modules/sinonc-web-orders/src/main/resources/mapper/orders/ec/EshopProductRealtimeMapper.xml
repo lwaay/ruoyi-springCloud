@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.EshopProductRealtimeMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.EshopProductRealtime" id="EshopProductRealtimeResult">
+        <result property="eshopId" column="eshop_id"/>
+        <result property="platform" column="platform"/>
+        <result property="name" column="name"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="title" column="title"/>
+        <result property="saleCount" column="sale_count"/>
+        <result property="salePrice" column="sale_price"/>
+        <result property="price" column="price"/>
+        <result property="shopAddr" column="shop_addr"/>
+        <result property="images" column="images"/>
+        <result property="weight" column="weight"/>
+        <result property="factoryAddr" column="factory_addr"/>
+        <result property="factoryName" column="factory_name"/>
+        <result property="saleTime" column="sale_time"/>
+        <result property="url" column="url"/>
+        <result property="productType" column="product_type"/>
+        <result property="specialtyType" column="specialty_type"/>
+        <result property="brand" column="brand"/>
+        <result property="reptileStatus" column="reptile_status"/>
+        <result property="cronId" column="cron_id"/>
+        <result property="reptileStatusRealtime" column="reptile_status_realtime"/>
+        <result property="cronIdRealtime" column="cron_id_realtime"/>
+    </resultMap>
+
+    <sql id="selectEshopProductRealtimeVo">
+        select eshop_id,
+               platform,
+               name,
+               goods_id,
+               title,
+               sale_count,
+               sale_price,
+               price,
+               shop_addr,
+               images,
+               weight,
+               factory_addr,
+               factory_name,
+               sale_time,
+               url,
+               product_type,
+               specialty_type,
+               brand,
+               reptile_status,
+               cron_id,
+               reptile_status_realtime,
+               cron_id_realtime
+        from eshop_product_realtime
+    </sql>
+
+    <select id="selectEshopProductRealtimeList" parameterType="com.sinonc.orders.ec.domain.EshopProductRealtime"
+            resultMap="EshopProductRealtimeResult">
+        <include refid="selectEshopProductRealtimeVo"/>
+        <where>
+            <if test="platform != null ">
+                and platform = #{platform}
+            </if>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="goodsId != null ">
+                and goods_id = #{goodsId}
+            </if>
+            <if test="title != null  and title != ''">
+                and title = #{title}
+            </if>
+            <if test="saleCount != null ">
+                and sale_count = #{saleCount}
+            </if>
+            <if test="salePrice != null ">
+                and sale_price = #{salePrice}
+            </if>
+            <if test="price != null ">
+                and price = #{price}
+            </if>
+            <if test="shopAddr != null  and shopAddr != ''">
+                and shop_addr = #{shopAddr}
+            </if>
+            <if test="images != null  and images != ''">
+                and images = #{images}
+            </if>
+            <if test="weight != null  and weight != ''">
+                and weight = #{weight}
+            </if>
+            <if test="factoryAddr != null  and factoryAddr != ''">
+                and factory_addr = #{factoryAddr}
+            </if>
+            <if test="factoryName != null  and factoryName != ''">
+                and factory_name like concat('%', #{factoryName}, '%')
+            </if>
+            <if test="saleTime != null ">
+                and sale_time = #{saleTime}
+            </if>
+            <if test="url != null  and url != ''">
+                and url = #{url}
+            </if>
+            <if test="productType != null  and productType != ''">
+                and product_type = #{productType}
+            </if>
+            <if test="specialtyType != null  and specialtyType != ''">
+                and specialty_type = #{specialtyType}
+            </if>
+            <if test="brand != null  and brand != ''">
+                and brand = #{brand}
+            </if>
+            <if test="reptileStatus != null ">
+                and reptile_status = #{reptileStatus}
+            </if>
+            <if test="cronId != null ">
+                and cron_id = #{cronId}
+            </if>
+            <if test="reptileStatusRealtime != null ">
+                and reptile_status_realtime = #{reptileStatusRealtime}
+            </if>
+            <if test="cronIdRealtime != null ">
+                and cron_id_realtime = #{cronIdRealtime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEshopProductRealtimeById" parameterType="Long" resultMap="EshopProductRealtimeResult">
+        <include refid="selectEshopProductRealtimeVo"/>
+        where eshop_id = #{eshopId}
+    </select>
+
+    <insert id="insertEshopProductRealtime" parameterType="com.sinonc.orders.ec.domain.EshopProductRealtime" useGeneratedKeys="true"
+            keyProperty="eshopId">
+        insert into eshop_product_realtime
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platform != null">platform,
+            </if>
+            <if test="name != null and name != ''">name,
+            </if>
+            <if test="goodsId != null">goods_id,
+            </if>
+            <if test="title != null and title != ''">title,
+            </if>
+            <if test="saleCount != null">sale_count,
+            </if>
+            <if test="salePrice != null">sale_price,
+            </if>
+            <if test="price != null">price,
+            </if>
+            <if test="shopAddr != null">shop_addr,
+            </if>
+            <if test="images != null and images != ''">images,
+            </if>
+            <if test="weight != null and weight != ''">weight,
+            </if>
+            <if test="factoryAddr != null and factoryAddr != ''">factory_addr,
+            </if>
+            <if test="factoryName != null and factoryName != ''">factory_name,
+            </if>
+            <if test="saleTime != null">sale_time,
+            </if>
+            <if test="url != null and url != ''">url,
+            </if>
+            <if test="productType != null and productType != ''">product_type,
+            </if>
+            <if test="specialtyType != null">specialty_type,
+            </if>
+            <if test="brand != null and brand != ''">brand,
+            </if>
+            <if test="reptileStatus != null">reptile_status,
+            </if>
+            <if test="cronId != null">cron_id,
+            </if>
+            <if test="reptileStatusRealtime != null">reptile_status_realtime,
+            </if>
+            <if test="cronIdRealtime != null">cron_id_realtime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platform != null">#{platform},
+            </if>
+            <if test="name != null and name != ''">#{name},
+            </if>
+            <if test="goodsId != null">#{goodsId},
+            </if>
+            <if test="title != null and title != ''">#{title},
+            </if>
+            <if test="saleCount != null">#{saleCount},
+            </if>
+            <if test="salePrice != null">#{salePrice},
+            </if>
+            <if test="price != null">#{price},
+            </if>
+            <if test="shopAddr != null">#{shopAddr},
+            </if>
+            <if test="images != null and images != ''">#{images},
+            </if>
+            <if test="weight != null and weight != ''">#{weight},
+            </if>
+            <if test="factoryAddr != null and factoryAddr != ''">#{factoryAddr},
+            </if>
+            <if test="factoryName != null and factoryName != ''">#{factoryName},
+            </if>
+            <if test="saleTime != null">#{saleTime},
+            </if>
+            <if test="url != null and url != ''">#{url},
+            </if>
+            <if test="productType != null and productType != ''">#{productType},
+            </if>
+            <if test="specialtyType != null">#{specialtyType},
+            </if>
+            <if test="brand != null and brand != ''">#{brand},
+            </if>
+            <if test="reptileStatus != null">#{reptileStatus},
+            </if>
+            <if test="cronId != null">#{cronId},
+            </if>
+            <if test="reptileStatusRealtime != null">#{reptileStatusRealtime},
+            </if>
+            <if test="cronIdRealtime != null">#{cronIdRealtime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateEshopProductRealtime" parameterType="com.sinonc.orders.ec.domain.EshopProductRealtime">
+        update eshop_product_realtime
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platform != null">platform =
+                #{platform},
+            </if>
+            <if test="name != null and name != ''">name =
+                #{name},
+            </if>
+            <if test="goodsId != null">goods_id =
+                #{goodsId},
+            </if>
+            <if test="title != null and title != ''">title =
+                #{title},
+            </if>
+            <if test="saleCount != null">sale_count =
+                #{saleCount},
+            </if>
+            <if test="salePrice != null">sale_price =
+                #{salePrice},
+            </if>
+            <if test="price != null">price =
+                #{price},
+            </if>
+            <if test="shopAddr != null">shop_addr =
+                #{shopAddr},
+            </if>
+            <if test="images != null and images != ''">images =
+                #{images},
+            </if>
+            <if test="weight != null and weight != ''">weight =
+                #{weight},
+            </if>
+            <if test="factoryAddr != null and factoryAddr != ''">factory_addr =
+                #{factoryAddr},
+            </if>
+            <if test="factoryName != null and factoryName != ''">factory_name =
+                #{factoryName},
+            </if>
+            <if test="saleTime != null">sale_time =
+                #{saleTime},
+            </if>
+            <if test="url != null and url != ''">url =
+                #{url},
+            </if>
+            <if test="productType != null and productType != ''">product_type =
+                #{productType},
+            </if>
+            <if test="specialtyType != null">specialty_type =
+                #{specialtyType},
+            </if>
+            <if test="brand != null and brand != ''">brand =
+                #{brand},
+            </if>
+            <if test="reptileStatus != null">reptile_status =
+                #{reptileStatus},
+            </if>
+            <if test="cronId != null">cron_id =
+                #{cronId},
+            </if>
+            <if test="reptileStatusRealtime != null">reptile_status_realtime =
+                #{reptileStatusRealtime},
+            </if>
+            <if test="cronIdRealtime != null">cron_id_realtime =
+                #{cronIdRealtime},
+            </if>
+        </trim>
+        where eshop_id = #{eshopId}
+    </update>
+
+    <delete id="deleteEshopProductRealtimeById" parameterType="Long">
+        delete
+        from eshop_product_realtime
+        where eshop_id = #{eshopId}
+    </delete>
+
+    <delete id="deleteEshopProductRealtimeByIds" parameterType="String">
+        delete from eshop_product_realtime where eshop_id in
+        <foreach item="eshopId" collection="array" open="(" separator="," close=")">
+            #{eshopId}
+        </foreach>
+    </delete>
+
+    <select id="listOpenGoodsType" resultType="String">
+        select product_type
+        from eshop_product_realtime
+        where reptile_status = 1
+          and product_type is not null
+        group by product_type
+    </select>
+
+    <select id="listOpenStore" resultType="String">
+        select name
+        from eshop_product_realtime
+        where reptile_status = 1
+          and name is not null
+        group by name
+    </select>
+</mapper>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.CropDictMapper">
+
+    <resultMap type="com.sinonc.base.api.domain.CropDict" id="CropDictResult">
+        <result property="cropId" column="crop_id"/>
+        <result property="cropName" column="crop_name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="iconImg" column="icon_img"/>
+        <result property="parentName" column="parent_name"/>
+    </resultMap>
+
+    <sql id="selectCropDictVo">
+        select crop_id,
+               crop_name,
+               parent_id,
+               create_time,
+               update_time,
+               create_by,
+               update_by,
+               icon_img
+        from crop_dict
+    </sql>
+
+    <select id="selectCropDictList" parameterType="com.sinonc.base.api.domain.CropDict" resultMap="CropDictResult">
+        <include refid="selectCropDictVo"/>
+        <where>
+            <if test="cropName != null  and cropName != ''">and crop_name like concat('%', #{cropName}, '%')</if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="iconImg != null  and iconImg != ''">and icon_img = #{iconImg}</if>
+        </where>
+    </select>
+
+    <select id="selectCropDictById" parameterType="Long" resultMap="CropDictResult">
+        select t.crop_id,
+               t.crop_name,
+               t.parent_id,
+               t.create_time,
+               t.update_time,
+               t.create_by,
+               t.update_by,
+               t.icon_img,
+               p.crop_name as parent_name
+        from crop_dict t
+                 left join crop_dict p on p.crop_id = t.parent_id
+        where t.crop_id = #{cropId}
+    </select>
+
+    <insert id="insertCropDict" parameterType="com.sinonc.base.api.domain.CropDict" useGeneratedKeys="true"
+            keyProperty="cropId">
+        insert into crop_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cropName != null">crop_name,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="iconImg != null">icon_img,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cropName != null">#{cropName},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="iconImg != null">#{iconImg},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCropDict" parameterType="com.sinonc.base.api.domain.CropDict">
+        update crop_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cropName != null">crop_name = #{cropName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="iconImg != null">icon_img = #{iconImg},</if>
+        </trim>
+        where crop_id = #{cropId}
+    </update>
+
+    <delete id="deleteCropDictById" parameterType="Long">
+        delete
+        from crop_dict
+        where crop_id = #{cropId}
+    </delete>
+
+    <delete id="deleteCropDictByIds" parameterType="String">
+        delete from crop_dict where crop_id in
+        <foreach item="cropId" collection="array" open="(" separator="," close=")">
+            #{cropId}
+        </foreach>
+    </delete>
+
+</mapper>

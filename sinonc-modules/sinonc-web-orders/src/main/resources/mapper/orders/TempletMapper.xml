@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.TempletMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Templet" id="TempletResult">
+        <result property="templetId"    column="templet_id"    />
+        <result property="templetName"    column="templet_name"    />
+        <result property="templetNo"    column="templet_no"    />
+        <result property="templetUrl"    column="templet_url"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+	<sql id="selectTempletVo">
+        select templet_id, templet_name, templet_no, templet_url, create_time, create_by from od_templet
+    </sql>
+
+    <select id="selectTempletList" parameterType="com.sinonc.orders.domain.Templet" resultMap="TempletResult">
+        <include refid="selectTempletVo"/>
+        <where>
+            <if test="templetId != null "> and templet_id = #{templetId}</if>
+             <if test="templetName != null  and templetName != '' "> and templet_name = #{templetName}</if>
+             <if test="templetNo != null  and templetNo != '' "> and templet_no = #{templetNo}</if>
+             <if test="templetUrl != null  and templetUrl != '' "> and templet_url = #{templetUrl}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="searchDate != null and  searchDate !='' "> and create_time  LIKE CONCAT('%',CONCAT(#{searchDate},'%'))</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+         </where>
+         order by create_time desc
+    </select>
+
+    <select id="selectTempletById" parameterType="Long" resultMap="TempletResult">
+        <include refid="selectTempletVo"/>
+        where templet_id = #{templetId}
+    </select>
+    <select id="selectLastNo" resultType="java.lang.String">
+        select max(templet_no) from od_templet
+    </select>
+
+    <insert id="insertTemplet" parameterType="com.sinonc.orders.domain.Templet" useGeneratedKeys="true" keyProperty="templetId">
+        insert into od_templet
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="templetName != null  and templetName != ''  ">templet_name,</if>
+			<if test="templetNo != null  and templetNo != ''  ">templet_no,</if>
+			<if test="templetUrl != null  and templetUrl != ''  ">templet_url,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="templetName != null  and templetName != ''  ">#{templetName},</if>
+			<if test="templetNo != null  and templetNo != ''  ">#{templetNo},</if>
+			<if test="templetUrl != null  and templetUrl != ''  ">#{templetUrl},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTemplet" parameterType="com.sinonc.orders.domain.Templet">
+        update od_templet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="templetName != null  and templetName != ''  ">templet_name = #{templetName},</if>
+            <if test="templetNo != null  and templetNo != ''  ">templet_no = #{templetNo},</if>
+            <if test="templetUrl != null  and templetUrl != ''  ">templet_url = #{templetUrl},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+        </trim>
+        where templet_id = #{templetId}
+    </update>
+
+	<delete id="deleteTempletById" parameterType="Long">
+        delete from od_templet where templet_id = #{templetId}
+    </delete>
+
+    <delete id="deleteTempletByIds" parameterType="String">
+        delete from od_templet where templet_id in
+        <foreach item="templetId" collection="array" open="(" separator="," close=")">
+            #{templetId}
+        </foreach>
+    </delete>
+
+</mapper>

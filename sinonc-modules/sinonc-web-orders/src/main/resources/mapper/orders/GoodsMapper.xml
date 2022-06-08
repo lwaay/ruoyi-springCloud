@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.GoodsMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Goods" id="GoodsResult">
+        <result property="goodsId" column="goods_id"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="name" column="name"/>
+        <result property="remark" column="remark"/>
+        <result property="image" column="image"/>
+        <result property="video" column="video"/>
+        <result property="type" column="type"/>
+        <result property="content" column="content"/>
+        <result property="saleAble" column="sale_able"/>
+        <result property="discount" column="discount"/>
+        <result property="finalPrice" column="final_price"/>
+        <result property="costPrice" column="cost_price"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="categoryId" column="category_id"/>
+        <result property="specsIds" column="specs_ids"/>
+        <result property="isRecommend" column="is_recommend"/>
+
+        <result property="orangeType" column="orange_type"/>
+        <result property="treeAge" column="tree_age"/>
+        <result property="preYearCrop" column="preyear_Crop"/>
+        <result property="fareIdP" column="fare_id_p"/>
+        <result property="productId" column="product_id"/>
+        <result property="farmId" column="farm_id"/>
+    </resultMap>
+
+    <sql id="selectGoodsVo">
+        select goods_id,
+               brand_id,
+               shop_id,
+               name,
+               remark,
+               image,
+               video,
+               type,
+               content,
+               sale_able,
+               discount,
+               final_price,
+               cost_price,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               category_id,
+               specs_ids,
+               orange_type,
+               tree_age,
+               preyear_Crop,
+               is_recommend,
+               fare_id_p,
+               product_id,
+               farm_id
+        from od_goods
+    </sql>
+
+    <select id="selectGoodsList" parameterType="com.sinonc.orders.domain.Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        <where>
+            <if test="brandId != null ">and brand_id = #{brandId}</if>
+            <if test="shopId != null ">and shop_id = #{shopId}</if>
+            <if test="name != null  and name != '' ">and `name` like concat(#{name},'%')</if>
+            <if test="remark != null  and remark != '' ">and remark = #{remark}</if>
+            <if test="image != null  and image != '' ">and image = #{image}</if>
+            <if test="video != null  and video != '' ">and video = #{video}</if>
+            <if test="type != null ">and type = #{type}</if>
+            <if test="content != null  and content != '' ">and content = #{content}</if>
+            <if test="saleAble != null ">and sale_able = #{saleAble}</if>
+            <if test="discount != null  and discount != '' ">and discount = #{discount}</if>
+            <if test="finalPrice != null ">and final_price = #{finalPrice}</if>
+            <if test="costPrice != null ">and cost_price = #{costPrice}</if>
+            <if test="createBy != null  and createBy != '' ">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="categoryId != null ">and category_id = #{categoryId}</if>
+            <if test="specsIds != null ">and specs_ids = #{specsIds}</if>
+            <if test="productId != null ">and product_id = #{productId}</if>
+
+        </where>
+        order by goods_id desc
+    </select>
+
+    <select id="selectGoodsById" parameterType="Long" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        where goods_id = #{goodsId}
+    </select>
+
+    <select id="selectGoodsByIds" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        where goods_id in
+        <foreach item="goodsId" collection="array" open="(" separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </select>
+
+    <insert id="insertGoods" useGeneratedKeys="true" keyProperty="goodsId" parameterType="com.sinonc.orders.domain.Goods">
+        insert into od_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null  ">goods_id,</if>
+            <if test="brandId != null  ">brand_id,</if>
+            <if test="shopId != null  ">shop_id,</if>
+            <if test="name != null  and name != ''  ">name,</if>
+            <if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="image != null  and image != ''  ">image,</if>
+            <if test="video != null  and video != ''  ">video,</if>
+            <if test="type != null  ">type,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="saleAble != null  ">sale_able,</if>
+            <if test="discount != null  and discount != ''  ">discount,</if>
+            <if test="finalPrice != null  ">final_price,</if>
+            <if test="costPrice != null  ">cost_price,</if>
+
+            <if test="orangeType != null  and orangeType != ''  ">orange_type,</if>
+            <if test="treeAge != null  ">tree_age,</if>
+            <if test="preYearCrop != null  ">preyear_Crop,</if>
+            <if test="isRecommend != null  ">is_recommend,</if>
+
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="categoryId != null  ">category_id,</if>
+            <if test="specsIds != null  ">specs_ids,</if>
+            <if test="fareIdP != null  ">fare_id_p,</if>
+            <if test="productId != null  ">product_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null  ">#{goodsId},</if>
+            <if test="brandId != null  ">#{brandId},</if>
+            <if test="shopId != null  ">#{shopId},</if>
+            <if test="name != null  and name != ''  ">#{name},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="image != null  and image != ''  ">#{image},</if>
+            <if test="video != null  and video != ''  ">#{video},</if>
+            <if test="type != null  ">#{type},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="saleAble != null  ">#{saleAble},</if>
+            <if test="discount != null  and discount != ''  ">#{discount},</if>
+            <if test="finalPrice != null  ">#{finalPrice},</if>
+            <if test="costPrice != null  ">#{costPrice},</if>
+
+            <if test="orangeType != null  and orangeType != ''  ">#{orangeType},</if>
+            <if test="treeAge != null  ">#{treeAge},</if>
+            <if test="preYearCrop != null  ">#{preYearCrop},</if>
+            <if test="isRecommend != null  and isRecommend != ''  ">#{isRecommend},</if>
+
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="categoryId != null  ">#{categoryId},</if>
+            <if test="specsIds != null  ">#{specsIds},</if>
+            <if test="fareIdP != null  ">#{fareIdP},</if>
+            <if test="productId != null  ">#{productId},</if>
+            <if test="farm_id != null  ">#{farmId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGoods" parameterType="com.sinonc.orders.domain.Goods">
+        update od_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandId != null  ">brand_id = #{brandId},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="image != null  and image != ''  ">image = #{image},</if>
+            <if test="video != null  and video != ''  ">video = #{video},</if>
+            <if test="type != null  ">type = #{type},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="saleAble != null  ">sale_able = #{saleAble},</if>
+            <if test="discount != null  and discount != ''  ">discount = #{discount},</if>
+            <if test="finalPrice != null  ">final_price = #{finalPrice},</if>
+            <if test="costPrice != null  ">cost_price = #{costPrice},</if>
+            <if test="orangeType != null  and orangeType != ''  ">orange_type = #{orangeType},</if>
+            <if test="treeAge != null  ">tree_age = #{treeAge},</if>
+            <if test="preYearCrop != null  ">preyear_Crop = #{preYearCrop},</if>
+            <if test="isRecommend != null  and isRecommend != ''  ">is_recommend = #{isRecommend},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="categoryId != null  ">category_id = #{categoryId},</if>
+            <if test="specsIds != null  ">specs_ids = #{specsIds},</if>
+            <if test="fareIdP != null  ">fare_id_p = #{fareIdP},</if>
+            <if test="farmId != null  ">farm_id = #{farmId},</if>
+            <if test="productId != null  ">product_id = #{productId},</if>
+        </trim>
+        where goods_id = #{goodsId}
+    </update>
+
+    <delete id="deleteGoodsById" parameterType="Long">
+        delete
+        from od_goods
+        where goods_id = #{goodsId}
+    </delete>
+
+    <delete id="deleteGoodsByIds" parameterType="String">
+        delete from od_goods where goods_id in
+        <foreach item="goodsId" collection="array" open="(" separator="," close=")">
+            #{goodsId}
+        </foreach>
+    </delete>
+
+
+
+    <select id="selectBookGoodsSellInfo" resultType="java.util.Map">
+        SELECT od_order.create_time,
+               od_order.address,
+               od_order.receiver,
+               od_order_item.goods_count,
+               od_specs.unit
+        FROM od_order
+                 INNER JOIN od_order_item ON od_order.order_id = od_order_item.order_id_p
+                 INNER JOIN od_specs on od_order_item.goods_specs_id_p = od_specs.specs_id
+        WHERE od_order.order_type = 2
+          AND od_order.trade_status > 0
+          AND od_order_item.goods_id_p = #{value}
+        order by od_order.create_time desc
+    </select>
+
+    <select id="countGoods" resultType="integer" >
+        SELECT
+            SUM(od_order_item.goods_count)
+        FROM
+            od_order
+                INNER JOIN od_order_item ON od_order.order_id = od_order_item.order_id_p
+        WHERE
+              od_order_item.goods_id_p = #{param1}
+          <if test="param2 != 0">
+              AND od_order.order_type = #{param2}
+          </if>
+    </select>
+    <select id="goodsCount" resultType="java.lang.Integer">
+        select count(0) from od_goods where sale_able = 0 and del_flag = 0
+    </select>
+</mapper>

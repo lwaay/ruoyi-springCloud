@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.SelfDiagnosisMapper">
+
+    <resultMap id="SelfDiagnosisVo" type="com.sinonc.agriculture.vo.SelfDiagnosisVo">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="cropIdP" column="crop_id_p"/>
+    </resultMap>
+
+    <resultMap id="DiagnosisSymptom" type="com.sinonc.agriculture.domain.DiagnosisSymptom">
+        <result property="id" column="id"/>
+        <result property="info" column="info"/>
+        <result property="diaIdP" column="dia_id_p"/>
+    </resultMap>
+
+    <resultMap id="DiagnosisResultVo" type="com.sinonc.agriculture.vo.DiagnosisResultVo">
+        <result property="illness" column="illness"/>
+        <result property="percent" column="percent"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <resultMap id="DiagnosisIllness" type="com.sinonc.agriculture.domain.DiagnosisIllness">
+        <result property="id" column="id"/>
+        <result property="illness" column="illness"/>
+        <result property="percent" column="percent"/>
+        <result property="diaSymptomIdP" column="dia_symptom_id_p"/>
+        <result property="illnessIdP" column="illness_id_p"/>
+    </resultMap>
+    <resultMap id="DiagnosisIllnessResult" type="com.sinonc.agriculture.domain.DiagnosisIllnessResult">
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <select id="selectOneByCropId" resultMap="SelfDiagnosisVo">
+        select id,name,crop_id_p as cropIdP from diagnosis where crop_id_p = #{cropId}
+    </select>
+
+    <select id="selectSymptomByDiaId" resultMap="DiagnosisSymptom">
+        select id,info,dia_id_p as diaIdP from diagnosis_symptom where dia_id_p = #{id}
+    </select>
+
+    <select id="selectDiagnosisIllnessResult" resultMap="DiagnosisIllnessResult">
+        select title,content from diagnosis_illness_result where illness_id_p = #{illnessId}
+    </select>
+
+    <select id="selectDiagnosisIllness" resultMap="DiagnosisIllness">
+        select id,illness,percent,dia_symptom_id_p,illness_id_p from diagnosis_illness
+         <where>
+            dia_symptom_id_p in
+            <foreach item="item" collection="idList" separator="," open="(" close=")" index="index">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+</mapper>

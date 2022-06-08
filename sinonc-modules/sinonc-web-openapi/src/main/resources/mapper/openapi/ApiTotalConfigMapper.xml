@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.openapi.mapper.ApiTotalConfigMapper">
+
+    <resultMap type="ApiTotalConfig" id="ApiTotalConfigResult">
+        <result property="configId" column="config_id"/>
+        <result property="urlSuffix" column="url_suffix"/>
+        <result property="moduleType" column="module_type"/>
+        <result property="tableName" column="table_name"/>
+        <result property="tableLabel" column="table_label"/>
+        <result property="columnName" column="column_name"/>
+        <result property="columnLabel" column="column_label"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createName" column="create_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectApiTotalConfigVo">
+        select config_id,
+               url_suffix,
+               module_type,
+               table_name,
+               table_label,
+               column_name,
+               column_label,
+               status,
+               create_by,
+               create_name,
+               create_time
+        from api_total_config
+    </sql>
+
+    <select id="selectApiTotalConfigList" parameterType="ApiTotalConfig" resultMap="ApiTotalConfigResult">
+        <include refid="selectApiTotalConfigVo"/>
+        <where>
+            <if test="urlSuffix != null  and urlSuffix != ''">
+                and url_suffix = #{urlSuffix}
+            </if>
+            <if test="moduleType != null ">
+                and module_type = #{moduleType}
+            </if>
+            <if test="tableName != null  and tableName != ''">
+                and table_name like concat('%', #{tableName}, '%')
+            </if>
+            <if test="tableLabel != null  and tableLabel != ''">
+                and table_label = #{tableLabel}
+            </if>
+            <if test="columnName != null  and columnName != ''">
+                and column_name like concat('%', #{columnName}, '%')
+            </if>
+            <if test="columnLabel != null  and columnLabel != ''">
+                and column_label = #{columnLabel}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+            <if test="createName != null  and createName != ''">
+                and create_name like concat('%', #{createName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectApiTotalConfigById" parameterType="Long" resultMap="ApiTotalConfigResult">
+        <include refid="selectApiTotalConfigVo"/>
+        where config_id = #{configId}
+    </select>
+
+    <select id="getConfigBySuffix" parameterType="String" resultMap="ApiTotalConfigResult">
+        <include refid="selectApiTotalConfigVo"/>
+        where url_suffix = #{suffix}
+        order by config_id desc limit 1
+    </select>
+
+    <insert id="insertApiTotalConfig" parameterType="ApiTotalConfig" useGeneratedKeys="true"
+            keyProperty="configId">
+        insert into api_total_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="urlSuffix != null">url_suffix,
+            </if>
+            <if test="moduleType != null">module_type,
+            </if>
+            <if test="tableName != null">table_name,
+            </if>
+            <if test="tableLabel != null">table_label,
+            </if>
+            <if test="columnName != null">column_name,
+            </if>
+            <if test="columnLabel != null">column_label,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createName != null">create_name,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="urlSuffix != null">#{urlSuffix},
+            </if>
+            <if test="moduleType != null">#{moduleType},
+            </if>
+            <if test="tableName != null">#{tableName},
+            </if>
+            <if test="tableLabel != null">#{tableLabel},
+            </if>
+            <if test="columnName != null">#{columnName},
+            </if>
+            <if test="columnLabel != null">#{columnLabel},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createName != null">#{createName},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateApiTotalConfig" parameterType="ApiTotalConfig">
+        update api_total_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="urlSuffix != null">url_suffix =
+                #{urlSuffix},
+            </if>
+            <if test="moduleType != null">module_type =
+                #{moduleType},
+            </if>
+            <if test="tableName != null">table_name =
+                #{tableName},
+            </if>
+            <if test="tableLabel != null">table_label =
+                #{tableLabel},
+            </if>
+            <if test="columnName != null">column_name =
+                #{columnName},
+            </if>
+            <if test="columnLabel != null">column_label =
+                #{columnLabel},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createName != null">create_name =
+                #{createName},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+        </trim>
+        where config_id = #{configId}
+    </update>
+
+    <delete id="deleteApiTotalConfigById" parameterType="Long">
+        delete
+        from api_total_config
+        where config_id = #{configId}
+    </delete>
+
+    <delete id="deleteApiTotalConfigByIds" parameterType="String">
+        delete from api_total_config where config_id in
+        <foreach item="configId" collection="array" open="(" separator="," close=")">
+            #{configId}
+        </foreach>
+    </delete>
+
+    <select id="selectTables" resultType="java.util.Map">
+        SELECT table_name, table_comment, create_time, update_time FROM information_schema.tables
+        WHERE  table_schema = (SELECT DATABASE());
+    </select>
+
+    <select id="selectColumns" resultType="java.util.Map" parameterType="String">
+        SELECT c.column_name,c.column_comment,c.column_type FROM information_schema.columns c WHERE table_schema =
+        (SELECT DATABASE()) AND table_name = #{tableName};
+    </select>
+
+    <select id="queryList"  resultType="java.util.Map" parameterType="com.sinonc.openapi.dto.ApiTotalConfigDto" statementType="STATEMENT">
+        select ${columns}
+        from ${tables}
+        limit ${start},${end}
+    </select>
+
+</mapper>

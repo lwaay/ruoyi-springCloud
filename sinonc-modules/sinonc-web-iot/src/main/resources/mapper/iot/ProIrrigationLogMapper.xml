@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.ProIrrigationLogMapper">
+
+    <resultMap type="com.sinonc.iot.domain.ProIrrigationLog" id="ProIrrigationLogResult">
+        <result property="logId" column="log_id"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="flow" column="flow"/>
+        <result property="startFlow" column="start_flow"/>
+        <result property="endFlow" column="end_flow"/>
+        <result property="startEc" column="start_ec"/>
+        <result property="startPh" column="start_ph"/>
+        <result property="endEc" column="end_ec"/>
+        <result property="endPh" column="end_ph"/>
+        <result property="aFlow" column="a_flow"/>
+        <result property="startAFlow" column="start_a_flow"/>
+        <result property="endAFlow" column="end_a_flow"/>
+        <result property="aRate" column="a_rate"/>
+        <result property="bFlow" column="b_flow"/>
+        <result property="startBFlow" column="start_b_flow"/>
+        <result property="endBFlow" column="end_b_flow"/>
+        <result property="bRate" column="b_rate"/>
+        <result property="createTime" column="create_time"/>
+        <result property="remark" column="remark"/>
+        <result property="startAcidAbsorb" column="start_acid_absorb"/>
+        <result property="endAcidAbsorb"  column="end_acid_absorb"/>
+        <result property="acidAbsorbUsed"   column="acid_absorb_used"/>
+    </resultMap>
+
+    <sql id="selectProIrrigationLogVo">
+        select log_id,
+               start_time,
+               end_time,
+               flow,
+               start_flow,
+               end_flow,
+               a_flow,
+               start_a_flow,
+               end_a_flow,
+               a_rate,
+               b_flow,
+               start_b_flow,
+               end_b_flow,
+               b_rate,
+               start_ec,
+               start_ph,
+               end_ec,
+               end_ph,
+               start_acid_absorb,
+               end_acid_absorb,
+               acid_absorb_used,
+               create_time,
+               remark
+        from pro_irrigation_log
+    </sql>
+
+    <select id="selectProIrrigationLogList" parameterType="ProIrrigationLog" resultMap="ProIrrigationLogResult">
+        <include refid="selectProIrrigationLogVo"/>
+        <where>
+            <if test="startTime != null ">and DATE_FORMAT(start_time,'%y%m%d') &gt;= DATE_FORMAT(#{startTime},'%y%m%d')</if>
+            <if test="endTime != null ">and DATE_FORMAT(end_time,'%y%m%d') &lt; DATE_FORMAT(#{endTime},"%y%m%d") +1</if>
+            <if test="flow != null ">and flow = #{flow}</if>
+            <if test="startFlow != null ">and start_flow = #{startFlow}</if>
+            <if test="endFlow != null ">and end_flow = #{endFlow}</if>
+            <if test="startEc != null ">and start_ec = #{startEc}</if>
+            <if test="startPh != null ">and start_ph = #{startPh}</if>
+            <if test="endEc != null ">and end_ec = #{endEc}</if>
+            <if test="endPh != null ">and end_ph = #{endPh}</if>
+            <if test="aFlow != null ">and a_flow = #{aFlow}</if>
+            <if test="startAFlow != null ">and start_a_flow = #{startAFlow}</if>
+            <if test="endAFlow != null ">and end_a_flow = #{endAFlow}</if>
+            <if test="aRate != null ">and a_rate = #{aRate}</if>
+            <if test="bFlow != null ">and b_flow = #{bFlow}</if>
+            <if test="startBFlow != null ">and start_b_flow = #{startBFlow}</if>
+            <if test="endBFlow != null ">and end_b_flow = #{endBFlow}</if>
+            <if test="bRate != null ">and b_rate = #{bRate}</if>
+            <if test="startAcidAbsorb != null ">and start_acid_absorb = #{startAcidAbsorb}</if>
+            <if test="endAcidAbsorb != null ">and end_acid_absorb = #{endAcidAbsorb}</if>
+            <if test="acidAbsorbUsed != null ">and acid_absorb_used = #{acidAbsorbUsed}</if>
+        </where>
+    </select>
+
+    <select id="listProIrrigationLogList" parameterType="com.sinonc.iot.dto.IrrigationDto" resultMap="ProIrrigationLogResult">
+        <include refid="selectProIrrigationLogVo"/>
+        <where>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
+            <if test="flow != null ">and flow = #{flow}</if>
+            <if test="startFlow != null ">and start_flow = #{startFlow}</if>
+            <if test="endFlow != null ">and end_flow = #{endFlow}</if>
+            <if test="aFlow != null ">and a_flow = #{aFlow}</if>
+            <if test="startAFlow != null ">and start_a_flow = #{startAFlow}</if>
+            <if test="endAFlow != null ">and end_a_flow = #{endAFlow}</if>
+            <if test="aRate != null ">and a_rate = #{aRate}</if>
+            <if test="bFlow != null ">and b_flow = #{bFlow}</if>
+            <if test="startBFlow != null ">and start_b_flow = #{startBFlow}</if>
+            <if test="endBFlow != null ">and end_b_flow = #{endBFlow}</if>
+            <if test="bRate != null ">and b_rate = #{bRate}</if>
+            <if test="startEc != null ">and start_ec = #{startEc}</if>
+            <if test="startPh != null ">and start_ph = #{startPh}</if>
+            <if test="endEc != null ">and end_ec = #{endEc}</if>
+            <if test="endPh != null ">and end_ph = #{endPh}</if>
+            <if test="startAcidAbsorb != null ">and start_acid_absorb = #{startAcidAbsorb}</if>
+            <if test="endAcidAbsorb != null ">and end_acid_absorb = #{endAcidAbsorb}</if>
+            <if test="acidAbsorbUsed != null ">and acid_absorb_used = #{acidAbsorbUsed}</if>
+        </where>
+        order by log_id desc
+    </select>
+
+    <select id="selectProIrrigationLogById" parameterType="Long" resultMap="ProIrrigationLogResult">
+        <include refid="selectProIrrigationLogVo"/>
+        where log_id = #{logId}
+    </select>
+
+    <insert id="insertProIrrigationLog" parameterType="ProIrrigationLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into pro_irrigation_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="flow != null">flow,</if>
+            <if test="startFlow != null">start_flow,</if>
+            <if test="endFlow != null">end_flow,</if>
+            <if test="aFlow != null">a_flow,</if>
+            <if test="startAFlow != null">start_a_flow,</if>
+            <if test="endAFlow != null">end_a_flow,</if>
+            <if test="aRate != null">a_rate,</if>
+            <if test="bFlow != null">b_flow,</if>
+            <if test="startBFlow != null">start_b_flow,</if>
+            <if test="endBFlow != null">end_b_flow,</if>
+            <if test="bRate != null">b_rate,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="startEc != null ">start_ec,</if>
+            <if test="startPh != null ">start_ph,</if>
+            <if test="endEc != null ">end_ec,</if>
+            <if test="endPh != null ">end_ph,</if>
+            <if test="startAcidAbsorb != null ">start_acid_absorb,</if>
+            <if test="endAcidAbsorb != null ">end_acid_absorb,</if>
+            <if test="acidAbsorbUsed != null ">acid_absorb_used,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="flow != null">#{flow},</if>
+            <if test="startFlow != null">#{startFlow},</if>
+            <if test="endFlow != null">#{endFlow},</if>
+            <if test="aFlow != null">#{aFlow},</if>
+            <if test="startAFlow != null">#{startAFlow},</if>
+            <if test="endAFlow != null">#{endAFlow},</if>
+            <if test="aRate != null">#{aRate},</if>
+            <if test="bFlow != null">#{bFlow},</if>
+            <if test="startBFlow != null">#{startBFlow},</if>
+            <if test="endBFlow != null">#{endBFlow},</if>
+            <if test="bRate != null">#{bRate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="startEc != null ">#{startEc},</if>
+            <if test="startPh != null ">#{startPh},</if>
+            <if test="endEc != null ">#{endEc},</if>
+            <if test="endPh != null ">#{endPh},</if>
+            <if test="startAcidAbsorb != null ">#{startAcidAbsorb},</if>
+            <if test="endAcidAbsorb != null ">#{endAcidAbsorb},</if>
+            <if test="acidAbsorbUsed != null ">#{acidAbsorbUsed},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProIrrigationLog" parameterType="ProIrrigationLog">
+        update pro_irrigation_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="flow != null">flow = #{flow},</if>
+            <if test="startFlow != null">start_flow = #{startFlow},</if>
+            <if test="endFlow != null">end_flow = #{endFlow},</if>
+            <if test="aFlow != null">a_flow = #{aFlow},</if>
+            <if test="startAFlow != null">start_a_flow = #{startAFlow},</if>
+            <if test="endAFlow != null">end_a_flow = #{endAFlow},</if>
+            <if test="aRate != null">a_rate = #{aRate},</if>
+            <if test="bFlow != null">b_flow = #{bFlow},</if>
+            <if test="startBFlow != null">start_b_flow = #{startBFlow},</if>
+            <if test="endBFlow != null">end_b_flow = #{endBFlow},</if>
+            <if test="bRate != null">b_rate = #{bRate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="startEc != null ">tart_ec = #{startEc},</if>
+            <if test="startPh != null ">start_ph = #{startPh},</if>
+            <if test="endEc != null ">end_ec = #{endEc},</if>
+            <if test="endPh != null ">end_ph = #{endPh},</if>
+            <if test="startAcidAbsorb != null ">start_acid_absorb = #{startAcidAbsorb},</if>
+            <if test="endAcidAbsorb != null ">end_acid_absorb = #{endAcidAbsorb},</if>
+            <if test="acidAbsorbUsed != null ">acid_absorb_used = #{acidAbsorbUsed},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteProIrrigationLogById" parameterType="Long">
+        delete
+        from pro_irrigation_log
+        where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteProIrrigationLogByIds" parameterType="String">
+        delete from pro_irrigation_log where log_id in
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+
+    <select id="getLogGroupByMonth" resultType="com.sinonc.iot.dto.EChartsDto">
+        select DATE_FORMAT(ANY_VALUE(start_time),'%Y-%m') AS month, sum(flow) as flow from pro_irrigation_log GROUP BY month order by month limit 12
+    </select>
+
+</mapper>

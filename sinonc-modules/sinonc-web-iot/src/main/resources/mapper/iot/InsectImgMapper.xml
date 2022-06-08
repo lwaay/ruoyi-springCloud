@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.InsectImgMapper">
+    
+    <resultMap type="com.sinonc.iot.domain.InsectImg" id="InsectImgResult">
+        <result property="id" column="id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="createTime" column="create_time"/>
+        <result property="resultImgUrl" column="result_img_url"/>
+        <result property="resultJson" column="result_json"/>
+    </resultMap>
+
+
+    <sql id="selectInsectImgVo">
+        select id, device_id, img_url,create_time ,result_img_url ,result_json from insect_img
+    </sql>
+
+    <select id="selectInsectImgList" parameterType="com.sinonc.iot.domain.InsectImg" resultMap="InsectImgResult">
+        <include refid="selectInsectImgVo"/>
+        <where>
+            <if test="deviceId != null  and deviceId != ''">and device_id = #{deviceId}</if>
+            <if test="imgUrl != null  and imgUrl != ''">and img_url = #{imgUrl}</if>
+        </where>
+    </select>
+
+    <select id="selectInsectImgById" parameterType="Long" resultMap="InsectImgResult">
+        <include refid="selectInsectImgVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertInsectImg" parameterType="com.sinonc.iot.domain.InsectImg" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into insect_img
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">device_id,</if>
+            <if test="imgUrl != null">img_url,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="resultImgUrl != null">result_img_url,</if>
+            <if test="resultJson != null">result_json</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="imgUrl != null">#{imgUrl},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="resultImgUrl != null">#{resultImgUrl},</if>
+            <if test="resultJson != null">#{resultJson}</if>
+        </trim>
+    </insert>
+
+    <update id="updateInsectImg" parameterType="com.sinonc.iot.domain.InsectImg">
+        update insect_img
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="imgUrl != null">img_url = #{imgUrl},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInsectImgById" parameterType="Long">
+        delete from insect_img where id = #{id}
+    </delete>
+
+    <delete id="deleteInsectImgByIds" parameterType="String">
+        delete from insect_img where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.KInsectMapper">
+
+    <resultMap type="KInsect" id="KInsectResult">
+                    <result property="id" column="id"/>
+                    <result property="insectCode" column="insect_code"/>
+                    <result property="insectName" column="insect_name"/>
+                    <result property="insectImage" column="insect_image"/>
+                    <result property="cureTime" column="cure_time"/>
+                    <result property="insectFeature" column="insect_feature"/>
+                    <result property="insectTime" column="insect_time"/>
+                    <result property="createTime" column="create_time"/>
+                    <result property="createUser" column="create_user"/>
+            </resultMap>
+
+    <sql id="selectKInsectVo">
+        select id, insect_code, insect_name, insect_image, cure_time, insect_feature, insect_time, create_time, create_user        from k_insect
+    </sql>
+
+    <select id="selectKInsectList" parameterType="KInsect" resultMap="KInsectResult">
+        <include refid="selectKInsectVo"/>
+        <where>
+                                                                                                    <if test="insectCode != null  and insectCode != ''">
+                            and insect_code = #{insectCode}
+                        </if>
+                                                                                                            <if test="insectName != null  and insectName != ''">
+                            and insect_name like concat('%', #{insectName}, '%')
+                        </if>
+                                                                                                            <if test="insectImage != null  and insectImage != ''">
+                            and insect_image = #{insectImage}
+                        </if>
+                                                                                                            <if test="cureTime != null  and cureTime != ''">
+                            and cure_time = #{cureTime}
+                        </if>
+                                                                                                            <if test="insectFeature != null  and insectFeature != ''">
+                            and insect_feature = #{insectFeature}
+                        </if>
+                                                                                                            <if test="insectTime != null  and insectTime != ''">
+                            and insect_time = #{insectTime}
+                        </if>
+                                                                                                                </where>
+    </select>
+
+    <select id="selectKInsectById" parameterType="Long" resultMap="KInsectResult">
+        <include refid="selectKInsectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKInsect" parameterType="KInsect" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into k_insect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                                            <if test="insectCode != null">insect_code,
+                    </if>
+                                                                <if test="insectName != null">insect_name,
+                    </if>
+                                                                <if test="insectImage != null">insect_image,
+                    </if>
+                                                                <if test="cureTime != null">cure_time,
+                    </if>
+                                                                <if test="insectFeature != null">insect_feature,
+                    </if>
+                                                                <if test="insectTime != null">insect_time,
+                    </if>
+                                                                <if test="createTime != null">create_time,
+                    </if>
+                                                                <if test="createUser != null">create_user,
+                    </if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                                            <if test="insectCode != null">#{insectCode},
+                    </if>
+                                                                <if test="insectName != null">#{insectName},
+                    </if>
+                                                                <if test="insectImage != null">#{insectImage},
+                    </if>
+                                                                <if test="cureTime != null">#{cureTime},
+                    </if>
+                                                                <if test="insectFeature != null">#{insectFeature},
+                    </if>
+                                                                <if test="insectTime != null">#{insectTime},
+                    </if>
+                                                                <if test="createTime != null">#{createTime},
+                    </if>
+                                                                <if test="createUser != null">#{createUser},
+                    </if>
+                                    </trim>
+    </insert>
+
+    <update id="updateKInsect" parameterType="KInsect">
+        update k_insect
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="insectCode != null">insect_code =
+                        #{insectCode},
+                    </if>
+                                                                <if test="insectName != null">insect_name =
+                        #{insectName},
+                    </if>
+                                                                <if test="insectImage != null">insect_image =
+                        #{insectImage},
+                    </if>
+                                                                <if test="cureTime != null">cure_time =
+                        #{cureTime},
+                    </if>
+                                                                <if test="insectFeature != null">insect_feature =
+                        #{insectFeature},
+                    </if>
+                                                                <if test="insectTime != null">insect_time =
+                        #{insectTime},
+                    </if>
+                                                                <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                                                                <if test="createUser != null">create_user =
+                        #{createUser},
+                    </if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKInsectById" parameterType="Long">
+        delete
+        from k_insect where id = #{id}
+    </delete>
+
+    <delete id="deleteKInsectByIds" parameterType="String">
+        delete from k_insect where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.FarmProduceSaleMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.FarmProduceSale" id="FarmProduceSaleResult">
+        <result property="saleId" column="sale_id"/>
+        <result property="produceType" column="produce_type"/>
+        <result property="unitPrice" column="unit_price"/>
+        <result property="saleVol" column="sale_vol"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="income" column="income"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createbyId" column="createby_id"/>
+        <result property="updatebyId" column="updateby_id"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.ec.dto.ProduceSaleDto" id="ProduceSaleDtoResult">
+        <result property="date" column="dateformat"/>
+        <result property="stvalue" column="stvalue"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.ec.dto.ProduceSalePieDto" id="ProduceSalePieDtoResult">
+        <result property="produceType" column="produceType"/>
+        <result property="stvalue" column="stvalue"/>
+    </resultMap>
+
+    <sql id="selectFarmProduceSaleVo">
+        select sale_id, produce_type, unit_price, sale_vol, unit_name, income, create_time, update_time, createby_id, updateby_id, remark        from farm_produce_sale
+    </sql>
+
+    <select id="selectFarmProduceSaleList" parameterType="com.sinonc.orders.ec.domain.FarmProduceSale" resultMap="FarmProduceSaleResult">
+        <include refid="selectFarmProduceSaleVo"/>
+        <where>
+            <if test="produceType != null  and produceType != ''">
+                and produce_type like concat('%', #{produceType}, '%')
+            </if>
+            <if test="unitPrice != null ">
+                and unit_price = #{unitPrice}
+            </if>
+            <if test="saleVol != null ">
+                and sale_vol = #{saleVol}
+            </if>
+            <if test="unitName != null  and unitName != ''">
+                and unit_name like concat('%', #{unitName}, '%')
+            </if>
+            <if test="income != null ">
+                and income = #{income}
+            </if>
+            <if test="createbyId != null ">
+                and createby_id = #{createbyId}
+            </if>
+            <if test="updatebyId != null ">
+                and updateby_id = #{updatebyId}
+            </if>
+        </where>
+        order by sale_id desc
+    </select>
+
+    <select id="selectFarmProduceSaleById" parameterType="Long" resultMap="FarmProduceSaleResult">
+        <include refid="selectFarmProduceSaleVo"/>
+        where sale_id = #{saleId}
+    </select>
+
+    <insert id="insertFarmProduceSale" parameterType="com.sinonc.orders.ec.domain.FarmProduceSale" useGeneratedKeys="true"
+            keyProperty="saleId">
+        insert into farm_produce_sale
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="produceType != null">produce_type,
+            </if>
+            <if test="unitPrice != null">unit_price,
+            </if>
+            <if test="saleVol != null">sale_vol,
+            </if>
+            <if test="unitName != null">unit_name,
+            </if>
+            <if test="income != null">income,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="createbyId != null">createby_id,
+            </if>
+            <if test="updatebyId != null">updateby_id,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="produceType != null">#{produceType},
+            </if>
+            <if test="unitPrice != null">#{unitPrice},
+            </if>
+            <if test="saleVol != null">#{saleVol},
+            </if>
+            <if test="unitName != null">#{unitName},
+            </if>
+            <if test="income != null">#{income},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="createbyId != null">#{createbyId},
+            </if>
+            <if test="updatebyId != null">#{updatebyId},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateFarmProduceSale" parameterType="com.sinonc.orders.ec.domain.FarmProduceSale">
+        update farm_produce_sale
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="produceType != null">produce_type =
+                #{produceType},
+            </if>
+            <if test="unitPrice != null">unit_price =
+                #{unitPrice},
+            </if>
+            <if test="saleVol != null">sale_vol =
+                #{saleVol},
+            </if>
+            <if test="unitName != null">unit_name =
+                #{unitName},
+            </if>
+            <if test="income != null">income =
+                #{income},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="createbyId != null">createby_id =
+                #{createbyId},
+            </if>
+            <if test="updatebyId != null">updateby_id =
+                #{updatebyId},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+        </trim>
+        where sale_id = #{saleId}
+    </update>
+
+    <delete id="deleteFarmProduceSaleById" parameterType="Long">
+        delete
+        from farm_produce_sale where sale_id = #{saleId}
+    </delete>
+
+    <delete id="deleteFarmProduceSaleByIds" parameterType="String">
+        delete from farm_produce_sale where sale_id in
+        <foreach item="saleId" collection="array" open="(" separator="," close=")">
+            #{saleId}
+        </foreach>
+    </delete>
+
+
+    <select id="statisticFarmProduceSaleByUnitPrice" parameterType="com.sinonc.orders.ec.vo.FarmProduceSaleVo"
+            resultMap="ProduceSaleDtoResult">
+        SELECT
+        DATE_FORMAT(create_time, '%Y-%m-%d') AS dateformat,
+        avg(unit_price) AS stvalue
+        FROM
+        farm_produce_sale
+        WHERE
+        produce_type = #{produceType}
+
+        <if test="beginDate != null ">
+            AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ >= ]]> #{beginDate}
+        </if>
+
+        <if test="beginDate != null ">
+            AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ <= ]]> #{endDate}
+        </if>
+
+        GROUP BY
+        DATE_FORMAT(create_time, '%Y-%m-%d')
+    </select>
+
+    <select id="statisticFarmProduceSaleBySaleVol" parameterType="com.sinonc.orders.ec.vo.FarmProduceSaleVo"
+            resultMap="ProduceSaleDtoResult">
+        SELECT
+        DATE_FORMAT(create_time, '%Y-%m-%d') AS dateformat,
+        sum(sale_vol) AS stvalue
+        FROM
+        farm_produce_sale
+        WHERE
+        produce_type = #{produceType}
+
+        <if test="beginDate != null ">
+            AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ >= ]]> #{beginDate}
+        </if>
+
+        <if test="beginDate != null ">
+            AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ <= ]]> #{endDate}
+        </if>
+
+        GROUP BY
+        DATE_FORMAT(create_time, '%Y-%m-%d')
+    </select>
+
+    <select id="statisticFarmProduceSaleByIncome" parameterType="com.sinonc.orders.ec.vo.FarmProduceSaleVo"
+            resultMap="ProduceSaleDtoResult">
+        SELECT
+        DATE_FORMAT(create_time, '%Y-%m-%d') AS dateformat,
+        sum(income) AS stvalue
+        FROM
+        farm_produce_sale
+        WHERE
+        produce_type = #{produceType}
+
+        <if test="beginDate != null ">
+            AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ >= ]]> #{beginDate}
+        </if>
+
+        <if test="beginDate != null ">
+            AND DATE_FORMAT(create_time, '%Y-%m-%d') <![CDATA[ <= ]]> #{endDate}
+        </if>
+
+        GROUP BY
+        DATE_FORMAT(create_time, '%Y-%m-%d')
+    </select>
+
+
+    <select id="statisticPieFarmProduceSaleByIncome" resultMap="ProduceSalePieDtoResult">
+        SELECT
+            produce_type AS produceType,
+            SUM(income) AS stvalue
+        FROM
+            farm_produce_sale
+        GROUP BY
+            produce_type
+    </select>
+
+
+    <select id="statisticPieFarmProduceSaleBySaleVol" resultMap="ProduceSalePieDtoResult">
+        SELECT
+            produce_type AS produceType,
+            SUM(sale_vol) AS stvalue
+        FROM
+            farm_produce_sale
+        GROUP BY
+            produce_type
+    </select>
+
+    <select id="getProduceTypeList" resultType="String">
+        SELECT
+            produce_type
+        FROM
+            farm_produce_sale
+        GROUP BY
+            produce_type
+    </select>
+</mapper>

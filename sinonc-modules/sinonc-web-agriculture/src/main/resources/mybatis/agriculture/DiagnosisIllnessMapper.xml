@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.DiagnosisIllnessMapper">
+    
+    <resultMap type="com.sinonc.agriculture.domain.DiagnosisIllness" id="DiagnosisIllnessResult">
+        <result property="id"    column="id"    />
+        <result property="illness"    column="illness"    />
+        <result property="percent"    column="percent"    />
+        <result property="diaSymptomIdP"    column="dia_symptom_id_p"    />
+        <result property="illnessIdP"    column="illness_id_p"    />
+    </resultMap>
+
+    <sql id="selectDiagnosisIllnessVo">
+        select id, illness, percent, dia_symptom_id_p, illness_id_p from diagnosis_illness
+    </sql>
+
+    <select id="selectDiagnosisIllnessList" parameterType="com.sinonc.agriculture.domain.DiagnosisIllness" resultMap="DiagnosisIllnessResult">
+        <include refid="selectDiagnosisIllnessVo"/>
+        <where>  
+            <if test="illness != null  and illness != ''"> and illness = #{illness}</if>
+            <if test="percent != null "> and percent = #{percent}</if>
+            <if test="diaSymptomIdP != null "> and dia_symptom_id_p = #{diaSymptomIdP}</if>
+            <if test="illnessIdP != null "> and illness_id_p = #{illnessIdP}</if>
+        </where>
+    </select>
+    
+    <select id="selectDiagnosisIllnessById" parameterType="Long" resultMap="DiagnosisIllnessResult">
+        <include refid="selectDiagnosisIllnessVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDiagnosisIllness" parameterType="com.sinonc.agriculture.domain.DiagnosisIllness" useGeneratedKeys="true" keyProperty="id">
+        insert into diagnosis_illness
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="illness != null  and illness != ''">illness,</if>
+            <if test="percent != null ">percent,</if>
+            <if test="diaSymptomIdP != null ">dia_symptom_id_p,</if>
+            <if test="illnessIdP != null ">illness_id_p,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="illness != null  and illness != ''">#{illness},</if>
+            <if test="percent != null ">#{percent},</if>
+            <if test="diaSymptomIdP != null ">#{diaSymptomIdP},</if>
+            <if test="illnessIdP != null ">#{illnessIdP},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDiagnosisIllness" parameterType="com.sinonc.agriculture.domain.DiagnosisIllness">
+        update diagnosis_illness
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="illness != null  and illness != ''">illness = #{illness},</if>
+            <if test="percent != null ">percent = #{percent},</if>
+            <if test="diaSymptomIdP != null ">dia_symptom_id_p = #{diaSymptomIdP},</if>
+            <if test="illnessIdP != null ">illness_id_p = #{illnessIdP},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDiagnosisIllnessById" parameterType="Long">
+        delete from diagnosis_illness where id = #{id}
+    </delete>
+
+    <delete id="deleteDiagnosisIllnessByIds" parameterType="String">
+        delete from diagnosis_illness where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

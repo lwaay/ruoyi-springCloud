@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('问题回答列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>会员昵称：</p>
+                                <input type="text" name="nikeName"/>
+                            </li>
+                            <li>
+                                <p>null：</p>
+                                <input type="text" name="memberId"/>
+                            </li>
+                            <li>
+                                <p>问题ID：</p>
+                                <input type="text" name="questionId"/>
+                            </li>
+                            <li>
+                                <p>评论内容：</p>
+                                <input type="text" name="content"/>
+                            </li>
+                            <li>
+                                <p>所在地行政区划编码：</p>
+                                <input type="text" name="areaCode"/>
+                            </li>
+                            <li>
+                                <p>所在地行政区划名称：</p>
+                                <input type="text" name="areaName"/>
+                            </li>
+                            <li>
+                                <p>最佳答案标记，0，非，1，是：</p>
+                                <input type="text" name="bestFlag"/>
+                            </li>
+                            <li>
+                                <p>回答问题的系统名称：</p>
+                                <input type="text" name="sysName"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="agriculture:answer:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="agriculture:answer:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="agriculture:answer:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="agriculture:answer:export">
+                    <i class="fa fa-download"></i> 导出
+                 </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('agriculture:answer:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('agriculture:answer:remove')}]];
+        var prefix = ctx + "agriculture/answer";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "问题回答",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field : 'answerId', 
+                    title : 'null',
+                    visible: false
+                },
+                {
+                    field : 'nikeName', 
+                    title : '会员昵称'
+                },
+                {
+                    field : 'memberId', 
+                    title : 'null'
+                },
+                {
+                    field : 'questionId', 
+                    title : '问题ID'
+                },
+                {
+                    field : 'content', 
+                    title : '评论内容'
+                },
+                {
+                    field : 'img', 
+                    title : 'null'
+                },
+                {
+                    field : 'favorCount', 
+                    title : '点赞数'
+                },
+                {
+                    field : 'opposeCount', 
+                    title : '反对数'
+                },
+                {
+                    field : 'areaCode', 
+                    title : '所在地行政区划编码'
+                },
+                {
+                    field : 'areaName', 
+                    title : '所在地行政区划名称'
+                },
+                {
+                    field : 'bestFlag', 
+                    title : '最佳答案标记，0，非，1，是'
+                },
+                {
+                    field : 'sysName', 
+                    title : '回答问题的系统名称'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.answerId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.answerId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

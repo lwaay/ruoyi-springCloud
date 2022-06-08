@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.openapi.mapper.ApiLogMapper">
+
+    <resultMap type="ApiLog" id="ApiLogResult">
+        <result property="id" column="id"/>
+        <result property="requestUrl" column="request_url"/>
+        <result property="requestArg" column="request_arg"/>
+        <result property="ipAddress" column="ip_address"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectApiLogVo">
+        select id, request_url, request_arg, ip_address, create_time from api_log
+    </sql>
+
+    <select id="selectApiLogList" parameterType="ApiLog" resultMap="ApiLogResult">
+        <include refid="selectApiLogVo"/>
+        <where>
+            <if test="requestUrl != null  and requestUrl != ''">
+                and request_url = #{requestUrl}
+            </if>
+            <if test="requestArg != null  and requestArg != ''">
+                and request_arg = #{requestArg}
+            </if>
+            <if test="ipAddress != null  and ipAddress != ''">
+                and ip_address = #{ipAddress}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectApiLogById" parameterType="Long" resultMap="ApiLogResult">
+        <include refid="selectApiLogVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertApiLog" parameterType="ApiLog" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into api_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="requestUrl != null and requestUrl != ''">request_url,
+            </if>
+            <if test="requestArg != null and requestArg != ''">request_arg,
+            </if>
+            <if test="ipAddress != null and ipAddress != ''">ip_address,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="requestUrl != null and requestUrl != ''">#{requestUrl},
+            </if>
+            <if test="requestArg != null and requestArg != ''">#{requestArg},
+            </if>
+            <if test="ipAddress != null and ipAddress != ''">#{ipAddress},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateApiLog" parameterType="ApiLog">
+        update api_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="requestUrl != null and requestUrl != ''">request_url =
+                #{requestUrl},
+            </if>
+            <if test="requestArg != null and requestArg != ''">request_arg =
+                #{requestArg},
+            </if>
+            <if test="ipAddress != null and ipAddress != ''">ip_address =
+                #{ipAddress},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteApiLogById" parameterType="Long">
+        delete
+        from api_log where id = #{id}
+    </delete>
+
+    <delete id="deleteApiLogByIds" parameterType="String">
+        delete from api_log where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

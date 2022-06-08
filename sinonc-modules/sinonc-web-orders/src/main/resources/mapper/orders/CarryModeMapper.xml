@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.CarryModeMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.CarryMode" id="CarryModeResult">
+        <result property="carrymodelId"    column="carrymodel_id"    />
+        <result property="fareId"    column="fare_id"    />
+        <result property="regionAddr"    column="region_addr"    />
+        <result property="firstPiece"    column="first_piece"    />
+        <result property="firstWeight"    column="first_weight"    />
+        <result property="firstAmount"    column="first_amount"    />
+        <result property="secondPiece"    column="second_piece"    />
+        <result property="secondWeight"    column="second_weight"    />
+        <result property="secondAmount"    column="second_amount"    />
+        <result property="carryWay"    column="carry_way"    />
+        <result property="isDefault"    column="is_default"    />
+    </resultMap>
+	
+	<sql id="selectCarryModeVo">
+        select carrymodel_id, fare_id, region_addr, first_piece, first_weight, first_amount, second_piece, second_weight, second_amount, carry_way, is_default from od_carry_mode
+    </sql>
+	
+    <select id="selectCarryModeList" parameterType="com.sinonc.orders.domain.CarryMode" resultMap="CarryModeResult">
+        <include refid="selectCarryModeVo"/>
+        <where>  
+            <if test="carrymodelId != null "> and carrymodel_id = #{carrymodelId}</if>
+             <if test="fareId != null "> and fare_id = #{fareId}</if>
+             <if test="regionAddr != null  and regionAddr != '' "> and region_addr = #{regionAddr}</if>
+             <if test="firstPiece != null "> and first_piece = #{firstPiece}</if>
+             <if test="firstWeight != null "> and first_weight = #{firstWeight}</if>
+             <if test="firstAmount != null "> and first_amount = #{firstAmount}</if>
+             <if test="secondPiece != null "> and second_piece = #{secondPiece}</if>
+             <if test="secondWeight != null "> and second_weight = #{secondWeight}</if>
+             <if test="secondAmount != null "> and second_amount = #{secondAmount}</if>
+             <if test="carryWay != null  and carryWay != '' "> and carry_way = #{carryWay}</if>
+             <if test="isDefault != null "> and is_default = #{isDefault}</if>
+         </where>
+    </select>
+    
+    <select id="selectCarryModeById" parameterType="Long" resultMap="CarryModeResult">
+        <include refid="selectCarryModeVo"/>
+        where carrymodel_id = #{carrymodelId}
+    </select>
+        
+    <insert id="insertCarryMode" parameterType="com.sinonc.orders.domain.CarryMode" useGeneratedKeys="true" keyProperty="carrymodelId">
+        insert into od_carry_mode
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="fareId != null  ">fare_id,</if>
+			<if test="regionAddr != null  and regionAddr != ''  ">region_addr,</if>
+			<if test="firstPiece != null  ">first_piece,</if>
+			<if test="firstWeight != null  ">first_weight,</if>
+			<if test="firstAmount != null  ">first_amount,</if>
+			<if test="secondPiece != null  ">second_piece,</if>
+			<if test="secondWeight != null  ">second_weight,</if>
+			<if test="secondAmount != null  ">second_amount,</if>
+			<if test="carryWay != null  and carryWay != ''  ">carry_way,</if>
+			<if test="isDefault != null  ">is_default,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="fareId != null  ">#{fareId},</if>
+			<if test="regionAddr != null  and regionAddr != ''  ">#{regionAddr},</if>
+			<if test="firstPiece != null  ">#{firstPiece},</if>
+			<if test="firstWeight != null  ">#{firstWeight},</if>
+			<if test="firstAmount != null  ">#{firstAmount},</if>
+			<if test="secondPiece != null  ">#{secondPiece},</if>
+			<if test="secondWeight != null  ">#{secondWeight},</if>
+			<if test="secondAmount != null  ">#{secondAmount},</if>
+			<if test="carryWay != null  and carryWay != ''  ">#{carryWay},</if>
+			<if test="isDefault != null  ">#{isDefault},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCarryMode" parameterType="com.sinonc.orders.domain.CarryMode">
+        update od_carry_mode
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fareId != null  ">fare_id = #{fareId},</if>
+            <if test="regionAddr != null  and regionAddr != ''  ">region_addr = #{regionAddr},</if>
+            <if test="firstPiece != null  ">first_piece = #{firstPiece},</if>
+            <if test="firstWeight != null  ">first_weight = #{firstWeight},</if>
+            <if test="firstAmount != null  ">first_amount = #{firstAmount},</if>
+            <if test="secondPiece != null  ">second_piece = #{secondPiece},</if>
+            <if test="secondWeight != null  ">second_weight = #{secondWeight},</if>
+            <if test="secondAmount != null  ">second_amount = #{secondAmount},</if>
+            <if test="carryWay != null  and carryWay != ''  ">carry_way = #{carryWay},</if>
+            <if test="isDefault != null  ">is_default = #{isDefault},</if>
+        </trim>
+        where carrymodel_id = #{carrymodelId}
+    </update>
+
+	<delete id="deleteCarryModeById" parameterType="Long">
+        delete from od_carry_mode where carrymodel_id = #{carrymodelId}
+    </delete>
+	
+    <delete id="deleteCarryModeByIds" parameterType="String">
+        delete from od_carry_mode where carrymodel_id in 
+        <foreach item="carrymodelId" collection="array" open="(" separator="," close=")">
+            #{carrymodelId}
+        </foreach>
+    </delete>
+
+    <select id="selectCarryModelForIsDefault"  resultMap="CarryModeResult">
+      SELECT * FROM od_carry_mode WHERE fare_id =#{fareId}  AND is_default = #{isDefault}
+    </select>
+
+    <select id="deleteCarryModeByFareId" parameterType="long">
+        DELETE FROM od_carry_mode WHERE fare_id = #{fareId}
+    </select>
+    
+</mapper>

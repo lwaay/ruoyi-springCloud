@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.FruiterInfoMapper">
+
+    <resultMap type="FruiterInfo" id="FruiterInfoResult">
+        <result property="fruId" column="fru_id"/>
+        <result property="orchId" column="orch_id"/>
+        <result property="fruName" column="fru_name"/>
+        <result property="fruType" column="fru_type"/>
+        <result property="plantNumber" column="plant_number"/>
+        <result property="plantArea" column="plant_area"/>
+        <result property="fruPic" column="fru_pic"/>
+        <result property="plantYear" column="plant_year"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectFruiterInfoVo">
+        select fru_id, orch_id, fru_name, fru_type, plant_number, plant_area, fru_pic, plant_year, create_time, update_time        from fruiter_info
+    </sql>
+
+    <select id="selectFruiterInfoList" parameterType="FruiterInfo" resultMap="FruiterInfoResult">
+        <include refid="selectFruiterInfoVo"/>
+        <where>
+            <if test="orchId != null ">
+                and orch_id = #{orchId}
+            </if>
+            <if test="fruName != null  and fruName != ''">
+                and fru_name like concat('%', #{fruName}, '%')
+            </if>
+            <if test="fruType != null  and fruType != ''">
+                and fru_type = #{fruType}
+            </if>
+            <if test="plantNumber != null ">
+                and plant_number = #{plantNumber}
+            </if>
+            <if test="plantArea != null ">
+                and plant_area = #{plantArea}
+            </if>
+            <if test="fruPic != null  and fruPic != ''">
+                and fru_pic = #{fruPic}
+            </if>
+            <if test="plantYear != null ">
+                and plant_year = #{plantYear}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectFruiterInfoById" parameterType="Long" resultMap="FruiterInfoResult">
+        <include refid="selectFruiterInfoVo"/>
+        where fru_id = #{fruId}
+    </select>
+
+    <insert id="insertFruiterInfo" parameterType="FruiterInfo">
+        insert into fruiter_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fruId != null">fru_id,
+            </if>
+            <if test="orchId != null">orch_id,
+            </if>
+            <if test="fruName != null">fru_name,
+            </if>
+            <if test="fruType != null">fru_type,
+            </if>
+            <if test="plantNumber != null">plant_number,
+            </if>
+            <if test="plantArea != null">plant_area,
+            </if>
+            <if test="fruPic != null">fru_pic,
+            </if>
+            <if test="plantYear != null">plant_year,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fruId != null">#{fruId},
+            </if>
+            <if test="orchId != null">#{orchId},
+            </if>
+            <if test="fruName != null">#{fruName},
+            </if>
+            <if test="fruType != null">#{fruType},
+            </if>
+            <if test="plantNumber != null">#{plantNumber},
+            </if>
+            <if test="plantArea != null">#{plantArea},
+            </if>
+            <if test="fruPic != null">#{fruPic},
+            </if>
+            <if test="plantYear != null">#{plantYear},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateFruiterInfo" parameterType="FruiterInfo">
+        update fruiter_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orchId != null">orch_id =
+                #{orchId},
+            </if>
+            <if test="fruName != null">fru_name =
+                #{fruName},
+            </if>
+            <if test="fruType != null">fru_type =
+                #{fruType},
+            </if>
+            <if test="plantNumber != null">plant_number =
+                #{plantNumber},
+            </if>
+            <if test="plantArea != null">plant_area =
+                #{plantArea},
+            </if>
+            <if test="fruPic != null">fru_pic =
+                #{fruPic},
+            </if>
+            <if test="plantYear != null">plant_year =
+                #{plantYear},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where fru_id = #{fruId}
+    </update>
+
+    <delete id="deleteFruiterInfoById" parameterType="Long">
+        delete
+        from fruiter_info where fru_id = #{fruId}
+    </delete>
+
+    <delete id="deleteFruiterInfoByIds" parameterType="String">
+        delete from fruiter_info where fru_id in
+        <foreach item="fruId" collection="array" open="(" separator="," close=")">
+            #{fruId}
+        </foreach>
+    </delete>
+
+</mapper>

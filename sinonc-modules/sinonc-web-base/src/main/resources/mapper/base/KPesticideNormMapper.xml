@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.KPesticideNormMapper">
+
+    <resultMap type="KPesticideNorm" id="KPesticideNormResult">
+                    <result property="id" column="id"/>
+                    <result property="insectCode" column="insect_code"/>
+                    <result property="pesticideCode" column="pesticide_code"/>
+                    <result property="maxTime" column="max_time"/>
+                    <result property="safePeriod" column="safe_period"/>
+                    <result property="indexSort" column="index_sort"/>
+                    <result property="createTime" column="create_time"/>
+                    <result property="createUser" column="create_user"/>
+            </resultMap>
+
+    <sql id="selectKPesticideNormVo">
+        select id, insect_code, pesticide_code, max_time, safe_period, index_sort, create_time, create_user        from k_pesticide_norm
+    </sql>
+
+    <select id="selectKPesticideNormList" parameterType="KPesticideNorm" resultMap="KPesticideNormResult">
+        <include refid="selectKPesticideNormVo"/>
+        <where>
+                                                                                                    <if test="insectCode != null  and insectCode != ''">
+                            and insect_code = #{insectCode}
+                        </if>
+                                                                                                            <if test="pesticideCode != null  and pesticideCode != ''">
+                            and pesticide_code = #{pesticideCode}
+                        </if>
+                                                                                                            <if test="maxTime != null  and maxTime != ''">
+                            and max_time = #{maxTime}
+                        </if>
+                                                                                                            <if test="safePeriod != null  and safePeriod != ''">
+                            and safe_period = #{safePeriod}
+                        </if>
+                                                                                                            <if test="indexSort != null ">
+                            and index_sort = #{indexSort}
+                        </if>
+                                                                                                                                        <if test="createUser != null  and createUser != ''">
+                            and create_user = #{createUser}
+                        </if>
+                                                        </where>
+    </select>
+
+    <select id="selectKPesticideNormById" parameterType="Long" resultMap="KPesticideNormResult">
+        <include refid="selectKPesticideNormVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKPesticideNorm" parameterType="KPesticideNorm" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into k_pesticide_norm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                                            <if test="insectCode != null">insect_code,
+                    </if>
+                                                                <if test="pesticideCode != null">pesticide_code,
+                    </if>
+                                                                <if test="maxTime != null">max_time,
+                    </if>
+                                                                <if test="safePeriod != null">safe_period,
+                    </if>
+                                                                <if test="indexSort != null">index_sort,
+                    </if>
+                                                                <if test="createTime != null">create_time,
+                    </if>
+                                                                <if test="createUser != null">create_user,
+                    </if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                                            <if test="insectCode != null">#{insectCode},
+                    </if>
+                                                                <if test="pesticideCode != null">#{pesticideCode},
+                    </if>
+                                                                <if test="maxTime != null">#{maxTime},
+                    </if>
+                                                                <if test="safePeriod != null">#{safePeriod},
+                    </if>
+                                                                <if test="indexSort != null">#{indexSort},
+                    </if>
+                                                                <if test="createTime != null">#{createTime},
+                    </if>
+                                                                <if test="createUser != null">#{createUser},
+                    </if>
+                                    </trim>
+    </insert>
+
+    <update id="updateKPesticideNorm" parameterType="KPesticideNorm">
+        update k_pesticide_norm
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="insectCode != null">insect_code =
+                        #{insectCode},
+                    </if>
+                                                                <if test="pesticideCode != null">pesticide_code =
+                        #{pesticideCode},
+                    </if>
+                                                                <if test="maxTime != null">max_time =
+                        #{maxTime},
+                    </if>
+                                                                <if test="safePeriod != null">safe_period =
+                        #{safePeriod},
+                    </if>
+                                                                <if test="indexSort != null">index_sort =
+                        #{indexSort},
+                    </if>
+                                                                <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                                                                <if test="createUser != null">create_user =
+                        #{createUser},
+                    </if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKPesticideNormById" parameterType="Long">
+        delete
+        from k_pesticide_norm where id = #{id}
+    </delete>
+
+    <delete id="deleteKPesticideNormByIds" parameterType="String">
+        delete from k_pesticide_norm where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

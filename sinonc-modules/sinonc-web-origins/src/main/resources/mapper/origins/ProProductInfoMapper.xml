@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.ProProductInfoMapper">
+
+    <resultMap type="com.sinonc.origins.api.domain.ProProductInfo" id="ProProductInfoResult">
+        <result property="productId" column="product_id"/>
+        <result property="tillmainIdP" column="tillmain_id_p"/>
+        <result property="manuIdP" column="manu_id_p"/>
+        <result property="entityIdP" column="entity_id_p"/>
+        <result property="entityNameP" column="entity_name_p"/>
+        <result property="productName" column="product_name"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="tillArea" column="till_area"/>
+        <result property="productCode" column="product_code"/>
+        <result property="productSpec" column="product_spec"/>
+        <result property="shelfLife" column="shelf_life"/>
+        <result property="shelfLifeUnit" column="shelf_life_unit"/>
+        <result property="proStore" column="pro_store"/>
+        <result property="proBatch" column="pro_batch"/>
+        <result property="buyUrl" column="buy_url"/>
+        <result property="productionDate" column="production_date"/>
+        <result property="mainImages" column="main_images"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="baseArea" column="base_area"/>
+        <result property="manuIdP" column="manu_id_p"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="businessName" column="busi_entityName"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.origins.dto.ProProductInfoDto" id="ProProductInfoDtoResult">
+        <result property="productId" column="product_id"/>
+        <result property="tillmainIdP" column="tillmain_id_p"/>
+        <result property="manuIdP" column="manu_id_p"/>
+        <result property="entityIdP" column="entity_id_p"/>
+        <result property="entityNameP" column="entity_name_p"/>
+        <result property="productName" column="product_name"/>
+        <result property="brandId" column="brand_id"/>
+        <result property="tillArea" column="till_area"/>
+        <result property="productCode" column="product_code"/>
+        <result property="productSpec" column="product_spec"/>
+        <result property="shelfLife" column="shelf_life"/>
+        <result property="shelfLifeUnit" column="shelf_life_unit"/>
+        <result property="proStore" column="pro_store"/>
+        <result property="proBatch" column="pro_batch"/>
+        <result property="buyUrl" column="buy_url"/>
+        <result property="productionDate" column="production_date"/>
+        <result property="mainImages" column="main_images"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="baseArea" column="base_area"/>
+        <result property="manuIdP" column="manu_id_p"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="businessName" column="busi_entityName"/>
+        <association property="pmBusiness" javaType="com.sinonc.origins.api.domain.PmBusiness" column="tillmain_id_p">
+            <result property="busiId" column="busi_Id"/>
+            <result property="busiEntityname" column="busi_entityName"/>
+            <result property="busiMainname" column="busi_mainName"/>
+            <result property="busiMaintype" column="busi_mainType"/>
+            <result property="baseArea" column="base_area"/>
+            <result property="busiInduSn" column="busi_indu_sn"/>
+            <result property="busiMainintroduce" column="busi_mainIntroduce"/>
+            <result property="busiCertification" column="busi_certification"/>
+            <result property="busiAuthentication" column="busi_authentication"/>
+            <result property="busiRemark" column="busi_remark"/>
+        </association>
+        <association property="proBrand" javaType="com.sinonc.origins.domain.ProBrand" column="brand_id">
+            <result property="brandId" column="brand_id"/>
+            <result property="brandName" column="brand_name"/>
+            <result property="remark" column="remark"/>
+            <result property="image" column="image"/>
+            <result property="createBy" column="create_by"/>
+        </association>
+    </resultMap>
+    <sql id="selectProProductInfoVo">
+        select product_id,
+               tillmain_id_p,
+               manu_id_p,
+               entity_id_p,
+               entity_name_p,
+               product_name,
+               brand_id,
+               till_area,
+               product_code,
+               product_spec,
+               shelf_life,
+               shelf_life_unit,
+               pro_store,
+               pro_batch,
+               buy_url,
+               production_date,
+               main_images,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               base_area
+        from pro_product_info
+    </sql>
+
+    <select id="selectProductInfoByLike" resultMap="ProProductInfoResult"
+            parameterType="com.sinonc.origins.api.domain.ProProductInfo">
+        SELECT
+        pro_product_info.product_id,
+        pro_product_info.tillmain_id_p,
+        pro_product_info.product_name,
+        pro_product_info.brand_id,
+        pro_product_info.till_area,
+        pro_product_info.product_code,
+        pro_product_info.product_spec,
+        pro_product_info.shelf_life,
+        pro_product_info.shelf_life_unit,
+        pro_product_info.pro_store,
+        pro_product_info.pro_batch,
+        pro_product_info.buy_url,
+        production_date,
+        pro_product_info.main_images,
+        pro_product_info.remark,
+        pro_product_info.create_by,
+        pro_product_info.create_time,
+        pro_product_info.update_by,
+        pro_product_info.update_time,
+        pro_brand.brand_name,
+        pro_product_info.manu_id_p,
+        count(1) AS proVisit
+        FROM
+        pro_product_info
+        LEFT JOIN pro_brand ON pro_brand.brand_id = pro_product_info.brand_id
+        LEFT JOIN pro_visit ON pro_product_info.product_id = pro_visit.product_id
+        <where>
+            <if test="like != null and like != ''">
+                and LOCATE(#{like},CONCAT(pro_brand.brand_name,pro_product_info.product_code,pro_product_info.till_area,pro_product_info.product_name,pm_business.busi_entityName)) > 0
+            </if>
+            <if test="baseArea != null and baseArea != ''">
+                and base_area = #{baseArea}
+            </if>
+        </where>
+        GROUP BY
+        pro_product_info.product_id
+
+        order by pro_product_info.create_time desc
+
+    </select>
+
+    <select id="selectProProductInfoList" parameterType="com.sinonc.origins.api.domain.ProProductInfo"
+            resultMap="ProProductInfoResult">
+        <include refid="selectProProductInfoVo"/>
+        <where>
+            <if test="tillmainIdP != null ">
+                and tillmain_id_p = #{tillmainIdP}
+            </if>
+            <if test="manuIdP != null ">
+                and manu_id_p = #{manuIdP}
+            </if>
+
+            <if test="entityIdP != null">
+                and entity_id_p = #{entityIdP}
+            </if>
+            <if test="productName != null  and productName != ''">
+                and product_name like concat('%', #{productName}, '%')
+            </if>
+            <if test="brandId != null ">
+                and brand_id = #{brandId}
+            </if>
+            <if test="tillArea != null  and tillArea != ''">
+                and till_area = #{tillArea}
+            </if>
+            <if test="productCode != null  and productCode != ''">
+                and product_code = #{productCode}
+            </if>
+            <if test="productSpec != null  and productSpec != ''">
+                and product_spec = #{productSpec}
+            </if>
+            <if test="shelfLife != null  and shelfLife != ''">
+                and shelf_life = #{shelfLife}
+            </if>
+            <if test="shelfLifeUnit != null  and shelfLifeUnit != ''">
+                and shelf_life_unit = #{shelfLifeUnit}
+            </if>
+            <if test="proStore != null  and proStore != ''">
+                and pro_store = #{proStore}
+            </if>
+            <if test="proBatch != null  and proBatch != ''">
+                and pro_batch = #{proBatch}
+            </if>
+            <if test="buyUrl != null  and buyUrl != ''">
+                and buy_url = #{buyUrl}
+            </if>
+            <if test="productionDate != null ">
+                and production_date = #{productionDate}
+            </if>
+            <if test="mainImages != null  and mainImages != ''">
+                and main_images = #{mainImages}
+            </if>
+            <if test="baseArea != null  and baseArea != ''">
+                and base_area = #{baseArea}
+            </if>
+        </where>
+
+        ORDER BY product_id desc
+    </select>
+
+    <select id="listProProductInfoDto" parameterType="com.sinonc.origins.dto.ProProductInfoDto"
+            resultMap="ProProductInfoDtoResult">
+        SELECT t1.*,t2.busi_Id,t2.`busi_entityName`,t3.`brand_name`
+        FROM `pro_product_info` t1
+        LEFT JOIN `pm_business` t2 ON t1.tillmain_id_p = t2.`busi_Id`
+        LEFT JOIN `pro_brand` t3 ON t1.`brand_id` = t3.`brand_id`
+        <where>
+            <if test="tillmainIdP != null ">
+                and t1.tillmain_id_p = #{tillmainIdP}
+            </if>
+            <if test="manuIdP != null ">
+                and t1.manu_id_p = #{manuIdP}
+            </if>
+            <if test="entityIdP !=null">
+                and t1.entity_id_p = #{entityIdP}
+            </if>
+            <if test="productName != null  and productName != ''">
+                and t1.product_name like concat('%', #{productName}, '%')
+            </if>
+            <if test="brandId != null ">
+                and t1.brand_id = #{brandId}
+            </if>
+            <if test="productCode != null  and productCode != ''">
+                and t1.product_code = #{productCode}
+            </if>
+            <if test="productSpec != null  and productSpec != ''">
+                and t1.product_spec = #{productSpec}
+            </if>
+            <if test="proBatch != null  and proBatch != ''">
+                and t1.pro_batch = #{proBatch}
+            </if>
+            <if test="baseArea != null  and baseArea != ''">
+                and t1.base_area = #{baseArea}
+            </if>
+            <if test="pmBusinessName !=null and pmBusinessName !=''">
+                and t2.busi_entityName like concat("%",#{pmBusinessName},"%")
+            </if>
+            <if test="proBrandName != null and proBrandName !=''">
+                and t3.brand_name like concat("%",#{proBrandName},"%")
+            </if>
+            <if test="productionDate !=null">
+                and DATE_FORMAT(t1.production_date,'%Y%m%d') = DATE_FORMAT(#{productionDate},'%Y%m%d')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProductInfos" resultMap="ProProductInfoResult"
+            parameterType="com.sinonc.origins.api.domain.ProProductInfo">
+        SELECT pro_product_info.product_id,
+               pro_product_info.tillmain_id_p,
+               pro_product_info.entity_id_p,
+               pro_product_info.entity_name_p,
+               pro_product_info.product_name,
+               pro_product_info.brand_id,
+               pro_product_info.till_area,
+               pro_product_info.product_code,
+               pro_product_info.product_spec,
+               pro_product_info.shelf_life,
+               pro_product_info.shelf_life_unit,
+               pro_product_info.pro_store,
+               pro_product_info.pro_batch,
+               pro_product_info.buy_url,
+               production_date,
+               pro_product_info.main_images,
+               pro_product_info.remark,
+               pro_product_info.create_by,
+               pro_product_info.create_time,
+               pro_product_info.update_by,
+               pro_product_info.update_time,
+               pro_brand.brand_name,
+               pro_product_info.manu_id_p,
+               pm_business.busi_entityName
+        FROM pro_product_info
+                 LEFT JOIN pro_brand ON pro_brand.brand_id = pro_product_info.brand_id
+                 left join pm_business on pm_business.busi_id = pro_product_info.tillmain_id_p
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Long" parameterType="string">
+        select count(*) from pro_product_info
+        <where>
+            <if test="baseArea != null and baseArea != ''">
+                and base_area = #{baseArea}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProProductInfoById" parameterType="Long" resultMap="ProProductInfoResult">
+        <include refid="selectProProductInfoVo"/>
+        where product_id = #{productId}
+    </select>
+
+    <insert id="insertProProductInfo" parameterType="com.sinonc.origins.api.domain.ProProductInfo"
+            useGeneratedKeys="true"
+            keyProperty="productId">
+        insert into pro_product_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tillmainIdP != null">tillmain_id_p,
+            </if>
+            <if test="manuIdP != null">manu_id_p,
+            </if>
+            <if test="entityIdP != null">entity_id_p,</if>
+            <if test="entityNameP != null">entity_name_p,</if>
+            <if test="productName != null">product_name,
+            </if>
+            <if test="brandId != null">brand_id,
+            </if>
+            <if test="tillArea != null">till_area,
+            </if>
+            <if test="productCode != null">product_code,
+            </if>
+            <if test="productSpec != null">product_spec,
+            </if>
+            <if test="shelfLife != null">shelf_life,
+            </if>
+            <if test="shelfLifeUnit != null">shelf_life_unit,
+            </if>
+            <if test="proStore != null">pro_store,
+            </if>
+            <if test="proBatch != null">pro_batch,
+            </if>
+            <if test="buyUrl != null">buy_url,
+            </if>
+            <if test="productionDate != null">production_date,
+            </if>
+            <if test="mainImages != null">main_images,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="baseArea != null">base_area,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tillmainIdP != null">#{tillmainIdP},
+            </if>
+            <if test="manuIdP != null">#{manuIdP},
+            </if>
+            <if test="entityIdP">#{entityIdP},</if>
+            <if test="entityNameP != null">#{entityNameP},</if>
+            <if test="productName != null">#{productName},</if>
+            <if test="brandId != null">#{brandId},
+            </if>
+            <if test="tillArea != null">#{tillArea},
+            </if>
+            <if test="productCode != null">#{productCode},
+            </if>
+            <if test="productSpec != null">#{productSpec},
+            </if>
+            <if test="shelfLife != null">#{shelfLife},
+            </if>
+            <if test="shelfLifeUnit != null">#{shelfLifeUnit},
+            </if>
+            <if test="proStore != null">#{proStore},
+            </if>
+            <if test="proBatch != null">#{proBatch},
+            </if>
+            <if test="buyUrl != null">#{buyUrl},
+            </if>
+            <if test="productionDate != null">#{productionDate},
+            </if>
+            <if test="mainImages != null">#{mainImages},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="baseArea != null">#{baseArea},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProProductInfo" parameterType="com.sinonc.origins.api.domain.ProProductInfo">
+        update pro_product_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tillmainIdP != null">tillmain_id_p =
+                #{tillmainIdP},
+            </if>
+            <if test="manuIdP != null">manu_id_p =
+                #{manuIdP},
+            </if>
+            <if test="entityIdP">entity_id_p = #{entityIdP},</if>
+            <if test="entityNameP != null">entity_name_p = #{entityNameP},</if>
+            <if test="productName != null">product_name =
+                #{productName},
+            </if>
+            <if test="brandId != null">brand_id =
+                #{brandId},
+            </if>
+            <if test="tillArea != null">till_area =
+                #{tillArea},
+            </if>
+            <if test="productCode != null">product_code =
+                #{productCode},
+            </if>
+            <if test="productSpec != null">product_spec =
+                #{productSpec},
+            </if>
+            <if test="shelfLife != null">shelf_life =
+                #{shelfLife},
+            </if>
+            <if test="shelfLifeUnit != null">shelf_life_unit =
+                #{shelfLifeUnit},
+            </if>
+            <if test="proStore != null">pro_store =
+                #{proStore},
+            </if>
+            <if test="proBatch != null">pro_batch =
+                #{proBatch},
+            </if>
+            <if test="buyUrl != null">buy_url =
+                #{buyUrl},
+            </if>
+            <if test="productionDate != null">production_date =
+                #{productionDate},
+            </if>
+            <if test="mainImages != null">main_images =
+                #{mainImages},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="baseArea != null">base_area =
+                #{baseArea},
+            </if>
+        </trim>
+        where product_id = #{productId}
+    </update>
+
+    <delete id="deleteProProductInfoById" parameterType="Long">
+        delete
+        from pro_product_info
+        where product_id = #{productId}
+    </delete>
+
+    <delete id="deleteProProductInfoByIds" parameterType="String">
+        delete from pro_product_info where product_id in
+        <foreach item="productId" collection="array" open="(" separator="," close=")">
+            #{productId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectProductByCode" resultMap="ProProductInfoResult" parameterType="string">
+        SELECT pro_product_info.product_id,
+               pro_product_info.tillmain_id_p,
+               pro_product_info.entity_id_p,
+               pro_product_info.entity_name_p,
+               pro_product_info.product_name,
+               pro_product_info.brand_id,
+               pro_product_info.till_area,
+               pro_product_info.product_code,
+               pro_product_info.product_spec,
+               pro_product_info.shelf_life,
+               pro_product_info.shelf_life_unit,
+               pro_product_info.pro_store,
+               pro_product_info.pro_batch,
+               pro_product_info.buy_url,
+               production_date,
+               pro_product_info.main_images,
+               pro_product_info.remark,
+               pro_product_info.create_by,
+               pro_product_info.create_time,
+               pro_product_info.update_by,
+               pro_product_info.update_time,
+               pro_brand.brand_name,
+               pro_product_info.manu_id_p
+        FROM pro_product_info
+                 LEFT JOIN pro_brand ON pro_brand.brand_id = pro_product_info.brand_id
+        where pro_product_info.product_code = #{code}
+    </select>
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AppVersionMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AppVersion" id="AppVersionResult">
+        <result property="versionId" column="version_id"/>
+        <result property="type" column="type"/>
+        <result property="version" column="version"/>
+        <result property="remark" column="remark"/>
+        <result property="downloadUrl" column="download_url"/>
+        <result property="downloadPage" column="download_page"/>
+
+        <result property="iosDownloadPage" column="ios_download_page"/>
+        <result property="redirectUrl" column="redirect_url"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+
+        <result property="isSuggest" column="is_suggest"/>
+    </resultMap>
+
+	<sql id="selectAppVersionVo">
+        select version_id,type, version, remark, download_url, download_page,ios_download_page,redirect_url, create_time, create_by, update_time, update_by,is_suggest from od_app_version
+    </sql>
+
+    <select id="selectAppVersionList" parameterType="com.sinonc.orders.domain.AppVersion" resultMap="AppVersionResult">
+        <include refid="selectAppVersionVo"/>
+        <where>
+            <if test="versionId != null "> and version_id = #{versionId}</if>
+            <if test="type != null "> and type = #{type}</if>
+             <if test="version != null  and version != '' "> and version = #{version}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="downloadUrl != null  and downloadUrl != '' "> and download_url = #{downloadUrl}</if>
+             <if test="downloadPage != null  and downloadPage != '' "> and download_page = #{downloadPage}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="searchDate != null and searchDate !='' "> and create_time LIKE CONCAT('%',CONCAT(#{searchDate},'%'))</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+         </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectAppVersionById" parameterType="Long" resultMap="AppVersionResult">
+        <include refid="selectAppVersionVo"/>
+        where version_id = #{versionId}
+    </select>
+
+    <select id="selectLastVersion" resultMap="AppVersionResult">
+        <include refid="selectAppVersionVo"/>
+        <where>
+            <if test="value != null">
+               and type = #{value}
+            </if>
+        </where>
+         order by version_id desc limit 0,1
+    </select>
+
+    <insert id="insertAppVersion" parameterType="com.sinonc.orders.domain.AppVersion" useGeneratedKeys="true" keyProperty="versionId">
+        insert into od_app_version
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="version != null  and version != ''  ">version,</if>
+			<if test="type != null">type,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="downloadUrl != null  and downloadUrl != ''  ">download_url,</if>
+			<if test="downloadPage != null  and downloadPage != ''  ">download_page,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+
+            <if test="iosDownloadPage != null  and iosDownloadPage != ''  ">ios_download_page,</if>
+            <if test="redirectUrl !=null">redirect_url,</if>
+            <if test="isSuggest != null  and isSuggest != ''  ">is_suggest,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="version != null">#{version},</if>
+			<if test="type != null">#{type},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="downloadUrl != null  and downloadUrl != ''  ">#{downloadUrl},</if>
+			<if test="downloadPage != null  and downloadPage != ''  ">#{downloadPage},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+
+            <if test="iosDownloadPage != null  and iosDownloadPage != ''  ">#{iosDownloadPage},</if>
+            <if test="redirectUrl !=null">#{redirectUrl},</if>
+            <if test="isSuggest != null  and isSuggest != ''  ">#{isSuggest},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppVersion" parameterType="com.sinonc.orders.domain.AppVersion">
+        update od_app_version
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="version != null  and version != ''  ">version = #{version},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="downloadUrl != null  and downloadUrl != ''  ">download_url = #{downloadUrl},</if>
+            <if test="downloadPage != null  and downloadPage != ''  ">download_page = #{downloadPage},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+
+            <if test="iosDownloadPage != null  and iosDownloadPage != ''  ">ios_download_page = #{iosDownloadPage},</if>
+            <if test="redirectUrl !=null">redirect_url = #{redirectUrl},</if>
+            <if test="isSuggest != null  and isSuggest != ''  ">is_suggest = #{isSuggest},</if>
+        </trim>
+        where version_id = #{versionId}
+    </update>
+
+	<delete id="deleteAppVersionById" parameterType="Long">
+        delete from od_app_version where version_id = #{versionId}
+    </delete>
+
+    <delete id="deleteAppVersionByIds" parameterType="String">
+        delete from od_app_version where version_id in
+        <foreach item="versionId" collection="array" open="(" separator="," close=")">
+            #{versionId}
+        </foreach>
+    </delete>
+
+</mapper>

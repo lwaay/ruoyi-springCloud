@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.system.mapper.WxUserMapper">
+
+    <resultMap type="WxUser" id="WxUserResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="sex" column="sex"/>
+        <result property="type" column="type"/>
+        <result property="birthday" column="birthday"/>
+        <result property="area" column="area"/>
+        <result property="hobby" column="hobby"/>
+        <result property="addr" column="addr"/>
+        <result property="work" column="work"/>
+        <result property="family" column="family"/>
+        <result property="openid" column="openid"/>
+        <result property="headimg" column="headimg"/>
+        <result property="unionid" column="unionid"/>
+        <result property="wxname" column="wxname"/>
+        <result property="password" column="password"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="signature" column="signature"/>
+    </resultMap>
+
+    <sql id="selectWxUserVo">
+        select id,
+               name,
+               phone,
+               create_time,
+               update_time,
+               sex,
+               type,
+               birthday,
+               area,
+               hobby,
+               addr,
+               work,
+               family,
+               openid,
+               headimg,
+               unionid,
+               wxname,
+               password,
+               entity_id,
+               signature
+        from wx_user
+    </sql>
+
+    <select id="selectWxUserList" parameterType="WxUser" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        <where>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="phone != null  and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="sex != null ">
+                and sex = #{sex}
+            </if>
+            <if test="wxname != null  and wxname != ''">
+                and wxname like concat('%', #{wxname}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectWxUserById" parameterType="Long" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertWxUser" parameterType="WxUser" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into wx_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,
+            </if>
+            <if test="phone != null">phone,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="sex != null">sex,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="birthday != null">birthday,
+            </if>
+            <if test="area != null">area,
+            </if>
+            <if test="hobby != null">hobby,
+            </if>
+            <if test="addr != null">addr,
+            </if>
+            <if test="work != null">work,
+            </if>
+            <if test="family != null">family,
+            </if>
+            <if test="openid != null">openid,
+            </if>
+            <if test="headimg != null">headimg,
+            </if>
+            <if test="unionid != null">unionid,
+            </if>
+            <if test="wxname != null">wxname,
+            </if>
+            <if test="password != null">password,
+            </if>
+            <if test="entityId != null">entity_id,
+            </if>
+            <if test="signature != null">signature,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},
+            </if>
+            <if test="phone != null">#{phone},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="sex != null">#{sex},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="birthday != null">#{birthday},
+            </if>
+            <if test="area != null">#{area},
+            </if>
+            <if test="hobby != null">#{hobby},
+            </if>
+            <if test="addr != null">#{addr},
+            </if>
+            <if test="work != null">#{work},
+            </if>
+            <if test="family != null">#{family},
+            </if>
+            <if test="openid != null">#{openid},
+            </if>
+            <if test="headimg != null">#{headimg},
+            </if>
+            <if test="unionid != null">#{unionid},
+            </if>
+            <if test="wxname != null">#{wxname},
+            </if>
+            <if test="password != null">#{password},
+            </if>
+            <if test="entityId != null">#{entityId},
+            </if>
+            <if test="signature != null">#{signature},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateWxUser" parameterType="WxUser">
+        update wx_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name =
+                #{name},
+            </if>
+            <if test="phone != null">phone =
+                #{phone},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="sex != null">sex =
+                #{sex},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="birthday != null">birthday =
+                #{birthday},
+            </if>
+            <if test="area != null">area =
+                #{area},
+            </if>
+            <if test="hobby != null">hobby =
+                #{hobby},
+            </if>
+            <if test="addr != null">addr =
+                #{addr},
+            </if>
+            <if test="work != null">work =
+                #{work},
+            </if>
+            <if test="family != null">family =
+                #{family},
+            </if>
+            <if test="openid != null">openid =
+                #{openid},
+            </if>
+            <if test="headimg != null">headimg =
+                #{headimg},
+            </if>
+            <if test="unionid != null">unionid =
+                #{unionid},
+            </if>
+            <if test="wxname != null">wxname =
+                #{wxname},
+            </if>
+            <if test="password != null">password =
+                #{password},
+            </if>
+            <if test="entityId != null">entity_id =
+                #{entityId},
+            </if>
+            <if test="signature != null">signature =
+                #{signature},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteWxUserById" parameterType="Long">
+        delete
+        from wx_user
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteWxUserByIds" parameterType="String">
+        delete from wx_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectWxUserByOpenId" parameterType="string" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where openid = #{openId}
+    </select>
+
+    <select id="selectWxUserByUnionId" parameterType="string" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where unionid = #{unionId}
+    </select>
+
+    <select id="selectWxUserByPhone" parameterType="string" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where phone = #{phone} or name = #{phone}
+    </select>
+
+    <select id="selectWxUserByNameAndWord" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where `name` = #{param1} and `password` = #{param2}
+    </select>
+
+    <select id="selectWxUserByPhoneAndWord" resultMap="WxUserResult">
+        <include refid="selectWxUserVo"/>
+        where `phone` = #{param1} and `password` = #{param2}
+    </select>
+
+    <select id="selectWxUserByIds" resultType="com.sinonc.system.api.domain.WxUser">
+        <include refid="selectWxUserVo"/>
+        <foreach collection="array" item="item" open=" where id in (" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+</mapper>

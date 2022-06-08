@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.ShopDiscountLogMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.ShopDiscountLog" id="ShopDiscountLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="originalPrice"    column="original_price"    />
+        <result property="presentPrice"    column="present_price"    />
+        <result property="discountPrice"    column="discount_price"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+	
+	<sql id="selectShopDiscountLogVo">
+        select log_id, member_id, shop_id, order_id, order_no, original_price, present_price, discount_price, create_by, create_time from od_shop_discount_log
+    </sql>
+	
+    <select id="selectShopDiscountLogList" parameterType="com.sinonc.orders.domain.ShopDiscountLog" resultMap="ShopDiscountLogResult">
+        <include refid="selectShopDiscountLogVo"/>
+        <where>  
+            <if test="logId != null "> and log_id = #{logId}</if>
+             <if test="memberId != null "> and member_id = #{memberId}</if>
+             <if test="shopId != null "> and shop_id = #{shopId}</if>
+             <if test="orderId != null "> and order_id = #{orderId}</if>
+             <if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
+             <if test="originalPrice != null "> and original_price = #{originalPrice}</if>
+             <if test="presentPrice != null "> and present_price = #{presentPrice}</if>
+             <if test="discountPrice != null "> and discount_price = #{discountPrice}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectShopDiscountLogById" parameterType="Long" resultMap="ShopDiscountLogResult">
+        <include refid="selectShopDiscountLogVo"/>
+        where log_id = #{logId}
+    </select>
+        
+    <insert id="insertShopDiscountLog" parameterType="com.sinonc.orders.domain.ShopDiscountLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into od_shop_discount_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memberId != null  ">member_id,</if>
+			<if test="shopId != null  ">shop_id,</if>
+			<if test="orderId != null  ">order_id,</if>
+			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+			<if test="originalPrice != null  ">original_price,</if>
+			<if test="presentPrice != null  ">present_price,</if>
+			<if test="discountPrice != null  ">discount_price,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="memberId != null  ">#{memberId},</if>
+			<if test="shopId != null  ">#{shopId},</if>
+			<if test="orderId != null  ">#{orderId},</if>
+			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+			<if test="originalPrice != null  ">#{originalPrice},</if>
+			<if test="presentPrice != null  ">#{presentPrice},</if>
+			<if test="discountPrice != null  ">#{discountPrice},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateShopDiscountLog" parameterType="com.sinonc.orders.domain.ShopDiscountLog">
+        update od_shop_discount_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="originalPrice != null  ">original_price = #{originalPrice},</if>
+            <if test="presentPrice != null  ">present_price = #{presentPrice},</if>
+            <if test="discountPrice != null  ">discount_price = #{discountPrice},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+	<delete id="deleteShopDiscountLogById" parameterType="Long">
+        delete from od_shop_discount_log where log_id = #{logId}
+    </delete>
+	
+    <delete id="deleteShopDiscountLogByIds" parameterType="String">
+        delete from od_shop_discount_log where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+    
+</mapper>

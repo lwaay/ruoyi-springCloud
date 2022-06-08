@@ -1,0 +1,1003 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OrderMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Order" id="OrderResult">
+        <result property="orderId" column="order_id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="goodsTotalPrice" column="goods_total_price"/>
+        <result property="expressPrice" column="express_price"/>
+        <result property="shopTotalDiscountPrice" column="shop_total_discount_price"/>
+        <result property="platformTotalDiscountPrice" column="platform_total_discount_price"/>
+        <result property="shopCustomDiscountPrice" column="shop_custom_discount_price"/>
+        <result property="orderTotalPrice" column="order_total_price"/>
+        <result property="couponIdP" column="coupon_id_p"/>
+        <result property="actualPayment" column="actual_payment"/>
+        <result property="tradeStatus" column="trade_status"/>
+        <result property="tradeIdP" column="trade_id_p"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="refundStatus" column="refund_status"/>
+        <result property="settlement" column="settlement"/>
+        <result property="settlementAmount" column="settlement_amount"/>
+        <result property="evaluationStatus" column="evaluation_status"/>
+        <result property="orderType" column="order_type"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="expressIdP" column="express_id_p"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="addrIdP" column="addr_id_p"/>
+        <result property="receiver" column="receiver"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="createTime" column="create_time"/>
+        <result property="tradeTime" column="trade_time"/>
+        <result property="expressTime" column="express_time"/>
+        <result property="finishTime" column="finish_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="autoConfirmTime" column="auto_confirm_time"/>
+        <result property="settlementTime" column="settlement_time"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <resultMap id="OrderVoResult" type="com.sinonc.orders.vo.OrderVO">
+        <id property="orderId" column="order_id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="receiver" column="receiver"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="couponIdP" column="coupon_id_p"/>
+        <result property="expressIdP" column="express_id_p"/>
+        <result property="expressPrice" column="express_price"/>
+        <result property="expressTime" column="express_time"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="remark" column="remark"/>
+        <result property="shopCustomDiscountPrice" column="shop_custom_discount_price"/>
+        <result property="actualPayment" column="actual_payment"/>
+        <result property="orderTotalPrice" column="order_total_price"/>
+        <result property="goodsTotalPrice" column="goods_total_price"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="orderType" column="order_type"/>
+        <result property="tradeStatus" column="trade_status"/>
+        <result property="tradeIdP" column="trade_id_p"/>
+        <result property="refundStatus" column="refund_status"/>
+        <result property="settlement" column="settlement"/>
+        <result property="settlementAmount" column="settlement_amount"/>
+        <result property="evaluationStatus" column="evaluation_status"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="shopHead" column="shop_head"/>
+        <result property="shopMobile" column="shop_mobile"/>
+        <result property="earnest" column="earnest_price"/>
+        <result property="restPrice" column="rest_price"/>
+        <result property="autoConfirmTime" column="auto_confirm_time"/>
+        <collection property="goodsVos" column="order_id" ofType="com.sinonc.orders.domain.OrderItem" select="com.sinonc.orders.mapper.OrderItemMapper.getOrderItemByOrderId">
+            <id property="orderItemId" column="order_item_id"/>
+            <result property="goodsIdP" column="goods_id_p"/>
+            <result property="orderIdP" column="order_id_p"/>
+            <result property="goodsName" column="goods_name"/>
+            <result property="goodsSpecsName" column="goods_specs_name"/>
+            <result property="goodsSpecsIdP" column="goods_specs_id_p"/>
+            <result property="goodsImg" column="goods_img"/>
+            <result property="goodsType" column="goods_type"/>
+            <result property="goodsSpecsName" column="goods_specs_name"/>
+            <result property="goodsPrice" column="goods_price"/>
+            <result property="goodsCount" column="goods_count"/>
+            <result property="goodsShopDiscountPrice" column="goods_shop_discount_price"/>
+            <result property="goodsPlatformDiscountPrice" column="goods_platform_discount_price"/>
+            <result property="goodsTotalPrice" column="it_goods_total_price"/>
+            <result property="goodsOrderStatus" column="goods_order_status"/>
+            <result property="shopIdP" column="shop_id_p"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="settlementDtoResult" type="com.sinonc.orders.dto.SettlementDto">
+        <id property="tradeId" column="trade_id"/>
+        <result property="receiptAmount" column="receipt_amount"/>
+        <association property="target" javaType="com.sinonc.orders.domain.Order">
+            <id property="orderId" column="order_id"/>
+            <result property="orderNo" column="order_no"/>
+            <result property="goodsTotalPrice" column="goods_total_price"/>
+            <result property="expressPrice" column="express_price"/>
+            <result property="shopTotalDiscountPrice" column="shop_total_discount_price"/>
+            <result property="platformTotalDiscountPrice" column="platform_total_discount_price"/>
+            <result property="shopCustomDiscountPrice" column="shop_custom_discount_price"/>
+            <result property="orderTotalPrice" column="order_total_price"/>
+            <result property="couponIdP" column="coupon_id_p"/>
+            <result property="actualPayment" column="actual_payment"/>
+            <result property="tradeStatus" column="trade_status"/>
+            <result property="tradeIdP" column="trade_id_p"/>
+            <result property="orderStatus" column="order_status"/>
+            <result property="refundStatus" column="refund_status"/>
+            <result property="settlement" column="settlement"/>
+            <result property="settlementAmount" column="settlement_amount"/>
+            <result property="evaluationStatus" column="evaluation_status"/>
+            <result property="orderType" column="order_type"/>
+            <result property="shopIdP" column="shop_id_p"/>
+            <result property="expressIdP" column="express_id_p"/>
+            <result property="memberIdP" column="member_id_p"/>
+            <result property="addrIdP" column="addr_id_p"/>
+            <result property="receiver" column="receiver"/>
+            <result property="phone" column="phone"/>
+            <result property="address" column="address"/>
+            <result property="createTime" column="create_time"/>
+            <result property="tradeTime" column="trade_time"/>
+            <result property="expressTime" column="express_time"/>
+            <result property="finishTime" column="finish_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="autoConfirmTime" column="auto_confirm_time"/>
+            <result property="settlementTime" column="settlement_time"/>
+            <result property="remark" column="remark"/>
+            <result property="delFlag" column="del_flag"/>
+        </association>
+    </resultMap>
+
+
+    <sql id="selectOrderVo">
+        select order_id,
+               order_no,
+               goods_total_price,
+               express_price,
+               shop_total_discount_price,
+               platform_total_discount_price,
+               shop_custom_discount_price,
+               order_total_price,
+               coupon_id_p,
+               actual_payment,
+               trade_status,
+               trade_id_p,
+               order_status,
+               refund_status,
+               settlement,
+               settlement_amount,
+               evaluation_status,
+               order_type,
+               shop_id_p,
+               express_id_p,
+               express_time,
+               member_id_p,
+               addr_id_p,
+               receiver,
+               phone,
+               address,
+               create_time,
+               trade_time,
+               express_time,
+               finish_time,
+               update_time,
+               auto_confirm_time,
+               settlement_time,
+               remark,
+               del_flag
+        from od_order
+    </sql>
+
+    <select id="selectOrderList" parameterType="com.sinonc.orders.domain.Order" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        <where>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="orderNo != null  and orderNo != '' ">and order_no = #{orderNo}</if>
+            <if test="goodsTotalPrice != null ">and goods_total_price = #{goodsTotalPrice}</if>
+            <if test="expressPrice != null ">and express_price = #{expressPrice}</if>
+            <if test="shopTotalDiscountPrice != null ">and shop_total_discount_price = #{shopTotalDiscountPrice}</if>
+            <if test="platformTotalDiscountPrice != null ">and platform_total_discount_price =
+                #{platformTotalDiscountPrice}
+            </if>
+            <if test="orderTotalPrice != null ">and order_total_price = #{orderTotalPrice}</if>
+            <if test="couponIdP != null ">and coupon_id_p = #{couponIdP}</if>
+            <if test="actualPayment != null ">and actual_payment = #{actualPayment}</if>
+            <if test="tradeStatus != null ">and trade_status = #{tradeStatus}</if>
+            <if test="refundStatus != null ">and refund_status = #{refundStatus}</if>
+            <if test="settlement != null ">and settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and settlement_amount = #{settlementAmount}</if>
+            <if test="evaluationStatus != null ">and evaluation_status = #{evaluationStatus}</if>
+            <if test="tradeIdP != null ">and trade_id_p = #{tradeIdP}</if>
+            <if test="orderStatus != null and orderStatus != '' ">and order_status = #{orderStatus}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="expressIdP != null ">and express_id_p = #{expressIdP}</if>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="addrIdP != null ">and addr_id_p = #{addrIdP}</if>
+            <if test="receiver != null  and receiver != '' ">and receiver = #{receiver}</if>
+            <if test="phone != null  and phone != '' ">and phone = #{phone}</if>
+            <if test="address != null  and address != '' ">and address = #{address}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="tradeTime != null ">and trade_time = #{tradeTime}</if>
+            <if test="expressTime != null ">and express_time = #{expressTime}</if>
+            <if test="finishTime != null ">and finish_time = #{finishTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="autoConfirmTime != null ">and auto_confirm_time = #{autoConfirmTime}</if>
+            <if test="settlementTime != null ">and settlement_time = #{settlementTime}</if>
+            <if test="remark != null  and remark != '' ">and remark = #{remark}</if>
+            <if test="delFlag != null ">and del_flag = #{delFlag}</if>
+        </where>
+        ORDER BY create_time desc
+    </select>
+
+    <select id="selectOrderVoList" parameterType="com.sinonc.orders.domain.Order" resultMap="OrderVoResult">
+        select od_order.order_id,
+        od_order.order_no,
+        od_order.receiver,
+        od_order.phone,
+        od_order.address,
+        od_order.member_id_p,
+        od_order.coupon_id_p,
+        od_order.shop_id_p,
+        od_order.shop_custom_discount_price,
+        od_order.actual_payment,
+        od_order.goods_total_price,
+        od_order.order_total_price,
+        od_order.order_status,
+        od_order.refund_status,
+        od_order.settlement,
+        od_order.settlement_amount,
+        od_order.evaluation_status,
+        od_order.order_type,
+        od_order.trade_status,
+        od_order.express_id_p,
+        od_order.express_price,
+        od_order.express_time,
+        od_order.remark,
+        od_order.create_time,
+        od_order.update_time,
+        od_order.settlement_time,
+        od_book_order.earnest_price,
+        od_book_order.rest_price,
+        od_shop.shop_name shop_name
+        from od_order
+        left join od_shop on od_order.shop_id_p = od_shop.shop_id
+        left join od_book_order on od_book_order.order_id = od_order.order_id
+        <where>
+            <if test="orderId != null ">and od_order.order_id = #{orderId}</if>
+            <if test="orderNo != null  and orderNo != '' ">and od_order.order_no = #{orderNo}</if>
+            <if test="goodsTotalPrice != null ">and od_order.goods_total_price = #{goodsTotalPrice}</if>
+            <if test="expressPrice != null ">and od_order.express_price = #{expressPrice}</if>
+            <if test="shopTotalDiscountPrice != null ">and od_order.shop_total_discount_price =
+                #{shopTotalDiscountPrice}
+            </if>
+            <if test="platformTotalDiscountPrice != null ">and od_order.platform_total_discount_price =
+                #{platformTotalDiscountPrice}
+            </if>
+            <if test="orderTotalPrice != null ">and od_order.order_total_price = #{orderTotalPrice}</if>
+            <if test="couponIdP != null ">and od_order.coupon_id_p = #{couponIdP}</if>
+            <if test="actualPayment != null ">and od_order.actual_payment = #{actualPayment}</if>
+            <if test="tradeStatus != null ">and od_order.trade_status = #{tradeStatus}</if>
+            <if test="tradeIdP != null ">and od_order.trade_id_p = #{tradeIdP}</if>
+            <if test="orderStatus != null and orderStatus != '' ">and FIND_IN_SET(od_order.order_status, #{orderStatus})</if>
+            <if test="refundStatus != null ">and od_order.refund_status = #{refundStatus}</if>
+            <if test="settlement != null ">and od_order.settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and od_order.settlement_amount = #{settlementAmount}</if>
+            <if test="evaluationStatus != null ">and od_order.refund_status = #{evaluationStatus}</if>
+            <if test="orderType != null ">and od_order.order_type = #{orderType}</if>
+            <if test="shopIdP != null ">and od_order.shop_id_p = #{shopIdP}</if>
+            <if test="expressIdP != null ">and od_order.express_id_p = #{expressIdP}</if>
+            <if test="memberIdP != null ">and od_order.member_id_p = #{memberIdP}</if>
+            <if test="addrIdP != null ">and od_order.addr_id_p = #{addrIdP}</if>
+            <if test="receiver != null  and receiver != '' ">and od_order.receiver = #{receiver}</if>
+            <if test="phone != null  and phone != '' ">and od_order.phone = #{phone}</if>
+            <if test="address != null  and address != '' ">and od_order.address = #{address}</if>
+            <if test="createTime != null ">and od_order.create_time = #{createTime}</if>
+            <if test="tradeTime != null ">and od_order.trade_time = #{tradeTime}</if>
+            <if test="expressTime != null ">and od_order.express_time = #{expressTime}</if>
+            <if test="finishTime != null ">and od_order.finish_time = #{finishTime}</if>
+            <if test="updateTime != null ">and od_order.update_time = #{updateTime}</if>
+            <if test="autoConfirmTime != null ">and od_order.auto_confirm_time = #{autoConfirmTime}</if>
+            <if test="settlementTime != null ">and od_order.settlement_time = #{settlementTime}</if>
+            <if test="remark != null  and remark != '' ">and od_order.remark = #{remark}</if>
+            <if test="delFlag != null ">and od_order.del_flag = #{delFlag}</if>
+        </where>
+        ORDER BY od_order.create_time desc
+    </select>
+
+    <select id="listDataScopeOrderVo" parameterType="com.sinonc.orders.dto.OrderDto" resultMap="OrderVoResult">
+        select od_order.order_id,
+        od_order.order_no,
+        od_order.receiver,
+        od_order.phone,
+        od_order.address,
+        od_order.member_id_p,
+        od_order.coupon_id_p,
+        od_order.shop_id_p,
+        od_order.shop_custom_discount_price,
+        od_order.actual_payment,
+        od_order.goods_total_price,
+        od_order.order_total_price,
+        od_order.order_status,
+        od_order.refund_status,
+        od_order.settlement,
+        od_order.settlement_amount,
+        od_order.evaluation_status,
+        od_order.order_type,
+        od_order.trade_status,
+        od_order.express_id_p,
+        od_order.express_price,
+        od_order.express_time,
+        od_order.remark,
+        od_order.create_time,
+        od_order.update_time,
+        od_order.settlement_time,
+        od_book_order.earnest_price,
+        od_book_order.rest_price,
+        od_shop.shop_name shop_name
+        from od_order
+        left join od_shop on od_order.shop_id_p = od_shop.shop_id
+        left join od_book_order on od_book_order.order_id = od_order.order_id
+        <where>
+            <if test="orderId != null ">and od_order.order_id = #{orderId}</if>
+            <if test="orderNo != null  and orderNo != '' ">and od_order.order_no = #{orderNo}</if>
+            <if test="goodsTotalPrice != null ">and od_order.goods_total_price = #{goodsTotalPrice}</if>
+            <if test="expressPrice != null ">and od_order.express_price = #{expressPrice}</if>
+            <if test="shopTotalDiscountPrice != null ">and od_order.shop_total_discount_price =
+                #{shopTotalDiscountPrice}
+            </if>
+            <if test="platformTotalDiscountPrice != null ">and od_order.platform_total_discount_price =
+                #{platformTotalDiscountPrice}
+            </if>
+            <if test="orderTotalPrice != null ">and od_order.order_total_price = #{orderTotalPrice}</if>
+            <if test="couponIdP != null ">and od_order.coupon_id_p = #{couponIdP}</if>
+            <if test="actualPayment != null ">and od_order.actual_payment = #{actualPayment}</if>
+            <if test="tradeStatus != null ">and od_order.trade_status = #{tradeStatus}</if>
+            <if test="tradeIdP != null ">and od_order.trade_id_p = #{tradeIdP}</if>
+            <if test="orderStatus != null and orderStatus != ''">and od_order.order_status = #{orderStatus}</if>
+            <if test="refundStatus != null ">and od_order.refund_status = #{refundStatus}</if>
+            <if test="settlement != null ">and od_order.settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and od_order.settlement_amount = #{settlementAmount}</if>
+            <if test="evaluationStatus != null ">and od_order.refund_status = #{evaluationStatus}</if>
+            <if test="orderType != null ">and od_order.order_type = #{orderType}</if>
+            <if test="shopIdP != null ">and od_order.shop_id_p = #{shopIdP}</if>
+            <if test="expressIdP != null ">and od_order.express_id_p = #{expressIdP}</if>
+            <if test="memberIdP != null ">and od_order.member_id_p = #{memberIdP}</if>
+            <if test="addrIdP != null ">and od_order.addr_id_p = #{addrIdP}</if>
+            <if test="receiver != null  and receiver != '' ">and od_order.receiver = #{receiver}</if>
+            <if test="phone != null  and phone != '' ">and od_order.phone = #{phone}</if>
+            <if test="address != null  and address != '' ">and od_order.address = #{address}</if>
+            <if test="createTime != null ">and od_order.create_time = #{createTime}</if>
+            <if test="tradeTime != null ">and od_order.trade_time = #{tradeTime}</if>
+            <if test="expressTime != null ">and od_order.express_time = #{expressTime}</if>
+            <if test="finishTime != null ">and od_order.finish_time = #{finishTime}</if>
+            <if test="updateTime != null ">and od_order.update_time = #{updateTime}</if>
+            <if test="autoConfirmTime != null ">and od_order.auto_confirm_time = #{autoConfirmTime}</if>
+            <if test="settlementTime != null ">and od_order.settlement_time = #{settlementTime}</if>
+            <if test="remark != null  and remark != '' ">and od_order.remark = #{remark}</if>
+            <if test="delFlag != null ">and od_order.del_flag = #{delFlag}</if>
+            <if test="entityId != null ">and od_shop.entity_id = #{entityId}</if>
+        </where>
+        ORDER BY od_order.create_time desc
+    </select>
+
+    <select id="selectOrderById" parameterType="Long" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+    <select id="selectOrderByNo" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where order_no = #{no}
+        ORDER BY create_time desc
+    </select>
+    <select id="selectOrderDtoList" parameterType="com.sinonc.orders.dto.OrderDto" resultMap="OrderVoResult">
+        select od_order.order_id,
+        od_order.order_no,
+        od_order.receiver,
+        od_order.phone,
+        od_order.address,
+        od_order.member_id_p,
+        od_order.coupon_id_p,
+        od_order.shop_id_p,
+        od_order.shop_custom_discount_price,
+        od_order.actual_payment,
+        od_order.goods_total_price,
+        od_order.order_total_price,
+        od_order.order_status,
+        od_order.order_type,
+        od_order.trade_status,
+        od_order.refund_status,
+        od_order.settlement,
+        od_order.settlement_amount,
+        od_order.evaluation_status,
+        od_order.express_id_p,
+        od_order.express_price,
+        od_order.express_time,
+        od_order.remark,
+        od_order.create_time,
+        od_order.update_time,
+        od_order.auto_confirm_time,
+        od_book_order.earnest_price,
+        od_book_order.rest_price,
+        od_order_item.order_item_id,
+        od_order_item.order_id_p,
+        od_order_item.goods_id_p,
+        od_order_item.goods_name,
+        od_order_item.goods_specs_name,
+        od_order_item.goods_specs_id_p,
+        od_order_item.goods_img,
+        od_order_item.goods_type,
+        od_order_item.goods_specs_name,
+        od_order_item.goods_price,
+        od_order_item.goods_count,
+        od_order_item.goods_shop_discount_price,
+        od_order_item.goods_platform_discount_price,
+        od_order_item.goods_total_price it_goods_total_price,
+        od_order_item.goods_order_status,
+        od_order_item.shop_id_p,
+        od_shop.shop_name shop_name
+        from od_order
+        left join od_order_item on od_order.order_id = od_order_item.order_id_p
+        left join od_shop on od_order.shop_id_p = od_shop.shop_id
+        left join od_book_order on od_book_order.order_id = od_order.order_id
+        <where>
+            <if test="orderId != null ">and od_order.order_id = #{orderId}</if>
+            <if test="orderNo != null  and orderNo != '' ">and od_order.order_no = #{orderNo}</if>
+            <if test="goodsTotalPrice != null ">and od_order.goods_total_price = #{goodsTotalPrice}</if>
+            <if test="expressPrice != null ">and od_order.express_price = #{expressPrice}</if>
+            <if test="shopTotalDiscountPrice != null ">and od_order.shop_total_discount_price =
+                #{shopTotalDiscountPrice}
+            </if>
+            <if test="platformTotalDiscountPrice != null ">and od_order.platform_total_discount_price =
+                #{platformTotalDiscountPrice}
+            </if>
+            <if test="orderTotalPrice != null ">and od_order.order_total_price = #{orderTotalPrice}</if>
+            <if test="couponIdP != null ">and od_order.coupon_id_p = #{couponIdP}</if>
+            <if test="actualPayment != null ">and od_order.actual_payment = #{actualPayment}</if>
+            <if test="tradeStatus != null ">and od_order.trade_status = #{tradeStatus}</if>
+            <if test="refundStatus != null ">and od_order.refund_status = #{refundStatus}</if>
+            <if test="settlement != null ">and od_order.settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and od_order.settlement_amount = #{settlementAmount}</if>
+            <if test="evaluationStatus != null ">and od_order.evaluation_status = #{evaluationStatus}</if>
+            <if test="tradeIdP != null ">and od_order.trade_id_p = #{tradeIdP}</if>
+            <if test="orderStatus != null and orderStatus != ''">and od_order.order_status = #{orderStatus}</if>
+            <if test="orderType != null ">and od_order.order_type = #{orderType}</if>
+            <if test="shopIdP != null ">and od_order.shop_id_p = #{shopIdP}</if>
+            <if test="expressIdP != null ">and od_order.express_id_p = #{expressIdP}</if>
+            <if test="memberIdP != null ">and od_order.member_id_p = #{memberIdP}</if>
+            <if test="addrIdP != null ">and od_order.addr_id_p = #{addrIdP}</if>
+            <if test="receiver != null  and receiver != '' ">and od_order.receiver = #{receiver}</if>
+            <if test="phone != null  and phone != '' ">and od_order.phone = #{phone}</if>
+            <if test="address != null  and address != '' ">and od_order.address = #{address}</if>
+            <if test="createTime != null ">and od_order.create_time = #{createTime}</if>
+            <if test="searchDate != null and searchDate!='' ">and od_order.create_time like
+                concat('%',concat(#{searchDate},'%'))
+            </if>
+            <if test="tradeTime != null ">and od_order.trade_time = #{tradeTime}</if>
+            <if test="expressTime != null ">and od_order.express_time = #{expressTime}</if>
+            <if test="finishTime != null ">and od_order.finish_time = #{finishTime}</if>
+            <if test="updateTime != null ">and od_order.update_time = #{updateTime}</if>
+            <if test="autoConfirmTime != null ">and od_order.auto_confirm_time = #{autoConfirmTime}</if>
+            <if test="remark != null  and remark != '' ">and od_order.remark = #{remark}</if>
+            <if test="delFlag != null ">and od_order.del_flag = #{delFlag}</if>
+            ${params.dataScope}
+        </where>
+        ORDER BY od_order.create_time desc
+    </select>
+    <select id="selectCount" parameterType="com.sinonc.orders.domain.Order" resultType="java.lang.Integer">
+        select count(1) from od_order
+        <where>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="orderNo != null  and orderNo != '' ">and order_no = #{orderNo}</if>
+            <if test="goodsTotalPrice != null ">and goods_total_price = #{goodsTotalPrice}</if>
+            <if test="expressPrice != null ">and express_price = #{expressPrice}</if>
+            <if test="shopTotalDiscountPrice != null ">and shop_total_discount_price = #{shopTotalDiscountPrice}</if>
+            <if test="platformTotalDiscountPrice != null ">and platform_total_discount_price =
+                #{platformTotalDiscountPrice}
+            </if>
+            <if test="orderTotalPrice != null ">and order_total_price = #{orderTotalPrice}</if>
+            <if test="couponIdP != null ">and coupon_id_p = #{couponIdP}</if>
+            <if test="actualPayment != null ">and actual_payment = #{actualPayment}</if>
+            <if test="tradeStatus != null ">and trade_status = #{tradeStatus}</if>
+            <if test="orderType != null ">and order_type = #{orderType}</if>
+            <if test="tradeIdP != null ">and trade_id_p = #{tradeIdP}</if>
+            <if test="orderStatus != null and orderStatus != ''">and order_status = #{orderStatus}</if>
+            <if test="refundStatus != null ">and refund_status = #{refundStatus}</if>
+            <if test="settlement != null ">and settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and settlement_amount = #{settlementAmount}</if>
+            <if test="evaluationStatus != null ">and evaluation_status = #{evaluationStatus}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="expressIdP != null ">and express_id_p = #{expressIdP}</if>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="addrIdP != null ">and addr_id_p = #{addrIdP}</if>
+            <if test="receiver != null  and receiver != '' ">and receiver = #{receiver}</if>
+            <if test="phone != null  and phone != '' ">and phone = #{phone}</if>
+            <if test="address != null  and address != '' ">and address = #{address}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="tradeTime != null ">and trade_time = #{tradeTime}</if>
+            <if test="expressTime != null ">and express_time = #{expressTime}</if>
+            <if test="finishTime != null ">and finish_time = #{finishTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="autoConfirmTime != null ">and auto_confirm_time = #{autoConfirmTime}</if>
+            <if test="remark != null  and remark != '' ">and remark = #{remark}</if>
+            <if test="delFlag != null ">and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectOrderVoById" resultMap="OrderVoResult">
+        select od_order.order_id,
+               od_order.order_no,
+               od_order.receiver,
+               od_order.phone,
+               od_order.address,
+               od_order.member_id_p,
+               od_order.coupon_id_p,
+               od_order.shop_id_p,
+               od_order.shop_custom_discount_price,
+               od_order.actual_payment,
+               od_order.goods_total_price,
+               od_order.order_total_price,
+               od_order.order_status,
+               od_order.refund_status,
+               od_order.settlement,
+               od_order.settlement_amount,
+               od_order.evaluation_status,
+               od_order.order_type,
+               od_order.trade_status,
+               od_order.trade_id_p,
+               od_order.express_id_p,
+               od_order.express_price,
+               od_order.express_time,
+               od_order.remark,
+               od_order.create_time,
+               od_order.update_time,
+               od_book_order.earnest_price,
+               od_book_order.rest_price,
+               od_shop.shop_name shop_name,
+               od_shop.shop_logo shop_head
+        from od_order
+                 left join od_shop on od_order.shop_id_p = od_shop.shop_id
+                 left join od_book_order on od_book_order.order_id = od_order.order_id
+        where od_order.order_id = #{orderId}
+        ORDER BY od_order.create_time desc
+    </select>
+    <select id="selectOrderStatusCount" resultType="java.util.Map">
+        SELECT IFNULL(SUM(IF(order_status = '0' AND (trade_status = 2 OR trade_status = 0), 1, 0)), 0) AS waitPay,
+        IFNULL(SUM(IF(order_status = '1', 1, 0)),0) AS waitExp,
+        IFNULL(SUM(IF(order_status = '2', 1, 0)),0) AS waitConfirm,
+        IFNULL(SUM(IF(order_status = '0' AND trade_status = 2, 1, 0)),0) AS waitRest,
+        IFNULL(SUM(IF(order_status = '4' OR order_status = '3', 1, 0)),0) AS isFinish,
+        IFNULL(SUM(IF(order_status = '3', 1, 0)),0) AS waitEvaluation,
+        IFNULL(count(*),0) as `all`
+        from od_order
+        <where>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="orderNo != null  and orderNo != '' ">and order_no = #{orderNo}</if>
+            <if test="goodsTotalPrice != null ">and goods_total_price = #{goodsTotalPrice}</if>
+            <if test="expressPrice != null ">and express_price = #{expressPrice}</if>
+            <if test="shopTotalDiscountPrice != null ">and shop_total_discount_price = #{shopTotalDiscountPrice}</if>
+            <if test="platformTotalDiscountPrice != null ">and platform_total_discount_price =
+                #{platformTotalDiscountPrice}
+            </if>
+            <if test="orderTotalPrice != null ">and order_total_price = #{orderTotalPrice}</if>
+            <if test="couponIdP != null ">and coupon_id_p = #{couponIdP}</if>
+            <if test="actualPayment != null ">and actual_payment = #{actualPayment}</if>
+            <if test="tradeStatus != null ">and trade_status = #{tradeStatus}</if>
+            <if test="refundStatus != null ">and refund_status = #{refundStatus}</if>
+            <if test="settlement != null ">and settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and settlement_amount = #{settlementAmount}</if>
+            <if test="evaluationStatus != null ">and evaluation_status = #{evaluationStatus}</if>
+            <if test="orderType != null ">and order_type = #{orderType}</if>
+            <if test="tradeIdP != null ">and trade_id_p = #{tradeIdP}</if>
+            <if test="orderStatus != null ">and order_status = #{orderStatus}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="expressIdP != null ">and express_id_p = #{expressIdP}</if>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="addrIdP != null ">and addr_id_p = #{addrIdP}</if>
+            <if test="receiver != null  and receiver != '' ">and receiver = #{receiver}</if>
+            <if test="phone != null  and phone != '' ">and phone = #{phone}</if>
+            <if test="address != null  and address != '' ">and address = #{address}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="tradeTime != null ">and trade_time = #{tradeTime}</if>
+            <if test="expressTime != null ">and express_time = #{expressTime}</if>
+            <if test="finishTime != null ">and finish_time = #{finishTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="autoConfirmTime != null ">and auto_confirm_time = #{autoConfirmTime}</if>
+            <if test="remark != null  and remark != '' ">and remark = #{remark}</if>
+            <if test="delFlag != null ">and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    <select id="selectOrderByIdForUpdate" resultMap="OrderResult">
+        <include refid="selectOrderVo"/>
+        where order_id = #{orderId} for update
+    </select>
+
+    <insert id="insertOrder" parameterType="com.sinonc.orders.domain.Order" useGeneratedKeys="true"
+            keyProperty="orderId">
+        insert into od_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+            <if test="goodsTotalPrice != null  ">goods_total_price,</if>
+            <if test="expressPrice != null  ">express_price,</if>
+            <if test="shopTotalDiscountPrice != null  ">shop_total_discount_price,</if>
+            <if test="platformTotalDiscountPrice != null  ">platform_total_discount_price,</if>
+            <if test="orderTotalPrice != null  ">order_total_price,</if>
+            <if test="couponIdP != null  ">coupon_id_p,</if>
+            <if test="actualPayment != null  ">actual_payment,</if>
+            <if test="tradeStatus != null  ">trade_status,</if>
+            <if test="refundStatus != null  ">refund_status,</if>
+            <if test="settlement != null  ">settlement,</if>
+            <if test="settlementAmount != null  ">settlement_amount,</if>
+            <if test="evaluationStatus != null  ">evaluation_status,</if>
+            <if test="tradeIdP != null  ">trade_id_p,</if>
+            <if test="orderStatus != null  ">order_status,</if>
+            <if test="orderType != null  ">order_type,</if>
+            <if test="shopIdP != null  ">shop_id_p,</if>
+            <if test="expressIdP != null  ">express_id_p,</if>
+            <if test="memberIdP != null  ">member_id_p,</if>
+            <if test="addrIdP != null  ">addr_id_p,</if>
+            <if test="receiver != null  and receiver != ''  ">receiver,</if>
+            <if test="phone != null  and phone != ''  ">phone,</if>
+            <if test="address != null  and address != ''  ">address,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="tradeTime != null  ">trade_time,</if>
+            <if test="expressTime != null  ">express_time,</if>
+            <if test="finishTime != null  ">finish_time,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="autoConfirmTime != null  ">auto_confirm_time,</if>
+            <if test="settlementTime != null  ">settlement_time,</if>
+            <if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="delFlag != null  ">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+            <if test="goodsTotalPrice != null  ">#{goodsTotalPrice},</if>
+            <if test="expressPrice != null  ">#{expressPrice},</if>
+            <if test="shopTotalDiscountPrice != null  ">#{shopTotalDiscountPrice},</if>
+            <if test="platformTotalDiscountPrice != null  ">#{platformTotalDiscountPrice},</if>
+            <if test="orderTotalPrice != null  ">#{orderTotalPrice},</if>
+            <if test="couponIdP != null  ">#{couponIdP},</if>
+            <if test="actualPayment != null  ">#{actualPayment},</if>
+            <if test="tradeStatus != null  ">#{tradeStatus},</if>
+            <if test="refundStatus != null  ">#{refundStatus},</if>
+            <if test="settlement != null  ">#{settlement},</if>
+            <if test="settlementAmount != null  ">#{settlementAmount},</if>
+            <if test="evaluationStatus != null  ">#{evaluationStatus},</if>
+            <if test="tradeIdP != null  ">#{tradeIdP},</if>
+            <if test="orderStatus != null  ">#{orderStatus},</if>
+            <if test="orderType != null  ">#{orderType},</if>
+            <if test="shopIdP != null  ">#{shopIdP},</if>
+            <if test="expressIdP != null  ">#{expressIdP},</if>
+            <if test="memberIdP != null  ">#{memberIdP},</if>
+            <if test="addrIdP != null  ">#{addrIdP},</if>
+            <if test="receiver != null  and receiver != ''  ">#{receiver},</if>
+            <if test="phone != null  and phone != ''  ">#{phone},</if>
+            <if test="address != null  and address != ''  ">#{address},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="tradeTime != null  ">#{tradeTime},</if>
+            <if test="expressTime != null  ">#{expressTime},</if>
+            <if test="finishTime != null  ">#{finishTime},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="autoConfirmTime != null  ">#{autoConfirmTime},</if>
+            <if test="settlementTime != null  ">#{settlementTime},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="delFlag != null  ">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOrder" parameterType="com.sinonc.orders.domain.Order">
+        update od_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="goodsTotalPrice != null  ">goods_total_price = #{goodsTotalPrice},</if>
+            <if test="expressPrice != null  ">express_price = #{expressPrice},</if>
+            <if test="shopTotalDiscountPrice != null  ">shop_total_discount_price = #{shopTotalDiscountPrice},</if>
+            <if test="shopCustomDiscountPrice != null  ">shop_custom_discount_price = #{shopCustomDiscountPrice},</if>
+            <if test="platformTotalDiscountPrice != null  ">platform_total_discount_price =
+                #{platformTotalDiscountPrice},
+            </if>
+            <if test="orderTotalPrice != null  ">order_total_price = #{orderTotalPrice},</if>
+            <if test="couponIdP != null  ">coupon_id_p = #{couponIdP},</if>
+            <if test="actualPayment != null  ">actual_payment = #{actualPayment},</if>
+            <if test="tradeStatus != null  ">trade_status = #{tradeStatus},</if>
+            <if test="tradeIdP != null  ">trade_id_p = #{tradeIdP},</if>
+            <if test="orderStatus != null  ">order_status = #{orderStatus},</if>
+            <if test="refundStatus != null  ">refund_status = #{refundStatus},</if>
+            <if test="settlement != null  ">settlement = #{settlement},</if>
+            <if test="settlementAmount != null  ">settlement_amount = #{settlementAmount},</if>
+            <if test="evaluationStatus != null  ">evaluation_status = #{evaluationStatus},</if>
+            <if test="orderType != null  ">order_type = #{orderType},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="expressIdP != null  ">express_id_p = #{expressIdP},</if>
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="addrIdP != null  ">addr_id_p = #{addrIdP},</if>
+            <if test="receiver != null  and receiver != ''  ">receiver = #{receiver},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="tradeTime != null  ">trade_time = #{tradeTime},</if>
+            <if test="expressTime != null  ">express_time = #{expressTime},</if>
+            <if test="finishTime != null  ">finish_time = #{finishTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="autoConfirmTime != null  ">auto_confirm_time = #{autoConfirmTime},</if>
+            <if test="settlementTime != null  ">settlement_time = #{settlementTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="delFlag != null  ">del_flag = #{delFlag},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+    <update id="updateOrderOptimistic" parameterType="com.sinonc.orders.domain.Order">
+        update od_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="order.orderNo != null  and order.orderNo != ''  ">order_no = #{order.orderNo},</if>
+            <if test="order.goodsTotalPrice != null  ">goods_total_price = #{order.goodsTotalPrice},</if>
+            <if test="order.expressPrice != null  ">express_price = #{order.expressPrice},</if>
+            <if test="order.shopTotalDiscountPrice != null  ">shop_total_discount_price =
+                #{order.shopTotalDiscountPrice},
+            </if>
+            <if test="order.shopCustomDiscountPrice != null  ">shop_custom_discount_price =
+                #{order.shopCustomDiscountPrice},
+            </if>
+            <if test="order.platformTotalDiscountPrice != null  ">platform_total_discount_price =
+                #{order.platformTotalDiscountPrice},
+            </if>
+            <if test="order.orderTotalPrice != null  ">order_total_price = #{order.orderTotalPrice},</if>
+            <if test="order.couponIdP != null  ">coupon_id_p = #{order.couponIdP},</if>
+            <if test="order.actualPayment != null  ">actual_payment = #{order.actualPayment},</if>
+            <if test="order.tradeStatus != null  ">trade_status = #{order.tradeStatus},</if>
+            <if test="order.refundStatus != null  ">refund_status = #{order.refundStatus},</if>
+            <if test="order.settlement != null  ">settlement = #{order.settlement},</if>
+            <if test="order.settlementAmount != null  ">settlement_amount = #{order.settlementAmount},</if>
+            <if test="order.evaluationStatus != null  ">evaluation_status = #{order.evaluationStatus},</if>
+            <if test="order.tradeIdP != null  ">trade_id_p = #{order.tradeIdP},</if>
+            <if test="order.orderStatus != null  ">order_status = #{order.orderStatus},</if>
+            <if test="order.orderType != null  ">order_type = #{order.orderType},</if>
+            <if test="order.shopIdP != null  ">shop_id_p = #{order.shopIdP},</if>
+            <if test="order.expressIdP != null  ">express_id_p = #{order.expressIdP},</if>
+            <if test="order.memberIdP != null  ">member_id_p = #{order.memberIdP},</if>
+            <if test="order.addrIdP != null  ">addr_id_p = #{order.addrIdP},</if>
+            <if test="order.receiver != null  and receiver != ''  ">receiver = #{order.receiver},</if>
+            <if test="order.phone != null  and phone != ''  ">phone = #{order.phone},</if>
+            <if test="order.address != null  and address != ''  ">address = #{order.address},</if>
+            <if test="order.createTime != null  ">create_time = #{order.createTime},</if>
+            <if test="order.tradeTime != null  ">trade_time = #{order.tradeTime},</if>
+            <if test="order.expressTime != null  ">express_time = #{order.expressTime},</if>
+            <if test="order.finishTime != null  ">finish_time = #{order.finishTime},</if>
+            <if test="order.updateTime != null  ">update_time = #{order.updateTime},</if>
+            <if test="order.autoConfirmTime != null  ">auto_confirm_time = #{order.autoConfirmTime},</if>
+            <if test="order.remark != null  and remark != ''  ">remark = #{order.remark},</if>
+            <if test="order.delFlag != null  ">del_flag = #{order.delFlag},</if>
+        </trim>
+        <where>
+            <if test="lock.orderNo != null  and orderNo != '' ">and order_no = #{lock.orderNo}</if>
+            <if test="lock.goodsTotalPrice != null ">and goods_total_price = #{lock.goodsTotalPrice}</if>
+            <if test="lock.expressPrice != null ">and express_price = #{lock.expressPrice}</if>
+            <if test="lock.shopTotalDiscountPrice != null ">and shop_total_discount_price =
+                #{lock.shopTotalDiscountPrice}
+            </if>
+            <if test="lock.platformTotalDiscountPrice != null ">and platform_total_discount_price =
+                #{lock.platformTotalDiscountPrice}
+            </if>
+            <if test="lock.orderTotalPrice != null ">and order_total_price = #{lock.orderTotalPrice}</if>
+            <if test="lock.couponIdP != null ">and coupon_id_p = #{lock.couponIdP}</if>
+            <if test="lock.actualPayment != null ">and actual_payment = #{lock.actualPayment}</if>
+            <if test="lock.tradeStatus != null ">and trade_status = #{lock.tradeStatus}</if>
+            <if test="lock.refundStatus != null ">and refund_status = #{lock.refundStatus}</if>
+            <if test="lock.settlement != null ">and settlement = #{lock.settlement}</if>
+            <if test="lock.settlementAmount != null ">and settlement_amount = #{lock.settlementAmount}</if>
+            <if test="lock.evaluationStatus != null ">and evaluation_status = #{lock.evaluationStatus}</if>
+            <if test="lock.orderType != null ">and order_type = #{lock.orderType}</if>
+            <if test="lock.tradeIdP != null ">and trade_id_p = #{lock.tradeIdP}</if>
+            <if test="lock.orderStatus != null ">and order_status = #{lock.orderStatus}</if>
+            <if test="lock.shopIdP != null ">and shop_id_p = #{lock.shopIdP}</if>
+            <if test="lock.expressIdP != null ">and express_id_p = #{lock.expressIdP}</if>
+            <if test="lock.memberIdP != null ">and member_id_p = #{lock.memberIdP}</if>
+            <if test="lock.addrIdP != null ">and addr_id_p = #{lock.addrIdP}</if>
+            <if test="lock.receiver != null  and receiver != '' ">and receiver = #{lock.receiver}</if>
+            <if test="lock.phone != null  and phone != '' ">and phone = #{lock.phone}</if>
+            <if test="lock.address != null  and address != '' ">and address = #{lock.address}</if>
+            <if test="lock.createTime != null ">and create_time = #{lock.createTime}</if>
+            <if test="lock.tradeTime != null ">and trade_time = #{lock.tradeTime}</if>
+            <if test="lock.expressTime != null ">and express_time = #{lock.expressTime}</if>
+            <if test="lock.finishTime != null ">and finish_time = #{lock.finishTime}</if>
+            <if test="lock.updateTime != null ">and update_time = #{lock.updateTime}</if>
+            <if test="lock.autoConfirmTime != null ">and auto_confirm_time = #{lock.autoConfirmTime}</if>
+            <if test="lock.remark != null  and remark != '' ">and remark = #{lock.remark}</if>
+            <if test="lock.delFlag != null ">and del_flag = #{lock.delFlag}</if>
+            and order_id = #{order.orderId}
+        </where>
+    </update>
+    <update id="updateSettlement">
+        update od_order
+        set settlement_amount = actual_payment,
+        settlement= #{settlement},
+        settlement_time = CURRENT_TIMESTAMP()
+        where order_id in
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="selectShopCount" parameterType="Long" resultType="Double">
+        SELECT IFNULL(SUM(od.actual_payment), 0) AS ttPayAomount
+        FROM od_order od
+        WHERE 1 = 1
+          AND od.shop_id_p = #{shopId}
+          AND od.trade_status = 1
+          AND DATE_FORMAT(od.create_time, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d')
+
+    </select>
+    <select id="selectShopCountByDate" parameterType="com.sinonc.orders.dto.AccountDto" resultType="Double">
+        SELECT IFNULL(SUM(od.actual_payment),0)AS ttPayAomount FROM od_order od
+        <where>
+            AND od.shop_id_p = #{shopId}
+            AND od.trade_status=1
+            <if test="nowDate != null and nowDate != ''">and DATE_FORMAT(create_time,'%Y-%m-%d')=#{nowDate}</if>
+        </where>
+
+    </select>
+    <select id="selectVisitor" resultType="Long" parameterType="Long">
+        select visit_number as visitNumber
+        from od_shop_visit
+        where 1 = 1
+          and shop_id_p = #{shopId}
+          and DATEDIFF(NOW(), visit_date) = 1
+    </select>
+    <select id="countOrders" resultType="long">
+
+        select count(*)
+        from od_order
+        where 1 = 1
+    </select>
+    <select id="selectTodayOrdersPayment" resultType="double" parameterType="com.sinonc.orders.dto.OrderDto">
+        select IFNULL(sum(actual_payment),0) from od_order
+        <where>
+
+            <if test="tradeStatus != null ">and trade_status = #{tradeStatus}</if>
+            and DATE_FORMAT(NOW(),'%Y-%m-%d')=DATE_FORMAT(create_time,'%Y-%m-%d')
+            ${params.dataScope}
+        </where>
+
+    </select>
+    <select id="getOrdersCount" parameterType="com.sinonc.orders.dto.OrderDto" resultType="long">
+        select count(*) from od_order
+        <where>
+            <if test="tradeStatus != null ">and trade_status = #{tradeStatus}</if>
+            <if test="orderStatus != null ">and order_status = #{orderStatus}</if>
+            <if test="orderType != null ">and order_type = #{orderType}</if>
+            <if test="settlement != null ">and settlement = #{settlement}</if>
+            and DATE_FORMAT(NOW(),'%Y-%m-%d')=DATE_FORMAT(create_time,'%Y-%m-%d')
+            ${params.dataScope}
+        </where>
+    </select>
+    <select id="selectCountByType" resultType="java.lang.Long" parameterType="com.sinonc.orders.dto.AccountDto">
+        select count(*) from od_order
+        <where>
+            <if test="nowDate != null and nowDate != '' ">DATE_FORMAT(create_time,'%Y-%m-%d')=#{nowDate}</if>
+            and order_type=#{orderType}
+            and trade_status in(1,2)
+            ${params.dataScope}
+        </where>
+    </select>
+    <select id="selectOrderCountByDay" resultType="com.sinonc.orders.dto.OrderCountDto"
+            parameterType="com.sinonc.orders.dto.AccountDto">
+        SELECT DATE_FORMAT(create_time,'%Y-%m-%d') AS dateFomat,sum(actual_payment) as orderCount FROM
+        od_order
+        <where>
+            DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;= DATE(create_time)
+            -- DATE_FORMAT(create_time,'%Y-%m') = DATE_FORMAT(now(),'%Y-%m')
+            AND trade_status IN(1,2)
+            ${params.dataScope}
+        </where>
+        GROUP BY DAY (create_time)
+        ORDER BY create_time
+    </select>
+    <select id="selectOrderCountByMonth" resultType="com.sinonc.orders.dto.OrderCountDto"
+            parameterType="com.sinonc.orders.dto.AccountDto">
+        SELECT DATE_FORMAT(create_time,'%Y-%m') AS dateFomat,sum(actual_payment) as orderCount FROM
+        od_order
+        <where>
+            create_time BETWEEN DATE_SUB(NOW(),INTERVAL 6 MONTH) AND NOW()
+            AND trade_status IN(1,2)
+            ${params.dataScope}
+        </where>
+        GROUP BY month (create_time)
+        ORDER BY create_time
+    </select>
+    <select id="selectOrderCountByYear" resultType="com.sinonc.orders.dto.OrderCountDto"
+            parameterType="com.sinonc.orders.dto.AccountDto">
+
+
+        select DATE_FORMAT(t.create_time,'%Y-%m') dateFomat,sum(t.actual_payment) orderCount from od_order t
+        <where>
+            t.actual_payment>0 and t.trade_status IN(1,2)
+            AND DATE_FORMAT(create_time,'%Y-%m')>
+            DATE_FORMAT(date_sub(curdate(), interval 12 month),'%Y-%m')
+            ${params.dataScope}
+        </where>
+        GROUP BY month (create_time)
+    </select>
+    <select id="selectSettlementDto" parameterType="com.sinonc.orders.domain.Order" resultMap="settlementDtoResult">
+        select od_order.order_id,
+        od_order.order_no,
+        od_order.goods_total_price,
+        od_order.express_price,
+        od_order.shop_total_discount_price,
+        od_order.platform_total_discount_price,
+        od_order.shop_custom_discount_price,
+        od_order.order_total_price,
+        od_order.coupon_id_p,
+        od_order.actual_payment,
+        od_order.trade_status,
+        od_order.trade_id_p,
+        od_order.order_status,
+        od_order.refund_status,
+        od_order.settlement,
+        od_order.settlement_amount,
+        od_order.evaluation_status,
+        od_order.order_type,
+        od_order.shop_id_p,
+        od_order.express_id_p,
+        od_order.express_time,
+        od_order.member_id_p,
+        od_order.addr_id_p,
+        od_order.receiver,
+        od_order.phone,
+        od_order.address,
+        od_order.create_time,
+        od_order.trade_time,
+        od_order.express_time,
+        od_order.finish_time,
+        od_order.update_time,
+        od_order.auto_confirm_time,
+        od_order.settlement_time,
+        od_order.remark,
+        od_order.del_flag,
+        od_trade_info.receipt_amount,
+        od_trade_info.trade_id
+        from od_order
+        left join od_trade_info on od_order.order_no = od_trade_info.order_no
+        <where>
+            and od_trade_info.trade_type = 0
+            and od_trade_info.order_id_type = 0
+            and ( od_order.refund_status = 3
+            or od_order.refund_status = 0 )
+            <if test="orderId != null ">and od_order.order_id = #{orderId}</if>
+            <if test="orderNo != null  and orderNo != '' ">and od_order.order_no = #{orderNo}</if>
+            <if test="goodsTotalPrice != null ">and od_order.goods_total_price = #{goodsTotalPrice}</if>
+            <if test="expressPrice != null ">and od_order.express_price = #{expressPrice}</if>
+            <if test="shopTotalDiscountPrice != null ">and od_order.shop_total_discount_price =
+                #{shopTotalDiscountPrice}
+            </if>
+            <if test="platformTotalDiscountPrice != null ">and od_order.platform_total_discount_price =
+                #{platformTotalDiscountPrice}
+            </if>
+            <if test="orderTotalPrice != null ">and od_order.order_total_price = #{orderTotalPrice}</if>
+            <if test="couponIdP != null ">and od_order.coupon_id_p = #{couponIdP}</if>
+            <if test="actualPayment != null ">and od_order.actual_payment = #{actualPayment}</if>
+            <if test="tradeStatus != null ">and od_order.trade_status = #{tradeStatus}</if>
+            <if test="refundStatus != null ">and od_order.refund_status = #{refundStatus}</if>
+            <if test="settlement != null ">and od_order.settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and od_order.settlement_amount = #{settlementAmount}</if>
+            <if test="evaluationStatus != null ">and od_order.evaluation_status = #{evaluationStatus}</if>
+            <if test="tradeIdP != null ">and od_order.trade_id_p = #{tradeIdP}</if>
+            <if test="orderStatus != null ">and od_order.order_status = #{orderStatus}</if>
+            <if test="orderType != null ">and od_order.order_type = #{orderType}</if>
+            <if test="shopIdP != null ">and od_order.shop_id_p = #{shopIdP}</if>
+            <if test="expressIdP != null ">and od_order.express_id_p = #{expressIdP}</if>
+            <if test="memberIdP != null ">and od_order.member_id_p = #{memberIdP}</if>
+            <if test="addrIdP != null ">and od_order.addr_id_p = #{addrIdP}</if>
+            <if test="receiver != null  and receiver != '' ">and receiver = #{receiver}</if>
+            <if test="phone != null  and phone != '' ">and phone = #{phone}</if>
+            <if test="address != null  and address != '' ">and address = #{address}</if>
+            <if test="createTime != null ">and od_order.create_time = #{createTime}</if>
+            <if test="tradeTime != null ">and od_order.trade_time = #{tradeTime}</if>
+            <if test="expressTime != null ">and od_order.express_time = #{expressTime}</if>
+            <if test="finishTime != null ">and od_order.finish_time = #{finishTime}</if>
+            <if test="updateTime != null ">and od_order.update_time = #{updateTime}</if>
+            <if test="autoConfirmTime != null ">and od_order.auto_confirm_time = #{autoConfirmTime}</if>
+            <if test="settlementTime != null ">and od_order.settlement_time = #{settlementTime}</if>
+            <if test="remark != null  and remark != '' ">and od_order.remark = #{remark}</if>
+            <if test="delFlag != null ">and od_order.del_flag = #{delFlag}</if>
+        </where>
+    </select>
+    <delete id="deleteOrderById" parameterType="Long">
+        delete
+        from od_order
+        where order_id = #{orderId}
+    </delete>
+
+    <delete id="deleteOrderByIds" parameterType="String">
+        delete from od_order where order_id in
+        <foreach item="orderId" collection="array" open="(" separator="," close=")">
+            #{orderId}
+        </foreach>
+    </delete>
+
+</mapper>

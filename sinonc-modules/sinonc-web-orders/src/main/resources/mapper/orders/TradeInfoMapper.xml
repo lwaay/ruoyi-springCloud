@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.TradeInfoMapper">
+
+    <resultMap type="com.sinonc.orders.domain.TradeInfo" id="TradeInfoResult">
+        <result property="tradeId" column="trade_id"/>
+        <result property="orderIdP" column="order_id_p"/>
+        <result property="orderIdType" column="order_id_type"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="tradeNo" column="trade_no"/>
+        <result property="returnCode" column="return_code"/>
+        <result property="retrunMsg" column="retrun_msg"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="receiptAmount" column="receipt_amount"/>
+        <result property="payType" column="pay_type"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="memberId" column="member_id"/>
+        <result property="payStatus" column="pay_status"/>
+        <result property="tradeType" column="trade_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectTradeInfoVo">
+        select trade_id,
+               order_id_p,
+               order_id_type,
+               order_no,
+               trade_no,
+               return_code,
+               retrun_msg,
+               total_amount,
+               receipt_amount,
+               pay_type,
+               shop_id_p,
+               member_id,
+               pay_status,
+               trade_type,
+               create_time,
+               update_time
+        from od_trade_info
+    </sql>
+
+    <select id="selectTradeInfoList" parameterType="com.sinonc.orders.domain.TradeInfo" resultMap="TradeInfoResult">
+        <include refid="selectTradeInfoVo"/>
+        <where>
+            <if test="tradeId != null ">and trade_id = #{tradeId}</if>
+            <if test="orderIdP != null ">and order_id_p = #{orderIdP}</if>
+            <if test="orderIdType != null ">and order_id_type = #{orderIdType}</if>
+            <if test="orderNo != null  and orderNo != '' ">and order_no = #{orderNo}</if>
+            <if test="tradeNo != null  and tradeNo != '' ">and trade_no = #{tradeNo}</if>
+            <if test="returnCode != null  and returnCode != '' ">and return_code = #{returnCode}</if>
+            <if test="retrunMsg != null  and retrunMsg != '' ">and retrun_msg = #{retrunMsg}</if>
+            <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
+            <if test="receiptAmount != null ">and receipt_amount = #{receiptAmount}</if>
+            <if test="payType != null ">and pay_type = #{payType}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="payStatus != null ">and pay_status = #{payStatus}</if>
+            <if test="tradeType != null ">and trade_type = #{tradeType}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="searchDate != null and searchDate !='' ">and create_time LIKE CONCAT('%',CONCAT(#{searchDate},'%'))</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+        </where>
+        order by trade_id desc
+    </select>
+
+    <select id="selectTradeInfoById" parameterType="Long" resultMap="TradeInfoResult">
+        <include refid="selectTradeInfoVo"/>
+        where trade_id = #{tradeId}
+    </select>
+    <select id="selectTotalAmount" resultType="java.lang.String">
+        select cast(sum(total_amount) as DECIMAL (10, 2)) from od_trade_info
+        <where>
+            <if test="tradeId != null ">and trade_id = #{tradeId}</if>
+            <if test="orderIdP != null ">and order_id_p = #{orderIdP}</if>
+            <if test="orderIdType != null ">and order_id_type = #{orderIdType}</if>
+            <if test="orderNo != null  and orderNo != '' ">and order_no = #{orderNo}</if>
+            <if test="tradeNo != null  and tradeNo != '' ">and trade_no = #{tradeNo}</if>
+            <if test="returnCode != null  and returnCode != '' ">and return_code = #{returnCode}</if>
+            <if test="retrunMsg != null  and retrunMsg != '' ">and retrun_msg = #{retrunMsg}</if>
+            <if test="totalAmount != null ">and total_amount = #{totalAmount}</if>
+            <if test="receiptAmount != null ">and receipt_amount = #{receiptAmount}</if>
+            <if test="payType != null ">and pay_type = #{payType}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="payStatus != null ">and pay_status = #{payStatus}</if>
+            <if test="tradeType != null ">and trade_type = #{tradeType}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+        </where>
+    </select>
+    <select id="selectPayTradeByOrderNo" resultMap="TradeInfoResult">
+        <include refid="selectTradeInfoVo"/>
+        where order_no = #{tradeId} and trade_type = 0
+    </select>
+
+    <insert id="insertTradeInfo" parameterType="com.sinonc.orders.domain.TradeInfo" useGeneratedKeys="true" keyProperty="tradeId">
+        insert into od_trade_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeId != null  ">trade_id,</if>
+            <if test="orderIdP != null  ">order_id_p,</if>
+            <if test="orderIdType != null  ">order_id_type,</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+            <if test="tradeNo != null  and tradeNo != ''  ">trade_no,</if>
+            <if test="returnCode != null  and returnCode != ''  ">return_code,</if>
+            <if test="retrunMsg != null  and retrunMsg != ''  ">retrun_msg,</if>
+            <if test="totalAmount != null  ">total_amount,</if>
+            <if test="receiptAmount != null  ">receipt_amount,</if>
+            <if test="payType != null  ">pay_type,</if>
+            <if test="shopIdP != null  ">shop_id_p,</if>
+            <if test="memberId != null  ">member_id,</if>
+            <if test="payStatus != null  ">pay_status,</if>
+            <if test="tradeType != null  ">trade_type,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateTime != null  ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeId != null  ">#{tradeId},</if>
+            <if test="orderIdP != null  ">#{orderIdP},</if>
+            <if test="orderIdType != null  ">#{orderIdType},</if>
+            <if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+            <if test="tradeNo != null  and tradeNo != ''  ">#{tradeNo},</if>
+            <if test="returnCode != null  and returnCode != ''  ">#{returnCode},</if>
+            <if test="retrunMsg != null  and retrunMsg != ''  ">#{retrunMsg},</if>
+            <if test="totalAmount != null  ">#{totalAmount},</if>
+            <if test="receiptAmount != null  ">#{receiptAmount},</if>
+            <if test="payType != null  ">#{payType},</if>
+            <if test="shopIdP != null  ">#{shopIdP},</if>
+            <if test="memberId != null  ">#{memberId},</if>
+            <if test="payStatus != null  ">#{payStatus},</if>
+            <if test="tradeType != null  ">#{tradeType},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTradeInfo" parameterType="com.sinonc.orders.domain.TradeInfo">
+        update od_trade_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderIdP != null  ">order_id_p = #{orderIdP},</if>
+            <if test="orderIdType != null  ">order_id_type = #{orderIdType},</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="tradeNo != null  and tradeNo != ''  ">trade_no = #{tradeNo},</if>
+            <if test="returnCode != null  and returnCode != ''  ">return_code = #{returnCode},</if>
+            <if test="retrunMsg != null  and retrunMsg != ''  ">retrun_msg = #{retrunMsg},</if>
+            <if test="totalAmount != null  ">total_amount = #{totalAmount},</if>
+            <if test="receiptAmount != null  ">receipt_amount = #{receiptAmount},</if>
+            <if test="payType != null  ">pay_type = #{payType},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="payStatus != null  ">pay_status = #{payStatus},</if>
+            <if test="tradeType != null  ">trade_type = #{tradeType},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where trade_id = #{tradeId}
+    </update>
+
+    <delete id="deleteTradeInfoById" parameterType="Long">
+        delete
+        from od_trade_info
+        where trade_id = #{tradeId}
+    </delete>
+
+    <delete id="deleteTradeInfoByIds" parameterType="String">
+        delete from od_trade_info where trade_id in
+        <foreach item="tradeId" collection="array" open="(" separator="," close=")">
+            #{tradeId}
+        </foreach>
+    </delete>
+
+</mapper>

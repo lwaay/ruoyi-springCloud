@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.FareTemplateMapper">
+
+    <resultMap type="com.sinonc.orders.domain.FareTemplate" id="FareTemplateResult">
+        <result property="fareId"    column="fare_id"    />
+        <result property="name"    column="name"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="dispatchTime"    column="dispatchTime"    />
+        <result property="isInclpostage"    column="is_inclpostage"    />
+        <result property="valuaTionmodel"    column="valua_tionmodel"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	<sql id="selectFareTemplateVo">
+        select fare_id, name, shop_id, dispatchTime, is_inclpostage, valua_tionmodel, create_time, update_time from od_fare_template
+    </sql>
+
+    <select id="selectFareTemplateList" parameterType="com.sinonc.orders.domain.FareTemplate" resultMap="FareTemplateResult">
+        <include refid="selectFareTemplateVo"/>
+        <where>
+            <if test="fareId != null "> and fare_id = #{fareId}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="shopId != null "> and shop_id = #{shopId}</if>
+             <if test="dispatchTime != null "> and dispatchTime = #{dispatchTime}</if>
+             <if test="isInclpostage != null "> and is_inclpostage = #{isInclpostage}</if>
+             <if test="valuaTionmodel != null "> and valua_tionmodel = #{valuaTionmodel}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+
+         order by fare_id desc
+    </select>
+
+    <select id="selectFareTemplateById" parameterType="Long" resultMap="FareTemplateResult">
+        <include refid="selectFareTemplateVo"/>
+        where fare_id = #{fareId}
+    </select>
+    <select id="selectFareTemplateByShopId"  parameterType="Long" resultMap="FareTemplateResult">
+        <include refid="selectFareTemplateVo"/>
+        where shop_id = #{shopId}
+        LIMIT 1
+    </select>
+
+    <insert id="insertFareTemplate" parameterType="com.sinonc.orders.domain.FareTemplate" useGeneratedKeys="true" keyProperty="fareId">
+        insert into od_fare_template
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="shopId != null  ">shop_id,</if>
+			<if test="dispatchTime != null  ">dispatchTime,</if>
+			<if test="isInclpostage != null  ">is_inclpostage,</if>
+			<if test="valuaTionmodel != null  ">valua_tionmodel,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="shopId != null  ">#{shopId},</if>
+			<if test="dispatchTime != null  ">#{dispatchTime},</if>
+			<if test="isInclpostage != null  ">#{isInclpostage},</if>
+			<if test="valuaTionmodel != null  ">#{valuaTionmodel},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFareTemplate" parameterType="com.sinonc.orders.domain.FareTemplate">
+        update od_fare_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="dispatchTime != null  ">dispatchTime = #{dispatchTime},</if>
+            <if test="isInclpostage != null  ">is_inclpostage = #{isInclpostage},</if>
+            <if test="valuaTionmodel != null  ">valua_tionmodel = #{valuaTionmodel},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where fare_id = #{fareId}
+    </update>
+
+	<delete id="deleteFareTemplateById" parameterType="Long">
+        delete from od_fare_template where fare_id = #{fareId}
+    </delete>
+
+    <delete id="deleteFareTemplateByIds" parameterType="String">
+        delete from od_fare_template where fare_id in
+        <foreach item="fareId" collection="array" open="(" separator="," close=")">
+            #{fareId}
+        </foreach>
+    </delete>
+
+</mapper>

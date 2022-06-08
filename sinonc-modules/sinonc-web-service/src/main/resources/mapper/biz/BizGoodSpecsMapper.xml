@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.ser.mapper.BizGoodSpecsMapper">
+
+    <resultMap type="com.sinonc.service.domain.BizGoodSpecs" id="BizGoodSpecsResult">
+        <result property="specsId"    column="specs_id"    />
+        <result property="infoIdP"    column="info_id_p"    />
+        <result property="specsName"    column="specs_name"    />
+        <result property="specsPrice"    column="specs_price"    />
+        <result property="stock"    column="stock"    />
+        <result property="imagesUrl"    column="images_url"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBizGoodSpecsVo">
+        select specs_id, info_id_p, specs_name, specs_price, stock, images_url, del_flag, create_time, update_time from biz_good_specs
+    </sql>
+
+    <select id="selectBizGoodSpecsList" parameterType="com.sinonc.service.domain.BizGoodSpecs" resultMap="BizGoodSpecsResult">
+        <include refid="selectBizGoodSpecsVo"/>
+        <where>
+            <if test="infoIdP != null "> and info_id_p = #{infoIdP}</if>
+            <if test="specsName != null  and specsName != ''"> and specs_name like concat('%', #{specsName}, '%')</if>
+            <if test="specsPrice != null "> and specs_price = #{specsPrice}</if>
+            <if test="stock != null "> and stock = #{stock}</if>
+            <if test="imagesUrl != null  and imagesUrl != ''"> and images_url = #{imagesUrl}</if>
+        </where>
+    </select>
+
+    <select id="selectBizGoodSpecsById" parameterType="Long" resultMap="BizGoodSpecsResult">
+        <include refid="selectBizGoodSpecsVo"/>
+        where specs_id = #{specsId}
+    </select>
+
+    <insert id="insertBizGoodSpecs" parameterType="com.sinonc.service.domain.BizGoodSpecs" useGeneratedKeys="true" keyProperty="specsId">
+        insert into biz_good_specs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="infoIdP != null">info_id_p,</if>
+            <if test="specsName != null and specsName != ''">specs_name,</if>
+            <if test="specsPrice != null">specs_price,</if>
+            <if test="stock != null">stock,</if>
+            <if test="imagesUrl != null">images_url,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="infoIdP != null">#{infoIdP},</if>
+            <if test="specsName != null and specsName != ''">#{specsName},</if>
+            <if test="specsPrice != null">#{specsPrice},</if>
+            <if test="stock != null">#{stock},</if>
+            <if test="imagesUrl != null">#{imagesUrl},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBizGoodSpecs" parameterType="com.sinonc.service.domain.BizGoodSpecs">
+        update biz_good_specs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="infoIdP != null">info_id_p = #{infoIdP},</if>
+            <if test="specsName != null and specsName != ''">specs_name = #{specsName},</if>
+            <if test="specsPrice != null">specs_price = #{specsPrice},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="imagesUrl != null">images_url = #{imagesUrl},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where specs_id = #{specsId}
+    </update>
+
+    <delete id="deleteBizGoodSpecsById" parameterType="Long">
+        delete from biz_good_specs where specs_id = #{specsId}
+    </delete>
+
+    <delete id="deleteBizGoodSpecsByIds" parameterType="String">
+        delete from biz_good_specs where specs_id in
+        <foreach item="specsId" collection="array" open="(" separator="," close=")">
+            #{specsId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectBizGoodSpecsMinPriceByInfoId" parameterType="Long" resultType="java.math.BigDecimal">
+        SELECT
+            min(specs_price)
+        FROM
+            biz_good_specs
+        WHERE
+            info_id_p = #{infoId}
+        GROUP BY info_id_p
+    </select>
+
+    <select id="selectBizGoodSpecsMaxPriceByInfoId" parameterType="Long" resultType="java.math.BigDecimal">
+        SELECT
+            max(specs_price)
+        FROM
+            biz_good_specs
+        WHERE
+            info_id_p = #{infoId}
+        GROUP BY info_id_p
+    </select>
+
+</mapper>

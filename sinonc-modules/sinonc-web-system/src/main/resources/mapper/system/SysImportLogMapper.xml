@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.system.mapper.SysImportLogMapper">
+
+    <resultMap type="SysImportLog" id="SysImportLogResult">
+        <result property="logId" column="log_id"/>
+        <result property="title" column="title"/>
+        <result property="taskName" column="task_name"/>
+        <result property="operatorTime" column="operator_time"/>
+        <result property="operatorBy" column="operator_by"/>
+        <result property="operatorName" column="operator_name"/>
+        <result property="successCount" column="success_count"/>
+        <result property="failCount" column="fail_count"/>
+        <result property="detail" column="detail"/>
+        <result property="operatorIp" column="operator_ip"/>
+    </resultMap>
+
+    <sql id="selectSysImportLogVo">
+        select log_id, title, task_name, operator_time, operator_by, operator_name, success_count, fail_count, detail, operator_ip        from sys_import_log
+    </sql>
+
+    <select id="selectSysImportLogList" parameterType="SysImportLog" resultMap="SysImportLogResult">
+        <include refid="selectSysImportLogVo"/>
+        <where>
+            <if test="title != null  and title != ''">
+                and title = #{title}
+            </if>
+            <if test="taskName != null  and taskName != ''">
+                and task_name like concat('%', #{taskName}, '%')
+            </if>
+            <if test="operatorTime != null ">
+                and operator_time = #{operatorTime}
+            </if>
+            <if test="operatorBy != null ">
+                and operator_by = #{operatorBy}
+            </if>
+            <if test="operatorName != null  and operatorName != ''">
+                and operator_name like concat('%', #{operatorName}, '%')
+            </if>
+            <if test="successCount != null ">
+                and success_count = #{successCount}
+            </if>
+            <if test="failCount != null ">
+                and fail_count = #{failCount}
+            </if>
+            <if test="detail != null  and detail != ''">
+                and detail = #{detail}
+            </if>
+            <if test="operatorIp != null  and operatorIp != ''">
+                and operator_ip = #{operatorIp}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSysImportLogById" parameterType="Long" resultMap="SysImportLogResult">
+        <include refid="selectSysImportLogVo"/>
+        where log_id = #{logId}
+    </select>
+
+    <insert id="insertSysImportLog" parameterType="SysImportLog" useGeneratedKeys="true"
+            keyProperty="logId">
+        insert into sys_import_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,
+            </if>
+            <if test="taskName != null">task_name,
+            </if>
+            <if test="operatorTime != null">operator_time,
+            </if>
+            <if test="operatorBy != null">operator_by,
+            </if>
+            <if test="operatorName != null">operator_name,
+            </if>
+            <if test="successCount != null">success_count,
+            </if>
+            <if test="failCount != null">fail_count,
+            </if>
+            <if test="detail != null">detail,
+            </if>
+            <if test="operatorIp != null">operator_ip,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},
+            </if>
+            <if test="taskName != null">#{taskName},
+            </if>
+            <if test="operatorTime != null">#{operatorTime},
+            </if>
+            <if test="operatorBy != null">#{operatorBy},
+            </if>
+            <if test="operatorName != null">#{operatorName},
+            </if>
+            <if test="successCount != null">#{successCount},
+            </if>
+            <if test="failCount != null">#{failCount},
+            </if>
+            <if test="detail != null">#{detail},
+            </if>
+            <if test="operatorIp != null">#{operatorIp},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSysImportLog" parameterType="SysImportLog">
+        update sys_import_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title =
+                #{title},
+            </if>
+            <if test="taskName != null">task_name =
+                #{taskName},
+            </if>
+            <if test="operatorTime != null">operator_time =
+                #{operatorTime},
+            </if>
+            <if test="operatorBy != null">operator_by =
+                #{operatorBy},
+            </if>
+            <if test="operatorName != null">operator_name =
+                #{operatorName},
+            </if>
+            <if test="successCount != null">success_count =
+                #{successCount},
+            </if>
+            <if test="failCount != null">fail_count =
+                #{failCount},
+            </if>
+            <if test="detail != null">detail =
+                #{detail},
+            </if>
+            <if test="operatorIp != null">operator_ip =
+                #{operatorIp},
+            </if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteSysImportLogById" parameterType="Long">
+        delete
+        from sys_import_log where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteSysImportLogByIds" parameterType="String">
+        delete from sys_import_log where log_id in
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+
+</mapper>

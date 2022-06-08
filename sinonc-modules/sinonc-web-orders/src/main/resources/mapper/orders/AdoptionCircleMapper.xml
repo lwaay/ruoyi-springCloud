@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AdoptionCircleMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AdoptionCircle" id="AdoptionCircleResult">
+        <result property="adoptionId" column="adoption_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="content" column="content"/>
+        <result property="images" column="images"/>
+        <result property="location" column="location"/>
+        <result property="createTime" column="create_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="isImages" column="is_images"/>
+        <result property="status"   column="status" />
+    </resultMap>
+
+    <sql id="selectAdoptionCircleVo">
+        select adoption_id, member_id, content, images, location, create_time, farm_areacode, user_id, is_deleted, is_images, status from adoption_circle
+    </sql>
+
+    <select id="selectAdoptionCircleList" resultMap="AdoptionCircleResult">
+        <include refid="selectAdoptionCircleVo"/>
+        <where>
+            <if test="memberId != null ">
+                and member_id = #{memberId}
+            </if>
+            <if test="isImages != null ">
+                and is_images = #{isImages}
+            </if>
+            <if test="status != null  and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAdoptionCircleById" parameterType="Long" resultMap="AdoptionCircleResult">
+        <include refid="selectAdoptionCircleVo"/>
+        where adoption_id = #{adoptionId}
+    </select>
+
+    <insert id="insertAdoptionCircle" parameterType="com.sinonc.orders.domain.AdoptionCircle" useGeneratedKeys="true"
+            keyProperty="adoptionId">
+        insert into adoption_circle
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null  ">member_id,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="images != null  and images != ''  ">images,</if>
+            <if test="location != null  ">location,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="userId != null  ">user_id,</if>
+            <if test="isImages!=null">is_images,</if>
+            <if test="status!=null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null  ">#{memberId},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="images != null  and images != ''  ">#{images},</if>
+            <if test="location != null  ">#{location},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="userId != null  ">#{userId},</if>
+            <if test="isImages!=null">#{isImages},</if>
+            <if test="status!=null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdoptionCircle" parameterType="com.sinonc.orders.domain.AdoptionCircle">
+        update adoption_circle
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="images != null  and images != ''  ">images = #{images},</if>
+            <if test="location != null  ">location = #{location},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="isDeleted !=null ">is_deleted = #{isDeleted},</if>
+            <if test="status!=null">status = #{status},</if>
+        </trim>
+        where adoption_id = #{adoptionId}
+    </update>
+
+    <update id="updateAdoptionCircleWithMemberId" parameterType="com.sinonc.orders.domain.AdoptionCircle">
+        update adoption_circle
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="images != null  and images != ''  ">images = #{images},</if>
+            <if test="location != null  ">location = #{location},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="isDeleted !=null ">is_deleted = #{isDeleted},</if>
+            <if test="status!=null">status = #{status},</if>
+        </trim>
+        where adoption_id = #{adoptionId} and member_id = #{memberId}
+    </update>
+
+    <delete id="deleteAdoptionCircleById" parameterType="Long">
+        delete from adoption_circle where adoption_id = #{adoptionId}
+    </delete>
+
+    <delete id="deleteAdoptionCircleByIds" parameterType="String">
+        delete from adoption_circle where adoption_id in
+        <foreach item="adoptionId" collection="array" open="(" separator="," close=")">
+            #{adoptionId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectAdoptionCircleListForApi" resultType="java.util.Map">
+          SELECT
+              ac.`adoption_id`,
+              ac.`content`,
+              ac.`create_time`,
+              ac.`images`,
+              ac.`location`,
+                ac.is_deleted,
+                ac.is_images,
+              om.`name`,
+              om.`phone`,
+              om.`headimg`,
+              om.`status`
+            FROM
+              adoption_circle ac
+              LEFT JOIN od_member om
+                ON ac.`member_id` = om.`member_id`
+    </select>
+
+    <select id="selectAdoptionCircleListForApiTwo" resultType="java.util.Map">
+        SELECT
+        ac.adoption_id,
+        ac.content,
+        date_format(ac.create_time,'%Y-%m-%d %H:%i:%s') create_time,
+        ac.images,
+        ac.location,
+        ac.is_images,
+        ac.status,
+        ac.member_id
+        FROM
+        adoption_circle ac
+        <where>
+            (ac.is_deleted = 0 and ac.status = '0')
+        <if test="memberId != null">
+            or member_id = #{memberId}
+        </if>
+        </where>
+        order by ac.create_time desc
+    </select>
+
+</mapper>

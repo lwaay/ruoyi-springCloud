@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.DeviceMonitorMapper">
+
+    <resultMap type="com.sinonc.iot.api.domain.DeviceMonitor" id="DeviceMonitorResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="factory" column="factory"/>
+        <result property="type" column="type"/>
+        <result property="ip" column="ip"/>
+        <result property="tcpPort" column="tcp_port"/>
+        <result property="httpPort" column="http_port"/>
+        <result property="account" column="account"/>
+        <result property="password" column="password"/>
+        <result property="openness" column="openness"/>
+        <result property="lat" column="lat"/>
+        <result property="lng" column="lng"/>
+        <result property="rtmpUrl" column="rtmp_url"/>
+        <result property="httpUrl" column="http_url"/>
+        <result property="playUrl" column="play_url"/>
+        <result property="ezopen" column="ezopen"/>
+        <result property="appKey" column="app_key"/>
+        <result property="appSecret" column="app_Secret"/>
+        <result property="devSn" column="dev_sn"/>
+        <result property="devChannel" column="dev_channel"/>
+
+        <result property="isEsys" column="is_esys"/>
+    </resultMap>
+
+    <sql id="selectDeviceMonitorVo">
+        select id,
+               name,
+               factory,
+               type,
+        ip,
+        tcp_port,
+        http_port,
+        account,
+        password,
+        openness,
+        lat,
+        lng,
+        rtmp_url,
+        http_url,
+        play_url,
+        ezopen,
+        app_key,
+        app_secret,
+        dev_sn,
+        dev_channel,
+        is_esys
+        from device_monitor
+    </sql>
+
+    <select id="selectDeviceMonitorList" parameterType="com.sinonc.iot.api.domain.DeviceMonitor"
+            resultMap="DeviceMonitorResult">
+        <include refid="selectDeviceMonitorVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="factory != null  and factory != ''">and factory = #{factory}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="ip != null  and ip != ''">and ip = #{ip}</if>
+            <if test="tcpPort != null ">and tcp_port = #{tcpPort}</if>
+            <if test="httpPort != null ">and http_port = #{httpPort}</if>
+            <if test="account != null  and account != ''">and account = #{account}</if>
+            <if test="password != null  and password != ''">and password = #{password}</if>
+            <if test="openness != null ">and openness = #{openness}</if>
+            <if test="lat != null  and lat != ''">and lat = #{lat}</if>
+            <if test="lng != null  and lng != ''">and lng = #{lng}</if>
+            <if test="rtmpUrl != null  and rtmpUrl != ''">and rtmp_url = #{rtmpUrl}</if>
+            <if test="httpUrl != null  and httpUrl != ''">and http_url = #{httpUrl}</if>
+            <if test="playUrl != null  and playUrl != ''">and play_url = #{playUrl}</if>
+            <if test="ezopen != null  and ezopen != ''">and ezopen = #{ezopen}</if>
+            <if test="appKey != null  and appKey != ''">and app_key = #{appKey}</if>
+            <if test="appSecret != null  and appSecret != ''">and app_secret = #{appSecret}</if>
+            <if test="devSn != null  and devSn != ''">and dev_sn = #{devSn}</if>
+            <if test="devChannel != null  and devChannel != ''">and dev_channel = #{devChannel}</if>
+            <if test="isEsys != null  and isEsys != ''">and is_esys = #{isEsys}</if>
+        </where>
+
+    </select>
+
+    <select id="selectDeviceMonitorById" parameterType="Long" resultMap="DeviceMonitorResult">
+        <include refid="selectDeviceMonitorVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDeviceMonitor" parameterType="com.sinonc.iot.api.domain.DeviceMonitor" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into device_monitor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="factory != null">factory,</if>
+            <if test="type != null">type,</if>
+            <if test="ip != null">ip,</if>
+            <if test="tcpPort != null">tcp_port,</if>
+            <if test="httpPort != null">http_port,</if>
+            <if test="account != null">account,</if>
+            <if test="password != null">password,</if>
+            <if test="openness != null">openness,</if>
+            <if test="lat != null">lat,</if>
+            <if test="lng != null">lng,</if>
+            <if test="rtmpUrl != null">rtmp_url,</if>
+            <if test="httpUrl != null">http_url,</if>
+            <if test="playUrl != null">play_url,</if>
+            <if test="ezopen != null">ezopen,</if>
+            <if test="appKey != null">app_key,</if>
+            <if test="appSecret != null">app_secret,</if>
+            <if test="devSn != null">dev_sn,</if>
+            <if test="devChannel != null">dev_channel,</if>
+            <if test="isEsys != null">is_esys,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="factory != null">#{factory},</if>
+            <if test="type != null">#{type},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="tcpPort != null">#{tcpPort},</if>
+            <if test="httpPort != null">#{httpPort},</if>
+            <if test="account != null">#{account},</if>
+            <if test="password != null">#{password},</if>
+            <if test="openness != null">#{openness},</if>
+            <if test="lat != null">#{lat},</if>
+            <if test="lng != null">#{lng},</if>
+            <if test="rtmpUrl != null">#{rtmpUrl},</if>
+            <if test="httpUrl != null">#{httpUrl},</if>
+            <if test="playUrl != null">#{playUrl},</if>
+            <if test="ezopen != null">#{ezopen},</if>
+            <if test="appKey != null">#{appKey},</if>
+            <if test="appSecret != null">#{appSecret},</if>
+            <if test="devSn != null">#{devSn},</if>
+            <if test="devChannel != null">#{devChannel},</if>
+            <if test="isEsys != null">#{isEsys},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDeviceMonitor" parameterType="com.sinonc.iot.api.domain.DeviceMonitor">
+        update device_monitor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="factory != null">factory = #{factory},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="tcpPort != null">tcp_port = #{tcpPort},</if>
+            <if test="httpPort != null">http_port = #{httpPort},</if>
+            <if test="account != null">account = #{account},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="openness != null">openness = #{openness},</if>
+            <if test="lat != null">lat = #{lat},</if>
+            <if test="lng != null">lng = #{lng},</if>
+            <if test="rtmpUrl != null">rtmp_url = #{rtmpUrl},</if>
+            <if test="httpUrl != null">http_url = #{httpUrl},</if>
+            <if test="playUrl != null">play_url = #{playUrl},</if>
+            <if test="ezopen != null">ezopen = #{ezopen},</if>
+            <if test="appKey != null">app_key = #{appKey},</if>
+            <if test="appSecret != null">app_secret = #{appSecret},</if>
+            <if test="devSn != null">dev_sn = #{devSn},</if>
+            <if test="devChannel != null">dev_channel = #{devChannel},</if>
+            <if test="isEsys != null">is_esys = #{isEsys},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDeviceMonitorById" parameterType="Long">
+        delete
+        from device_monitor
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDeviceMonitorByIds" parameterType="String">
+        delete from device_monitor where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getMonitorByIds" parameterType="string" resultMap="DeviceMonitorResult">
+        select * from device_monitor where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getMonitorCount" resultType="integer">
+        select count(id)
+        from device_monitor
+    </select>
+    <select id="getMonitorByDevSnChannel"  resultMap="DeviceMonitorResult">
+        <include refid="selectDeviceMonitorVo"/>
+        where dev_sn = #{devSn}
+        and dev_channel = #{channel}
+        order by id desc limit 1
+    </select>
+</mapper>

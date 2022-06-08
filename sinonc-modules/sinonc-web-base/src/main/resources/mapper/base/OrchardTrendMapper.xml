@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.OrchardTrendMapper">
+
+    <resultMap type="OrchardTrend" id="OrchardTrendResult">
+        <result property="id" column="id"/>
+        <result property="farmId" column="farm_id"/>
+        <result property="content" column="content"/>
+        <result property="dynamicType" column="dynamic_type"/>
+        <result property="mediaUrl" column="media_url"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectOrchardTrendVo">
+        select id,
+               farm_id,
+               content,
+               dynamic_type,
+               media_url,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from orchard_trend
+    </sql>
+
+    <select id="selectOrchardTrendList" parameterType="OrchardTrend" resultMap="OrchardTrendResult">
+        <include refid="selectOrchardTrendVo"/>
+        <where>
+            <if test="farmId != null ">
+                and farm_id = #{farmId}
+            </if>
+            <if test="content != null  and content != ''">
+                and content = #{content}
+            </if>
+            <if test="dynamicType != null  and dynamicType != ''">
+                and dynamic_type = #{dynamicType}
+            </if>
+            <if test="mediaUrl != null  and mediaUrl != ''">
+                and media_url = #{mediaUrl}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOrchardTrendById" parameterType="Long" resultMap="OrchardTrendResult">
+        <include refid="selectOrchardTrendVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOrchardTrend" parameterType="OrchardTrend" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into orchard_trend
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="farmId != null">farm_id,
+            </if>
+            <if test="content != null">content,
+            </if>
+            <if test="dynamicType != null">dynamic_type,
+            </if>
+            <if test="mediaUrl != null">media_url,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="farmId != null">#{farmId},
+            </if>
+            <if test="content != null">#{content},
+            </if>
+            <if test="dynamicType != null">#{dynamicType},
+            </if>
+            <if test="mediaUrl != null">#{mediaUrl},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOrchardTrend" parameterType="OrchardTrend">
+        update orchard_trend
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="farmId != null">farm_id =
+                #{farmId},
+            </if>
+            <if test="content != null">content =
+                #{content},
+            </if>
+            <if test="dynamicType != null">dynamic_type =
+                #{dynamicType},
+            </if>
+            <if test="mediaUrl != null">media_url =
+                #{mediaUrl},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrchardTrendById" parameterType="Long">
+        delete
+        from orchard_trend
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteOrchardTrendByIds" parameterType="String">
+        delete from orchard_trend where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,25 @@
+server:
+  port: 6204
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: sinonc-base
+  profiles:
+    # 环境配置
+    active: test
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+#        server-addr: 192.168.130.15:8848
+        server-addr: 192.168.130.15:8849
+      config:
+        #        server-addr: 192.168.130.15:8848
+        server-addr: 192.168.130.15:8849
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

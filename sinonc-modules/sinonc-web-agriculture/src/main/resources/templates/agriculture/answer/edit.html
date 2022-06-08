@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改问题回答')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-answer-edit" th:object="${questionAnswer}">
+            <input name="answerId" th:field="*{answerId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">会员昵称：</label>
+                <div class="col-sm-8">
+                    <input name="nikeName" th:field="*{nikeName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">null：</label>
+                <div class="col-sm-8">
+                    <input name="memberId" th:field="*{memberId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">问题ID：</label>
+                <div class="col-sm-8">
+                    <input name="questionId" th:field="*{questionId}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">评论内容：</label>
+                <div class="col-sm-8">
+                    <input name="content" th:field="*{content}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">null：</label>
+                <div class="col-sm-8">
+                    <textarea name="img" class="form-control">[[*{img}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">点赞数：</label>
+                <div class="col-sm-8">
+                    <input name="favorCount" th:field="*{favorCount}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">反对数：</label>
+                <div class="col-sm-8">
+                    <input name="opposeCount" th:field="*{opposeCount}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">所在地行政区划编码：</label>
+                <div class="col-sm-8">
+                    <input name="areaCode" th:field="*{areaCode}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">所在地行政区划名称：</label>
+                <div class="col-sm-8">
+                    <input name="areaName" th:field="*{areaName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">最佳答案标记，0，非，1，是：</label>
+                <div class="col-sm-8">
+                    <input name="bestFlag" th:field="*{bestFlag}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">回答问题的系统名称：</label>
+                <div class="col-sm-8">
+                    <input name="sysName" th:field="*{sysName}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "agriculture/answer";
+        $("#form-answer-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-answer-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

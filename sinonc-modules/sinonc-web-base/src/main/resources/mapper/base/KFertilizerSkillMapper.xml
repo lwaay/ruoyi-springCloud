@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.KFertilizerSkillMapper">
+
+    <resultMap type="KFertilizerSkill" id="KFertilizerSkillResult">
+                    <result property="id" column="id"/>
+                    <result property="skillType" column="skill_type"/>
+                    <result property="eleName" column="ele_name"/>
+                    <result property="title" column="title"/>
+                    <result property="imageUrl" column="image_url"/>
+                    <result property="content" column="content"/>
+                    <result property="createTime" column="create_time"/>
+                    <result property="createUser" column="create_user"/>
+            </resultMap>
+
+    <sql id="selectKFertilizerSkillVo">
+        select id, skill_type, ele_name, title, image_url, content, create_time, create_user        from k_fertilizer_skill
+    </sql>
+
+    <select id="selectKFertilizerSkillList" parameterType="KFertilizerSkill" resultMap="KFertilizerSkillResult">
+        <include refid="selectKFertilizerSkillVo"/>
+        <where>
+                                                                                                    <if test="skillType != null  and skillType != ''">
+                            and skill_type = #{skillType}
+                        </if>
+                                                                                                            <if test="eleName != null  and eleName != ''">
+                            and ele_name like concat('%', #{eleName}, '%')
+                        </if>
+                                                                                                            <if test="title != null  and title != ''">
+                            and title = #{title}
+                        </if>
+                                                                                                            <if test="imageUrl != null  and imageUrl != ''">
+                            and image_url = #{imageUrl}
+                        </if>
+                                                                                                            <if test="content != null  and content != ''">
+                            and content = #{content}
+                        </if>
+                                                                                                                                        <if test="createUser != null  and createUser != ''">
+                            and create_user = #{createUser}
+                        </if>
+                                                        </where>
+    </select>
+
+    <select id="selectKFertilizerSkillById" parameterType="Long" resultMap="KFertilizerSkillResult">
+        <include refid="selectKFertilizerSkillVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKFertilizerSkill" parameterType="KFertilizerSkill" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into k_fertilizer_skill
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                                            <if test="skillType != null">skill_type,
+                    </if>
+                                                                <if test="eleName != null">ele_name,
+                    </if>
+                                                                <if test="title != null">title,
+                    </if>
+                                                                <if test="imageUrl != null">image_url,
+                    </if>
+                                                                <if test="content != null">content,
+                    </if>
+                                                                <if test="createTime != null">create_time,
+                    </if>
+                                                                <if test="createUser != null">create_user,
+                    </if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                                            <if test="skillType != null">#{skillType},
+                    </if>
+                                                                <if test="eleName != null">#{eleName},
+                    </if>
+                                                                <if test="title != null">#{title},
+                    </if>
+                                                                <if test="imageUrl != null">#{imageUrl},
+                    </if>
+                                                                <if test="content != null">#{content},
+                    </if>
+                                                                <if test="createTime != null">#{createTime},
+                    </if>
+                                                                <if test="createUser != null">#{createUser},
+                    </if>
+                                    </trim>
+    </insert>
+
+    <update id="updateKFertilizerSkill" parameterType="KFertilizerSkill">
+        update k_fertilizer_skill
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="skillType != null">skill_type =
+                        #{skillType},
+                    </if>
+                                                                <if test="eleName != null">ele_name =
+                        #{eleName},
+                    </if>
+                                                                <if test="title != null">title =
+                        #{title},
+                    </if>
+                                                                <if test="imageUrl != null">image_url =
+                        #{imageUrl},
+                    </if>
+                                                                <if test="content != null">content =
+                        #{content},
+                    </if>
+                                                                <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                                                                <if test="createUser != null">create_user =
+                        #{createUser},
+                    </if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKFertilizerSkillById" parameterType="Long">
+        delete
+        from k_fertilizer_skill where id = #{id}
+    </delete>
+
+    <delete id="deleteKFertilizerSkillByIds" parameterType="String">
+        delete from k_fertilizer_skill where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

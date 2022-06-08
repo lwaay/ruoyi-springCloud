@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.ExpressMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Express" id="ExpressResult">
+        <result property="expressId" column="express_id"/>
+        <result property="orderIdP" column="order_id_p"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="expressCompanyId" column="express_company_id"/>
+        <result property="expressName" column="express_name"/>
+        <result property="expressNo" column="express_no"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="expressBy" column="express_by"/>
+    </resultMap>
+
+    <sql id="selectExpressVo">
+        select express_id,
+               order_id_p,
+               shop_id_p,
+               member_id_p,
+               express_company_id,
+               express_name,
+               express_no,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               express_by
+        from od_express
+    </sql>
+
+    <select id="selectExpressList" parameterType="com.sinonc.orders.domain.Express" resultMap="ExpressResult">
+        <include refid="selectExpressVo"/>
+        <where>
+            <if test="expressId != null ">and express_id = #{expressId}</if>
+            <if test="orderIdP != null ">and order_id_p = #{orderIdP}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="expressCompanyId != null ">and express_company_id = #{expressCompanyId}</if>
+            <if test="expressName != null  and expressName != '' ">and express_name = #{expressName}</if>
+            <if test="expressNo != null  and expressNo != '' ">and express_no = #{expressNo}</if>
+            <if test="createBy != null  and createBy != '' ">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            ${params.dataScope}
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectExpressById" parameterType="Long" resultMap="ExpressResult">
+        <include refid="selectExpressVo"/>
+        where express_id = #{expressId}
+    </select>
+    <select id="selectExpressByOrderId" resultMap="ExpressResult">
+        <include refid="selectExpressVo"/>
+        where order_id_p = #{orderId}
+    </select>
+
+    <insert id="insertExpress" parameterType="com.sinonc.orders.domain.Express" useGeneratedKeys="true" keyProperty="expressId">
+        insert into od_express
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="expressId != null  ">express_id,</if>
+            <if test="orderIdP != null  ">order_id_p,</if>
+            <if test="shopIdP != null  ">shop_id_p,</if>
+            <if test="memberIdP != null  ">member_id_p,</if>
+            <if test="expressCompanyId != null  ">express_company_id,</if>
+            <if test="expressName != null  and expressName != ''  ">express_name,</if>
+            <if test="expressNo != null  and expressNo != ''  ">express_no,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="expressBy != null">express_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="expressId != null  ">#{expressId},</if>
+            <if test="orderIdP != null  ">#{orderIdP},</if>
+            <if test="shopIdP != null  ">#{shopIdP},</if>
+            <if test="memberIdP != null  ">#{memberIdP},</if>
+            <if test="expressCompanyId != null  ">#{expressCompanyId},</if>
+            <if test="expressName != null  and expressName != ''  ">#{expressName},</if>
+            <if test="expressNo != null  and expressNo != ''  ">#{expressNo},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="expressBy != null">#{expressBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateExpress" parameterType="com.sinonc.orders.domain.Express">
+        update od_express
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderIdP != null  ">order_id_p = #{orderIdP},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="expressCompanyId != null  ">express_company_id = #{expressCompanyId},</if>
+            <if test="expressName != null  and expressName != ''  ">express_name = #{expressName},</if>
+            <if test="expressNo != null  and expressNo != ''  ">express_no = #{expressNo},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="expressBy != null">express_by = #{expressBy},</if>
+        </trim>
+        where express_id = #{expressId}
+    </update>
+    <update id="updateExpressByOrderId" parameterType="com.sinonc.orders.domain.Express">
+        update od_express
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="expressCompanyId != null  ">express_company_id = #{expressCompanyId},</if>
+            <if test="expressName != null  and expressName != ''  ">express_name = #{expressName},</if>
+            <if test="expressNo != null  and expressNo != ''  ">express_no = #{expressNo},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="expressBy != null">express_by = #{expressBy},</if>
+        </trim>
+        where order_id_p = #{orderIdP}
+    </update>
+
+    <delete id="deleteExpressById" parameterType="Long">
+        delete
+        from od_express
+        where express_id = #{expressId}
+    </delete>
+
+    <delete id="deleteExpressByIds" parameterType="String">
+        delete from od_express where express_id in
+        <foreach item="expressId" collection="array" open="(" separator="," close=")">
+            #{expressId}
+        </foreach>
+    </delete>
+
+</mapper>

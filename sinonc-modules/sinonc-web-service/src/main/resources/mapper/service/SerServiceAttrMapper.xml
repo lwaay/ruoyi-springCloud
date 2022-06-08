@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.ser.mapper.SerServiceAttrMapper">
+
+    <resultMap type="SerServiceAttr" id="SerServiceAttrResult">
+        <result property="attrId" column="attr_id"/>
+        <result property="serviceIdP" column="service_id_p"/>
+        <result property="spec" column="spec"/>
+        <result property="startNum" column="start_num"/>
+        <result property="price" column="price"/>
+        <result property="unit" column="unit"/>
+    </resultMap>
+
+    <sql id="selectSerServiceAttrVo">
+        select attr_id, service_id_p, spec, start_num, price, unit
+        from ser_service_attr
+    </sql>
+
+    <select id="selectSerServiceAttrList" parameterType="SerServiceAttr" resultMap="SerServiceAttrResult">
+        <include refid="selectSerServiceAttrVo"/>
+        <where>
+            <if test="serviceIdP != null ">
+                and service_id_p = #{serviceIdP}
+            </if>
+            <if test="spec != null  and spec != ''">
+                and spec = #{spec}
+            </if>
+            <if test="startNum != null  and startNum != ''">
+                and start_num = #{startNum}
+            </if>
+            <if test="price != null ">
+                and price = #{price}
+            </if>
+            <if test="unit != null  and unit != ''">
+                and unit = #{unit}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSerServiceAttrById" parameterType="Long" resultMap="SerServiceAttrResult">
+        <include refid="selectSerServiceAttrVo"/>
+        where attr_id = #{attrId}
+    </select>
+
+    <insert id="insertSerServiceAttr" parameterType="SerServiceAttr" useGeneratedKeys="true"
+            keyProperty="attrId">
+        insert into ser_service_attr
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serviceIdP != null">service_id_p,
+            </if>
+            <if test="spec != null">spec,
+            </if>
+            <if test="startNum != null">start_num,
+            </if>
+            <if test="price != null">price,
+            </if>
+            <if test="unit != null">unit,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serviceIdP != null">#{serviceIdP},
+            </if>
+            <if test="spec != null">#{spec},
+            </if>
+            <if test="startNum != null">#{startNum},
+            </if>
+            <if test="price != null">#{price},
+            </if>
+            <if test="unit != null">#{unit},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSerServiceAttr" parameterType="SerServiceAttr">
+        update ser_service_attr
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serviceIdP != null">service_id_p =
+                #{serviceIdP},
+            </if>
+            <if test="spec != null">spec =
+                #{spec},
+            </if>
+            <if test="startNum != null">start_num =
+                #{startNum},
+            </if>
+            <if test="price != null">price =
+                #{price},
+            </if>
+            <if test="unit != null">unit =
+                #{unit},
+            </if>
+        </trim>
+        where attr_id = #{attrId}
+    </update>
+
+    <delete id="deleteSerServiceAttrById" parameterType="Long">
+        delete
+        from ser_service_attr
+        where attr_id = #{attrId}
+    </delete>
+
+    <delete id="deleteSerServiceAttrByServiceId" parameterType="Long">
+        delete
+        from ser_service_attr
+        where service_id_p = #{serviceId}
+    </delete>
+
+    <delete id="deleteSerServiceAttrByIds" parameterType="String">
+        delete from ser_service_attr where attr_id in
+        <foreach item="attrId" collection="array" open="(" separator="," close=")">
+            #{attrId}
+        </foreach>
+    </delete>
+
+</mapper>

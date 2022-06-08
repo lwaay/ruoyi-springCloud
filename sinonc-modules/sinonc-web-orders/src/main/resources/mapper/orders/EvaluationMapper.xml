@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.EvaluationMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Evaluation" id="EvaluationResult">
+        <result property="evaluationId" column="evaluation_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="replyContent" column="reply_content"/>
+        <result property="evaluationContent" column="evaluation_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="orderId" column="order_id"/>
+        <result property="goodsStar" column="goods_star"/>
+        <result property="expressStar" column="express_star"/>
+        <result property="serviceStar" column="service_star"/>
+        <result property="images" column="images"/>
+    </resultMap>
+
+    <sql id="selectEvaluationVo">
+        select evaluation_id,
+               goods_id,
+               member_id,
+               shop_id,
+               reply_content,
+               evaluation_content,
+               create_time,
+               update_time,
+               order_id,
+               goods_star,
+               express_star,
+               service_star,
+               images
+        from od_evaluation
+    </sql>
+
+    <select id="selectEvaluationList" parameterType="com.sinonc.orders.domain.Evaluation" resultMap="EvaluationResult">
+        <include refid="selectEvaluationVo"/>
+        <where>
+            <if test="evaluationId != null ">and evaluation_id = #{evaluationId}</if>
+            <if test="goodsId != null ">and goods_id = #{goodsId}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="shopId != null ">and shop_id = #{shopId}</if>
+            <if test="replyContent != null  and replyContent != '' ">and reply_content = #{replyContent}</if>
+            <if test="evaluationContent != null  and evaluationContent != '' ">and evaluation_content =
+                #{evaluationContent}
+            </if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="goodsStar != null ">and goods_star = #{goodsStar}</if>
+            <if test="expressStar != null ">and express_star = #{expressStar}</if>
+            <if test="serviceStar != null ">and service_star = #{serviceStar}</if>
+            <if test="images != null  and images != '' ">and images = #{images}</if>
+        </where>
+    </select>
+
+    <select id="selectListBetweenStar" resultMap="EvaluationResult">
+        <include refid="selectEvaluationVo"/>
+        where goods_id = #{param1}
+        <if test="param2 !=null and param2 != ''">
+            and goods_star in
+            <foreach collection="param2" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+        order by create_time desc
+    </select>
+    <select id="selectEvaluationById" parameterType="Long" resultMap="EvaluationResult">
+        <include refid="selectEvaluationVo"/>
+        where evaluation_id = #{evaluationId}
+    </select>
+
+    <select id="selectStarTypeCount" resultType="java.util.Map">
+        select sum(IF(goods_star in (1, 2), 1, 0)) badCount,
+               sum(IF(goods_star = 3, 1, 0))       mediumCount,
+               sum(IF(goods_star in (4, 5), 1, 0)) bestCount
+        from od_evaluation
+        where goods_id = #{value}
+    </select>
+
+    <insert id="insertEvaluation" parameterType="com.sinonc.orders.domain.Evaluation" useGeneratedKeys="true"
+            keyProperty="evaluationId">
+        insert into od_evaluation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null  ">goods_id,</if>
+            <if test="memberId != null  ">member_id,</if>
+            <if test="shopId != null  ">shop_id,</if>
+            <if test="replyContent != null  and replyContent != ''  ">reply_content,</if>
+            <if test="evaluationContent != null  and evaluationContent != ''  ">evaluation_content,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="orderId != null  ">order_id,</if>
+            <if test="goodsStar != null  ">goods_star,</if>
+            <if test="expressStar != null  ">express_star,</if>
+            <if test="serviceStar != null  ">service_star,</if>
+            <if test="images != null  and images != ''  ">images,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null  ">#{goodsId},</if>
+            <if test="memberId != null  ">#{memberId},</if>
+            <if test="shopId != null  ">#{shopId},</if>
+            <if test="replyContent != null  and replyContent != ''  ">#{replyContent},</if>
+            <if test="evaluationContent != null  and evaluationContent != ''  ">#{evaluationContent},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="orderId != null  ">#{orderId},</if>
+            <if test="goodsStar != null  ">#{goodsStar},</if>
+            <if test="expressStar != null  ">#{expressStar},</if>
+            <if test="serviceStar != null  ">#{serviceStar},</if>
+            <if test="images != null  and images != ''  ">#{images},</if>
+        </trim>
+    </insert>
+
+    <update id="updateEvaluation" parameterType="com.sinonc.orders.domain.Evaluation">
+        update od_evaluation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="replyContent != null  and replyContent != ''  ">reply_content = #{replyContent},</if>
+            <if test="evaluationContent != null  and evaluationContent != ''  ">evaluation_content =
+                #{evaluationContent},
+            </if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="goodsStar != null  ">goods_star = #{goodsStar},</if>
+            <if test="expressStar != null  ">express_star = #{expressStar},</if>
+            <if test="serviceStar != null  ">service_star = #{serviceStar},</if>
+            <if test="images != null  and images != ''  ">images = #{images},</if>
+        </trim>
+        where evaluation_id = #{evaluationId}
+    </update>
+
+    <delete id="deleteEvaluationById" parameterType="Long">
+        delete
+        from od_evaluation
+        where evaluation_id = #{evaluationId}
+    </delete>
+
+    <delete id="deleteEvaluationByIds" parameterType="String">
+        delete from od_evaluation where evaluation_id in
+        <foreach item="evaluationId" collection="array" open="(" separator="," close=")">
+            #{evaluationId}
+        </foreach>
+    </delete>
+
+</mapper>

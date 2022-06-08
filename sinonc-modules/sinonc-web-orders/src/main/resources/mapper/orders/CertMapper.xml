@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.CertMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Cert" id="CertResult">
+        <result property="certId" column="cert_id"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="certType" column="cert_type"/>
+        <result property="servNo" column="serv_no"/>
+        <result property="userId" column="user_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="blessDesc" column="bless_desc"/>
+        <result property="masterName" column="master_name"/>
+        <result property="city" column="city"/>
+        <result property="specsName" column="specs_name"/>
+        <result property="templetNo" column="templet_no"/>
+        <result property="adoptTime" column="adopt_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <sql id="selectCertVo">
+        select cert_id,
+               img_url,
+               cert_type,
+               serv_no,
+               user_id,
+               order_id,
+               bless_desc,
+               master_name,
+               city,
+               specs_name,
+               templet_no,
+               adopt_time,
+               create_by,
+               create_time,
+               update_time,
+               update_by
+        from od_cert
+    </sql>
+
+    <select id="selectCertList" parameterType="com.sinonc.orders.domain.Cert" resultMap="CertResult">
+        <include refid="selectCertVo"/>
+        <where>
+            <if test="certId != null ">and cert_id = #{certId}</if>
+            <if test="imgUrl != null  and imgUrl != '' ">and img_url = #{imgUrl}</if>
+            <if test="certType != null ">and cert_type = #{certType}</if>
+            <if test="servNo != null  and servNo != '' ">and serv_no = #{servNo}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="blessDesc != null  and blessDesc != '' ">and bless_desc = #{blessDesc}</if>
+            <if test="masterName != null  and masterName != '' ">and master_name = #{masterName}</if>
+            <if test="city != null  and city != '' ">and city = #{city}</if>
+            <if test="specsName != null  and specsName != '' ">and specs_name = #{specsName}</if>
+            <if test="templetNo != null  and templetNo != '' ">and templet_no = #{templetNo}</if>
+            <if test="adoptTime != null ">and adopt_time = #{adoptTime}</if>
+            <if test="createBy != null  and createBy != '' ">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="searchDate != null and searchDate != '' ">and create_time LIKE CONCAT('%',CONCAT(#{searchDate},'%'))</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectCertById" parameterType="Long" resultMap="CertResult">
+        <include refid="selectCertVo"/>
+        where cert_id = #{certId}
+    </select>
+    <select id="selectLastNo" resultType="java.lang.String">
+        select max(serv_no)
+        from od_cert
+    </select>
+
+    <insert id="insertCert" parameterType="com.sinonc.orders.domain.Cert" useGeneratedKeys="true" keyProperty="certId">
+        insert into od_cert
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="imgUrl != null  and imgUrl != ''  ">img_url,</if>
+            <if test="certType != null  ">cert_type,</if>
+            <if test="servNo != null  and servNo != ''  ">serv_no,</if>
+            <if test="userId != null  ">user_id,</if>
+            <if test="orderId != null  ">order_id,</if>
+            <if test="blessDesc != null  and blessDesc != ''  ">bless_desc,</if>
+            <if test="masterName != null  and masterName != ''  ">master_name,</if>
+            <if test="city != null  and city != ''  ">city,</if>
+            <if test="specsName != null  and specsName != ''  ">specs_name,</if>
+            <if test="templetNo != null  and templetNo != ''  ">templet_no,</if>
+            <if test="adoptTime != null  ">adopt_time,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="imgUrl != null  and imgUrl != ''  ">#{imgUrl},</if>
+            <if test="certType != null  ">#{certType},</if>
+            <if test="servNo != null  and servNo != ''  ">#{servNo},</if>
+            <if test="userId != null  ">#{userId},</if>
+            <if test="orderId != null  ">#{orderId},</if>
+            <if test="blessDesc != null  and blessDesc != ''  ">#{blessDesc},</if>
+            <if test="masterName != null  and masterName != ''  ">#{masterName},</if>
+            <if test="city != null  and city != ''  ">#{city},</if>
+            <if test="specsName != null  and specsName != ''  ">#{specsName},</if>
+            <if test="templetNo != null  and templetNo != ''  ">#{templetNo},</if>
+            <if test="adoptTime != null  ">#{adoptTime},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCert" parameterType="com.sinonc.orders.domain.Cert">
+        update od_cert
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imgUrl != null  and imgUrl != ''  ">img_url = #{imgUrl},</if>
+            <if test="certType != null  ">cert_type = #{certType},</if>
+            <if test="servNo != null  and servNo != ''  ">serv_no = #{servNo},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="blessDesc != null  and blessDesc != ''  ">bless_desc = #{blessDesc},</if>
+            <if test="masterName != null  and masterName != ''  ">master_name = #{masterName},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="specsName != null  and specsName != ''  ">specs_name = #{specsName},</if>
+            <if test="templetNo != null  and templetNo != ''  ">templet_no = #{templetNo},</if>
+            <if test="adoptTime != null  ">adopt_time = #{adoptTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+        </trim>
+        where cert_id = #{certId}
+    </update>
+
+    <delete id="deleteCertById" parameterType="Long">
+        delete
+        from od_cert
+        where cert_id = #{certId}
+    </delete>
+
+    <delete id="deleteCertByIds" parameterType="String">
+        delete from od_cert where cert_id in
+        <foreach item="certId" collection="array" open="(" separator="," close=")">
+            #{certId}
+        </foreach>
+    </delete>
+
+</mapper>

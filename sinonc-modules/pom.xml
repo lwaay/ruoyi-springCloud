@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.sinonc.cloud</groupId>
+        <artifactId>sinonc-cloud</artifactId>
+        <version>2.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+        <modules>
+            <module>sinonc-web-system</module>
+            <module>sinonc-web-gen</module>
+            <module>sinonc-web-job</module>
+            <module>sinonc-web-base</module>
+            <module>sinonc-web-iot</module>
+            <module>sinonc-web-origins</module>
+            <module>sinonc-web-report</module>
+            <module>sinonc-web-service</module>
+            <module>sinonc-web-agriculture</module>
+            <module>sinonc-web-orders</module>
+            <module>sinonc-web-openapi</module>
+        </modules>
+
+    <artifactId>sinonc-modules</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        sinonc-modules业务模块
+    </description>
+    <dependencies>
+        <!-- SpringCloud Ailibaba Nacos -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <!-- SpringCloud Ailibaba Nacos Config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+        <!-- SpringCloud Ailibaba Sentinel -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <!-- SpringBoot Actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Swagger -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.fox.version}</version>
+        </dependency>
+
+        <!-- Mysql Connector -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- Ruoyi Common Security -->
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-security</artifactId>
+        </dependency>
+
+        <!-- Ruoyi Common Datascope -->
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-datascope</artifactId>
+        </dependency>
+
+        <!-- Ruoyi Common Log -->
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-log</artifactId>
+        </dependency>
+
+        <!-- Ruoyi Common Swagger -->
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-swagger</artifactId>
+        </dependency>
+
+        <!-- Ruoyi Common oss -->
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-oss</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+        <!-- Quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.mchange</groupId>
+                    <artifactId>c3p0</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Apache Velocity -->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+        </dependency>
+        <!-- RuoYi Common Redis-->
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-redis</artifactId>
+        </dependency>
+        <!--alibaba druid-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.3</version>
+        </dependency>
+
+        <!--加入配置文件加密-->
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+    </dependencies>
+</project>

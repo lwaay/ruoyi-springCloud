@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AccountTaskMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AccountTask" id="AccountTaskResult">
+        <result property="acctTaskId"    column="acct_task_id"    />
+        <result property="shopIdP"    column="shop_id_p"    />
+        <result property="taskTime"    column="task_time"    />
+        <result property="taskAmount"    column="task_amount"    />
+        <result property="trueAmount"    column="true_amount"    />
+        <result property="taskType"    column="task_type"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="bankNumber"    column="bank_number"    />
+        <result property="bankAcct"    column="bank_acct"    />
+        <result property="alipayAcct"    column="alipay_acct"    />
+        <result property="alipayName"    column="alipay_name"    />
+        <result property="wxAcct"    column="wx_acct"    />
+        <result property="wxName"    column="wx_name"    />
+        <result property="taskFlag"    column="task_flag"    />
+        <result property="auditBy"    column="audit_by"    />
+        <result property="auditTime"    column="audit_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="shopName"    column="shop_name"    />
+        <result property="userIdP"    column="user_id_p"    />
+        <result property="payTaskType"    column="paytask_type"    />
+        <result property="carryImages"    column="carry_images"    />
+    </resultMap>
+
+	<sql id="selectAccountTaskVo">
+        select acct_task_id,user_id_p,shop_id_p, task_time, task_amount, true_amount, task_type, bank_name, bank_number, bank_acct, alipay_acct, alipay_name, wx_acct, wx_name, task_flag, audit_by, audit_time, create_time, create_by, paytask_type, carry_images from od_account_task
+    </sql>
+
+    <select id="selectAccountTaskList" parameterType="com.sinonc.orders.domain.AccountTask" resultMap="AccountTaskResult">
+        SELECT
+            accTask.acct_task_id,
+            accTask.user_id_p,
+            accTask.shop_id_p,
+            accTask.task_time,
+            accTask.task_amount,
+            accTask.true_amount,
+            accTask.task_type,
+            accTask.bank_name,
+            accTask.bank_number,
+            accTask.bank_acct,
+            accTask.alipay_acct,
+            accTask.alipay_name,
+            accTask.wx_acct,
+            accTask.wx_name,
+            accTask.task_flag,
+            accTask.audit_by,
+            accTask.audit_time,
+            accTask.create_time,
+            accTask.create_by,
+            accTask.paytask_type,
+            accTask.carry_images,
+            shop.shop_name as shop_name
+        FROM
+            od_account_task accTask
+        LEFT JOIN od_shop shop ON accTask.shop_id_p = shop.shop_id
+
+        <where>
+             <if test="acctTaskId != null "> and acct_task_id = #{acctTaskId}</if>
+             <if test="userIdP != null "> and user_id_p = #{userIdP}</if>
+             <if test="shopIdP != null "> and shop_id_p = #{shopIdP}</if>
+
+             <if test="minTaskTime != null ">
+                <![CDATA[ and accTask.task_time >= #{minTaskTime}]]>
+             </if>
+             <if test="maxTaskTime != null ">
+                <![CDATA[ and accTask.task_time <= #{maxTaskTime}]]>
+             </if>
+
+             <if test="taskAmount != null "> and task_amount = #{taskAmount}</if>
+             <if test="trueAmount != null "> and true_amount = #{trueAmount}</if>
+             <if test="taskType != null "> and task_type = #{taskType}</if>
+             <if test="bankName != null  and bankName != '' "> and bank_name = #{bankName}</if>
+             <if test="bankNumber != null  and bankNumber != '' "> and bank_number = #{bankNumber}</if>
+             <if test="bankAcct != null  and bankAcct != '' "> and bank_acct = #{bankAcct}</if>
+             <if test="alipayAcct != null  and alipayAcct != '' "> and alipay_acct = #{alipayAcct}</if>
+             <if test="alipayName != null  and alipayName != '' "> and alipay_name = #{alipayName}</if>
+             <if test="wxAcct != null  and wxAcct != '' "> and wx_acct = #{wxAcct}</if>
+             <if test="wxName != null  and wxName != '' "> and wx_name = #{wxName}</if>
+             <if test="taskFlag != null "> and task_flag = #{taskFlag}</if>
+             <if test="auditBy != null  and auditBy != '' "> and audit_by = #{auditBy}</if>
+             <if test="auditTime != null "> and audit_time = #{auditTime}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="payTaskType != null  and payTaskType != '' "> and paytask_type = #{payTaskType}</if>
+             <if test="carryImages != null  and carryImages != '' "> and carry_images = #{carryImages}</if>
+            ${params.dataScope}
+         </where>
+         order by accTask.acct_task_id desc
+    </select>
+
+    <select id="selectAccountTaskById" parameterType="Long" resultMap="AccountTaskResult">
+        <include refid="selectAccountTaskVo"/>
+        where acct_task_id = #{acctTaskId}
+    </select>
+
+    <insert id="insertAccountTask" parameterType="com.sinonc.orders.domain.AccountTask" useGeneratedKeys="true" keyProperty="acctTaskId">
+        insert into od_account_task
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userIdP != null  ">user_id_p,</if>
+			<if test="shopIdP != null  ">shop_id_p,</if>
+			<if test="taskTime != null  ">task_time,</if>
+			<if test="taskAmount != null  ">task_amount,</if>
+			<if test="trueAmount != null  ">true_amount,</if>
+			<if test="taskType != null  ">task_type,</if>
+			<if test="bankName != null  and bankName != ''  ">bank_name,</if>
+			<if test="bankNumber != null  and bankNumber != ''  ">bank_number,</if>
+			<if test="bankAcct != null  and bankAcct != ''  ">bank_acct,</if>
+			<if test="alipayAcct != null  and alipayAcct != ''  ">alipay_acct,</if>
+			<if test="alipayName != null  and alipayName != ''  ">alipay_name,</if>
+			<if test="wxAcct != null  and wxAcct != ''  ">wx_acct,</if>
+			<if test="wxName != null  and wxName != ''  ">wx_name,</if>
+			<if test="taskFlag != null  ">task_flag,</if>
+			<if test="auditBy != null  and auditBy != ''  ">audit_by,</if>
+			<if test="auditTime != null  ">audit_time,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="payTaskType != null  and payTaskType != ''  ">paytask_type,</if>
+            <if test="carryImages != null  and carryImages != ''  ">carry_images,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userIdP != null  ">#{userIdP},</if>
+			<if test="shopIdP != null  ">#{shopIdP},</if>
+			<if test="taskTime != null  ">#{taskTime},</if>
+			<if test="taskAmount != null  ">#{taskAmount},</if>
+			<if test="trueAmount != null  ">#{trueAmount},</if>
+			<if test="taskType != null  ">#{taskType},</if>
+			<if test="bankName != null  and bankName != ''  ">#{bankName},</if>
+			<if test="bankNumber != null  and bankNumber != ''  ">#{bankNumber},</if>
+			<if test="bankAcct != null  and bankAcct != ''  ">#{bankAcct},</if>
+			<if test="alipayAcct != null  and alipayAcct != ''  ">#{alipayAcct},</if>
+			<if test="alipayName != null  and alipayName != ''  ">#{alipayName},</if>
+			<if test="wxAcct != null  and wxAcct != ''  ">#{wxAcct},</if>
+			<if test="wxName != null  and wxName != ''  ">#{wxName},</if>
+			<if test="taskFlag != null  ">#{taskFlag},</if>
+			<if test="auditBy != null  and auditBy != ''  ">#{auditBy},</if>
+			<if test="auditTime != null  ">#{auditTime},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="payTaskType != null  and payTaskType != ''  ">#{payTaskType},</if>
+            <if test="carryImages != null  and carryImages != ''  ">#{carryImages},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccountTask" parameterType="com.sinonc.orders.domain.AccountTask">
+        update od_account_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userIdP != null  ">user_id_p = #{userIdP},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="taskTime != null  ">task_time = #{taskTime},</if>
+            <if test="taskAmount != null  ">task_amount = #{taskAmount},</if>
+            <if test="trueAmount != null  ">true_amount = #{trueAmount},</if>
+            <if test="taskType != null  ">task_type = #{taskType},</if>
+            <if test="bankName != null  and bankName != ''  ">bank_name = #{bankName},</if>
+            <if test="bankNumber != null  and bankNumber != ''  ">bank_number = #{bankNumber},</if>
+            <if test="bankAcct != null  and bankAcct != ''  ">bank_acct = #{bankAcct},</if>
+            <if test="alipayAcct != null  and alipayAcct != ''  ">alipay_acct = #{alipayAcct},</if>
+            <if test="alipayName != null  and alipayName != ''  ">alipay_name = #{alipayName},</if>
+            <if test="wxAcct != null  and wxAcct != ''  ">wx_acct = #{wxAcct},</if>
+            <if test="wxName != null  and wxName != ''  ">wx_name = #{wxName},</if>
+            <if test="taskFlag != null  ">task_flag = #{taskFlag},</if>
+            <if test="auditBy != null  and auditBy != ''  ">audit_by = #{auditBy},</if>
+            <if test="auditTime != null  ">audit_time = #{auditTime},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="payTaskType != null  and payTaskType != ''  ">paytask_type = #{payTaskType},</if>
+            <if test="carryImages != null  and carryImages != ''  ">carry_images = #{carryImages},</if>
+        </trim>
+        where acct_task_id = #{acctTaskId}
+    </update>
+
+	<delete id="deleteAccountTaskById" parameterType="Long">
+        delete from od_account_task where acct_task_id = #{acctTaskId}
+    </delete>
+
+    <delete id="deleteAccountTaskByIds" parameterType="String">
+        delete from od_account_task where acct_task_id in
+        <foreach item="acctTaskId" collection="array" open="(" separator="," close=")">
+            #{acctTaskId}
+        </foreach>
+    </delete>
+
+
+    <select id="queryAccountTaskList" parameterType="com.sinonc.orders.domain.AccountTask" resultMap="AccountTaskResult">
+        SELECT
+            accTask.acct_task_id,
+            accTask.user_id_p,
+            accTask.shop_id_p,
+            accTask.task_time,
+            accTask.task_amount,
+            accTask.true_amount,
+            accTask.task_type,
+            accTask.bank_name,
+            accTask.bank_number,
+            accTask.bank_acct,
+            accTask.alipay_acct,
+            accTask.alipay_name,
+            accTask.wx_acct,
+            accTask.wx_name,
+            accTask.task_flag,
+            accTask.audit_by,
+            accTask.audit_time,
+            accTask.create_time,
+            accTask.create_by,
+            accTask.paytask_type,
+            accTask.carry_images,
+            shop.shop_name as shop_name
+        FROM
+            od_account_task accTask
+        LEFT JOIN od_shop shop ON accTask.shop_id_p = shop.shop_id
+
+        <where>
+            user_id_p = #{userIdP}
+            <if test="minTaskTime != null ">
+                <![CDATA[ and accTask.task_time >= #{minTaskTime}]]>
+            </if>
+            <if test="maxTaskTime != null ">
+                <![CDATA[ and accTask.task_time <= #{maxTaskTime}]]>
+            </if>
+            <if test="taskFlag != null "> and task_flag = #{taskFlag}</if>
+        </where>
+        order by  accTask.audit_time desc
+    </select>
+
+</mapper>

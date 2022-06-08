@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.KFertilizerSchemaMapper">
+
+    <resultMap type="KFertilizerSchema" id="KFertilizerSchemaResult">
+                    <result property="id" column="id"/>
+                    <result property="ageCode" column="age_code"/>
+                    <result property="organicSchema" column="organic_schema"/>
+                    <result property="ureaSchema" column="urea_schema"/>
+                    <result property="nitrogenSchema" column="nitrogen_schema"/>
+                    <result property="aciditySoilSchema" column="acidity_soil_schema"/>
+                    <result property="alkalineSoilSchema" column="alkaline_soil_schema"/>
+                    <result property="createTime" column="create_time"/>
+                    <result property="createUser" column="create_user"/>
+            </resultMap>
+
+    <sql id="selectKFertilizerSchemaVo">
+        select id, age_code, organic_schema, urea_schema, nitrogen_schema, acidity_soil_schema, alkaline_soil_schema, create_time, create_user        from k_fertilizer_schema
+    </sql>
+
+    <select id="selectKFertilizerSchemaList" parameterType="KFertilizerSchema" resultMap="KFertilizerSchemaResult">
+        <include refid="selectKFertilizerSchemaVo"/>
+        <where>
+                                                                                                    <if test="ageCode != null  and ageCode != ''">
+                            and age_code = #{ageCode}
+                        </if>
+                                                                                                            <if test="organicSchema != null  and organicSchema != ''">
+                            and organic_schema = #{organicSchema}
+                        </if>
+                                                                                                            <if test="ureaSchema != null  and ureaSchema != ''">
+                            and urea_schema = #{ureaSchema}
+                        </if>
+                                                                                                            <if test="nitrogenSchema != null  and nitrogenSchema != ''">
+                            and nitrogen_schema = #{nitrogenSchema}
+                        </if>
+                                                                                                            <if test="aciditySoilSchema != null  and aciditySoilSchema != ''">
+                            and acidity_soil_schema = #{aciditySoilSchema}
+                        </if>
+                                                                                                            <if test="alkalineSoilSchema != null  and alkalineSoilSchema != ''">
+                            and alkaline_soil_schema = #{alkalineSoilSchema}
+                        </if>
+                                                                                                                                        <if test="createUser != null  and createUser != ''">
+                            and create_user = #{createUser}
+                        </if>
+                                                        </where>
+    </select>
+
+    <select id="selectKFertilizerSchemaById" parameterType="Long" resultMap="KFertilizerSchemaResult">
+        <include refid="selectKFertilizerSchemaVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKFertilizerSchema" parameterType="KFertilizerSchema" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into k_fertilizer_schema
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                                            <if test="ageCode != null">age_code,
+                    </if>
+                                                                <if test="organicSchema != null">organic_schema,
+                    </if>
+                                                                <if test="ureaSchema != null">urea_schema,
+                    </if>
+                                                                <if test="nitrogenSchema != null">nitrogen_schema,
+                    </if>
+                                                                <if test="aciditySoilSchema != null">acidity_soil_schema,
+                    </if>
+                                                                <if test="alkalineSoilSchema != null">alkaline_soil_schema,
+                    </if>
+                                                                <if test="createTime != null">create_time,
+                    </if>
+                                                                <if test="createUser != null">create_user,
+                    </if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                                            <if test="ageCode != null">#{ageCode},
+                    </if>
+                                                                <if test="organicSchema != null">#{organicSchema},
+                    </if>
+                                                                <if test="ureaSchema != null">#{ureaSchema},
+                    </if>
+                                                                <if test="nitrogenSchema != null">#{nitrogenSchema},
+                    </if>
+                                                                <if test="aciditySoilSchema != null">#{aciditySoilSchema},
+                    </if>
+                                                                <if test="alkalineSoilSchema != null">#{alkalineSoilSchema},
+                    </if>
+                                                                <if test="createTime != null">#{createTime},
+                    </if>
+                                                                <if test="createUser != null">#{createUser},
+                    </if>
+                                    </trim>
+    </insert>
+
+    <update id="updateKFertilizerSchema" parameterType="KFertilizerSchema">
+        update k_fertilizer_schema
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="ageCode != null">age_code =
+                        #{ageCode},
+                    </if>
+                                                                <if test="organicSchema != null">organic_schema =
+                        #{organicSchema},
+                    </if>
+                                                                <if test="ureaSchema != null">urea_schema =
+                        #{ureaSchema},
+                    </if>
+                                                                <if test="nitrogenSchema != null">nitrogen_schema =
+                        #{nitrogenSchema},
+                    </if>
+                                                                <if test="aciditySoilSchema != null">acidity_soil_schema =
+                        #{aciditySoilSchema},
+                    </if>
+                                                                <if test="alkalineSoilSchema != null">alkaline_soil_schema =
+                        #{alkalineSoilSchema},
+                    </if>
+                                                                <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                                                                <if test="createUser != null">create_user =
+                        #{createUser},
+                    </if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKFertilizerSchemaById" parameterType="Long">
+        delete
+        from k_fertilizer_schema where id = #{id}
+    </delete>
+
+    <delete id="deleteKFertilizerSchemaByIds" parameterType="String">
+        delete from k_fertilizer_schema where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

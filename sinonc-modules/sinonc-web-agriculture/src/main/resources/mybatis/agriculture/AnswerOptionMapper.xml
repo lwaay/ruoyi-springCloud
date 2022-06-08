@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.AnswerOptionMapper">
+    <resultMap id="BaseResultMap" type="com.sinonc.agriculture.domain.AnswerOption">
+        <id column="op_id" jdbcType="BIGINT" property="opId"/>
+        <result column="question_id" jdbcType="BIGINT" property="questionId"/>
+        <result column="answer_id" jdbcType="BIGINT" property="answerId"/>
+        <result column="member_id" jdbcType="BIGINT" property="memberId"/>
+        <result column="op_type" jdbcType="INTEGER" property="opType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        op_id, question_id, answer_id, member_id, op_type, create_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from answer_option
+        where op_id = #{opId,jdbcType=BIGINT}
+    </select>
+    <select id="selectAnswerOptionList" parameterType="com.sinonc.agriculture.domain.AnswerOption"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from answer_option
+        <where>
+            <if test="opId != null">and op_id = #{opId}</if>
+            <if test="questionId != null">and question_id = #{questionId}</if>
+            <if test="answerId != null">and answer_id = #{answerId}</if>
+            <if test="opType != null">and op_type = #{opType}</if>
+            <if test="memberId != null">and member_id = #{memberId}</if>
+        </where>
+    </select>
+
+    <select id="selectOneAnswerOption" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from answer_option where member_id = #{param1} and answer_id = #{param2}
+    </select>
+
+    <select id="selectListAnswerOption" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from answer_option where member_id = #{param1} and question_id = #{param2}
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from answer_option
+        where op_id = #{opId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="op_id" keyProperty="opId" parameterType="com.sinonc.agriculture.domain.AnswerOption"
+            useGeneratedKeys="true">
+        insert into answer_option (question_id, answer_id, member_id, op_type,
+                                   create_time)
+        values (#{questionId,jdbcType=BIGINT}, #{answerId,jdbcType=BIGINT}, #{memberId,jdbcType=BIGINT},
+                #{opType,jdbcType=INTEGER},
+                #{createTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="op_id" keyProperty="opId"
+            parameterType="com.sinonc.agriculture.domain.AnswerOption" useGeneratedKeys="true">
+        insert into answer_option
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">
+                question_id,
+            </if>
+            <if test="answerId != null">
+                answer_id,
+            </if>
+            <if test="memberId != null">
+                member_id,
+            </if>
+            <if test="opType != null">
+                op_type,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="questionId != null">
+                #{questionId,jdbcType=BIGINT},
+            </if>
+            <if test="answerId != null">
+                #{answerId,jdbcType=BIGINT},
+            </if>
+            <if test="memberId != null">
+                #{memberId,jdbcType=BIGINT},
+            </if>
+            <if test="opType != null">
+                #{opType,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.sinonc.agriculture.domain.AnswerOption">
+        update answer_option
+        <set>
+            <if test="questionId != null">
+                question_id = #{questionId,jdbcType=BIGINT},
+            </if>
+            <if test="answerId != null">
+                answer_id = #{answerId,jdbcType=BIGINT},
+            </if>
+            <if test="memberId != null">
+                member_id = #{memberId,jdbcType=BIGINT},
+            </if>
+            <if test="opType != null">
+                op_type = #{opType,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where op_id = #{opId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.sinonc.agriculture.domain.AnswerOption">
+        update answer_option
+        set question_id = #{questionId,jdbcType=BIGINT},
+            answer_id   = #{answerId,jdbcType=BIGINT},
+            member_id   = #{memberId,jdbcType=BIGINT},
+            op_type     = #{opType,jdbcType=INTEGER},
+            create_time = #{createTime,jdbcType=TIMESTAMP}
+        where op_id = #{opId,jdbcType=BIGINT}
+    </update>
+
+
+    <select id="selectAnswerOptionPraise" parameterType="com.sinonc.agriculture.domain.AnswerOption"
+            resultMap="BaseResultMap">
+        SELECT
+            op_id,
+            answer_option.question_id,
+            answer_option.answer_id,
+            answer_option.member_id,
+            op_type,
+            answer_option.create_time
+        FROM
+            answer_option
+        LEFT JOIN question_answer ON question_answer.answer_id = answer_option.answer_id
+        WHERE
+            question_answer.member_id = #{memberId} AND  answer_option.op_type=0
+    </select>
+
+
+</mapper>

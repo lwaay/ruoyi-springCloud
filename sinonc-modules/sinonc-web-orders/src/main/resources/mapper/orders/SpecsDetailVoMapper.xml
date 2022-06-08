@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.SpecsDetailVoMapper">
+
+    <resultMap id="resultMap" type="com.sinonc.orders.vo.SpecsDetailVo">
+        <result property="specsId" column="specs_id"/>
+        <result property="specsPrice" column="specs_price"/>
+        <result property="stock" column="stock"/>
+        <result property="specsName" column="specs_name"/>
+        <result property="perWeight" column="per_weight"/>
+        <collection property="specsValue" ofType="com.sinonc.orders.domain.SpecsValue">
+            <result property="specsValue" column="specs_value"/>
+            <result property="numbers" column="numbers"/>
+            <result property="unit" column="unit"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectById" resultMap="resultMap">
+        select specs_id, specs_price, stock, specs_name,per_weight, specs_value, numbers, unit
+        from od_specs_detail
+        where specs_id = #{value}
+    </select>
+
+</mapper>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.PolicyNewsMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.PolicyNews" id="PolicyNewsResult">
+        <result property="newsId"    column="news_id"    />
+        <result property="title"    column="title"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="userId"    column="user_id"    />
+        <result property="mainImg" column="main_img"/>
+        <result property="readCount" column="read_count"/>
+        <result property="content" column="content"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+
+        <result property="userName" column="user_name"/>
+        <result property="newsType" column="news_type"/>
+        <result property="sysName" column="sys_name"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.agriculture.dto.PolicyNewsDto" id="PolicyNewsDtoResult">
+        <result property="newsId"    column="news_id"    />
+        <result property="title"    column="title"    />
+        <result property="introduction"    column="introduction"    />
+        <result property="userId"    column="user_id"    />
+        <result property="mainImg" column="main_img"/>
+        <result property="readCount" column="read_count"/>
+        <result property="content" column="content"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+
+        <result property="userName" column="user_name"/>
+        <result property="newsType" column="news_type"/>
+        <result property="sysName" column="sys_name"/>
+    </resultMap>
+
+    <sql id="selectPolicyNewsVo">
+        select news_id, title, introduction, user_id,user_name, main_img, read_count, content, issue_time, create_time, create_by, update_time, update_by,news_type,sys_name from policy_news
+    </sql>
+
+    <select id="selectPolicyNewsList" parameterType="com.sinonc.agriculture.domain.PolicyNews" resultMap="PolicyNewsResult">
+        <include refid="selectPolicyNewsVo"/>
+        <where>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="introduction != null  and introduction != ''">and introduction like concat('%', #{introduction},
+                '%')
+            </if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="readCount != null ">and read_count = #{readCount}</if>
+            <if test="params.beginIssueTime != null and params.beginIssueTime != '' ">
+                and issue_time &gt;= #{params.beginIssueTime}
+            </if>
+
+            <if test="params.endIssueTime != null and params.endIssueTime != ''">
+                and issue_time &lt;= #{params.endIssueTime}
+            </if>
+
+            <if test="newsType != null  and newsType != ''">and news_type = #{newsType}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name = #{sysName}</if>
+
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectPolicyNewsDtoById" parameterType="Long" resultMap="PolicyNewsDtoResult">
+        <include refid="selectPolicyNewsVo"/>
+        where news_id = #{newsId}
+    </select>
+
+    <select id="selectPolicyNewsById" parameterType="Long" resultMap="PolicyNewsResult">
+        <include refid="selectPolicyNewsVo"/>
+        where news_id = #{newsId}
+    </select>
+
+
+    <select id="selectPolicyNewsByIdForUpdate" parameterType="Long" resultMap="PolicyNewsResult">
+        <include refid="selectPolicyNewsVo"/>
+        where news_id = #{newsId}  FOR UPDATE
+    </select>
+
+    <insert id="insertPolicyNews" parameterType="com.sinonc.agriculture.domain.PolicyNews" useGeneratedKeys="true" keyProperty="newsId">
+        insert into policy_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="introduction != null  and introduction != ''">introduction,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="mainImg != null  and mainImg != ''">main_img,</if>
+            <if test="readCount != null ">read_count,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="issueTime != null ">issue_time,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="newsType != null  and newsType != ''">news_type,</if>
+            <if test="sysName != null  and sysName != ''">sys_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="introduction != null  and introduction != ''">#{introduction},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="mainImg != null  and mainImg != ''">#{mainImg},</if>
+            <if test="readCount != null ">#{readCount},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="issueTime != null ">#{issueTime},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="newsType != null  and newsType != ''">#{newsType},</if>
+            <if test="sysName != null  and sysName != ''">#{sysName},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePolicyNews" parameterType="com.sinonc.agriculture.domain.PolicyNews">
+        update policy_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="introduction != null  and introduction != ''">introduction = #{introduction},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="mainImg != null  and mainImg != ''">main_img = #{mainImg},</if>
+            <if test="readCount != null ">read_count = #{readCount},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="issueTime != null ">issue_time = #{issueTime},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="newsType != null  and newsType != ''">news_type = #{newsType},</if>
+            <if test="sysName != null  and sysName != ''">sys_name = #{sysName},</if>
+        </trim>
+        where news_id = #{newsId}
+    </update>
+
+    <delete id="deletePolicyNewsById" parameterType="Long">
+        delete from policy_news where news_id = #{newsId}
+    </delete>
+
+    <delete id="deletePolicyNewsByIds" parameterType="String">
+        delete from policy_news where news_id in
+        <foreach item="newsId" collection="array" open="(" separator="," close=")">
+            #{newsId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectPolicyNewsListByPolicyNewsVo" parameterType="com.sinonc.exchange.vo.PolicyNewsVo"
+            resultMap="PolicyNewsResult">
+        <include refid="selectPolicyNewsVo"/>
+        <where>
+
+            <if test="newsType != null  and newsType != ''">and news_type = #{newsType}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name = #{sysName}</if>
+
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="introduction != null  and introduction != ''">and introduction like concat('%', #{introduction},
+                '%')
+            </if>
+
+            <if test="beginIssueTime != null">
+                and issue_time &gt;= #{beginIssueTime}
+            </if>
+
+            <if test="endIssueTime != null">
+                and issue_time &lt;= #{endIssueTime}
+            </if>
+
+        </where>
+        order by create_time desc
+    </select>
+
+
+</mapper>

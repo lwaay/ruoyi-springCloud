@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.SectionDictMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.SectionDict" id="SectionDictResult">
+        <result property="sectionId" column="section_id"/>
+        <result property="sectionName" column="section_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="parentName" column="parent_name"/>
+    </resultMap>
+
+    <sql id="selectSectionDictVo">
+        select section_id, section_name, create_time, parent_id, create_by, update_time, update_by
+        from section_dict
+    </sql>
+
+    <select id="selectSectionDictList" parameterType="com.sinonc.agriculture.domain.SectionDict"
+            resultMap="SectionDictResult">
+        <include refid="selectSectionDictVo"/>
+        <where>
+            <if test="sectionName != null  and sectionName != ''">and section_name like concat('%', #{sectionName},
+                '%')
+            </if>
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+        </where>
+        order by parent_id
+    </select>
+
+    <select id="selectSectionDictById" parameterType="Long" resultMap="SectionDictResult">
+        select t.section_id,
+               t.section_name,
+               t.create_time,
+               t.parent_id,
+               t.create_by,
+               t.update_time,
+               t.update_by,
+               p.section_name as parent_name
+        from section_dict t
+                 left join section_dict p on p.section_id = t.parent_id
+        where t.section_id = #{sectionId}
+    </select>
+
+    <select id="selectAllSectionVo" resultType="com.sinonc.agriculture.vo.SectionDictVo">
+        select section_id sectionId, section_name sectionName
+        from section_dict
+    </select>
+
+    <insert id="insertSectionDict" parameterType="com.sinonc.agriculture.domain.SectionDict" useGeneratedKeys="true"
+            keyProperty="sectionId">
+        insert into section_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sectionName != null  and sectionName != ''">section_name,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="parentId != null ">parent_id,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sectionName != null  and sectionName != ''">#{sectionName},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="parentId != null ">#{parentId},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSectionDict" parameterType="com.sinonc.agriculture.domain.SectionDict">
+        update section_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sectionName != null  and sectionName != ''">section_name = #{sectionName},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+        </trim>
+        where section_id = #{sectionId}
+    </update>
+
+    <delete id="deleteSectionDictById" parameterType="Long">
+        delete
+        from section_dict
+        where section_id = #{sectionId}
+    </delete>
+
+    <delete id="deleteSectionDictByIds" parameterType="String">
+        delete from section_dict where section_id in
+        <foreach item="sectionId" collection="array" open="(" separator="," close=")">
+            #{sectionId}
+        </foreach>
+    </delete>
+
+</mapper>

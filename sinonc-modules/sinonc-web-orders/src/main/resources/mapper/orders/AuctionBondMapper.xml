@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AuctionBondMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AuctionBond" id="AuctionBondResult">
+        <result property="auctionbondId" column="auctionbond_id"/>
+        <result property="auctionId" column="auction_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="price" column="price"/>
+        <result property="payTime" column="pay_time"/>
+        <result property="paymentStatus" column="payment_status"/>
+        <result property="auctionOrderno" column="auction_orderno"/>
+        <result property="otherOrderno" column="other_orderno"/>
+        <result property="refundNo" column="refund_no"/>
+        <result property="createTime" column="create_time"/>
+        <result property="payType" column="pay_type"/>
+        <result property="win" column="win"/>
+        <result property="refundPrice" column="refund_price"/>
+        <result property="refundTime" column="refund_time"/>
+    </resultMap>
+
+    <sql id="selectAuctionBondVo">
+        select auctionbond_id,
+               auction_id,
+               member_id,
+               shop_id,
+               goods_id,
+               order_id,
+               price,
+               pay_time,
+               payment_status,
+               auction_orderno,
+               other_orderno,
+               refund_no,
+               create_time,
+               pay_type,
+               win,
+               refund_price,
+               refund_time
+        from od_auction_bond
+    </sql>
+
+    <select id="selectAuctionBondList" parameterType="com.sinonc.orders.domain.AuctionBond"
+            resultMap="AuctionBondResult">
+        <include refid="selectAuctionBondVo"/>
+        <where>
+            <if test="auctionbondId != null ">and auctionbond_id = #{auctionbondId}</if>
+            <if test="auctionId != null ">and auction_id = #{auctionId}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="shopId != null ">and shop_id = #{shopId}</if>
+            <if test="goodsId != null ">and goods_id = #{goodsId}</if>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="price != null ">and price = #{price}</if>
+            <if test="payTime != null ">and pay_time = #{payTime}</if>
+            <if test="paymentStatus != null ">and payment_status = #{paymentStatus}</if>
+            <if test="auctionOrderno != null  and auctionOrderno != '' ">and auction_orderno = #{auctionOrderno}</if>
+            <if test="otherOrderno != null  and otherOrderno != '' ">and other_orderno = #{otherOrderno}</if>
+            <if test="refundNo != null  and refundNo != '' ">and refund_no = #{refundNo}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="payType != null ">and pay_type = #{payType}</if>
+            <if test="win != null ">and win = #{win}</if>
+            <if test="refundPrice != null ">and refund_price = #{refundPrice}</if>
+            <if test="refundTime != null ">and refund_time = #{refundTime}</if>
+        </where>
+        order by auctionbond_id desc
+    </select>
+
+    <select id="selectAuctionBondById" parameterType="Long" resultMap="AuctionBondResult">
+        <include refid="selectAuctionBondVo"/>
+        where auctionbond_id = #{auctionbondId}
+    </select>
+
+    <insert id="insertAuctionBond" parameterType="com.sinonc.orders.domain.AuctionBond" useGeneratedKeys="true"
+            keyProperty="auctionbondId">
+        insert into od_auction_bond
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="auctionId != null  ">auction_id,</if>
+            <if test="memberId != null  ">member_id,</if>
+            <if test="shopId != null  ">shop_id,</if>
+            <if test="goodsId != null  ">goods_id,</if>
+            <if test="orderId != null  ">order_id,</if>
+            <if test="price != null  ">price,</if>
+            <if test="payTime != null  ">pay_time,</if>
+            <if test="paymentStatus != null  ">payment_status,</if>
+            <if test="auctionOrderno != null  and auctionOrderno != ''  ">auction_orderno,</if>
+            <if test="otherOrderno != null  and otherOrderno != ''  ">other_orderno,</if>
+            <if test="refundNo != null  and refundNo != ''  ">refund_no,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="payType != null  ">pay_type,</if>
+            <if test="win != null  ">win,</if>
+            <if test="refundPrice != null  ">refund_price,</if>
+            <if test="refundTime != null  ">refund_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="auctionId != null  ">#{auctionId},</if>
+            <if test="memberId != null  ">#{memberId},</if>
+            <if test="shopId != null  ">#{shopId},</if>
+            <if test="goodsId != null  ">#{goodsId},</if>
+            <if test="orderId != null  ">#{orderId},</if>
+            <if test="price != null  ">#{price},</if>
+            <if test="payTime != null  ">#{payTime},</if>
+            <if test="paymentStatus != null  ">#{paymentStatus},</if>
+            <if test="auctionOrderno != null  and auctionOrderno != ''  ">#{auctionOrderno},</if>
+            <if test="otherOrderno != null  and otherOrderno != ''  ">#{otherOrderno},</if>
+            <if test="refundNo != null  and refundNo != ''  ">#{refundNo},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="payType != null  ">#{payType},</if>
+            <if test="win != null  ">#{win},</if>
+            <if test="refundPrice != null  ">#{refundPrice},</if>
+            <if test="refundTime != null  ">#{refundTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAuctionBond" parameterType="com.sinonc.orders.domain.AuctionBond">
+        update od_auction_bond
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="auctionId != null  ">auction_id = #{auctionId},</if>
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="price != null  ">price = #{price},</if>
+            <if test="payTime != null  ">pay_time = #{payTime},</if>
+            <if test="paymentStatus != null  ">payment_status = #{paymentStatus},</if>
+            <if test="auctionOrderno != null  and auctionOrderno != ''  ">auction_orderno = #{auctionOrderno},</if>
+            <if test="otherOrderno != null  and otherOrderno != ''  ">other_orderno = #{otherOrderno},</if>
+            <if test="refundNo != null  and refundNo != ''  ">refund_no = #{refundNo},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="payType != null  ">pay_type = #{payType},</if>
+            <if test="win != null  ">win = #{win},</if>
+            <if test="refundPrice != null  ">refund_price = #{refundPrice},</if>
+            <if test="refundTime != null  ">refund_time = #{refundTime},</if>
+        </trim>
+        where auctionbond_id = #{auctionbondId}
+    </update>
+
+
+    <update id="updateAuctionBondByorderNo" parameterType="com.sinonc.orders.domain.AuctionBond">
+        update od_auction_bond
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="auctionId != null  ">auction_id = #{auctionId},</if>
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="price != null  ">price = #{price},</if>
+            <if test="payTime != null  ">pay_time = #{payTime},</if>
+            <if test="paymentStatus != null  ">payment_status = #{paymentStatus},</if>
+            <if test="auctionOrderno != null  and auctionOrderno != ''  ">auction_orderno = #{auctionOrderno},</if>
+            <if test="otherOrderno != null  and otherOrderno != ''  ">other_orderno = #{otherOrderno},</if>
+            <if test="refundNo != null  and refundNo != ''  ">refund_no = #{refundNo},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="payType != null  ">pay_type = #{payType},</if>
+            <if test="win != null  ">win = #{win},</if>
+            <if test="refundPrice != null  ">refund_price = #{refundPrice},</if>
+            <if test="refundTime != null  ">refund_time = #{refundTime},</if>
+        </trim>
+        where auction_orderno = #{auctionOrderno}
+    </update>
+
+
+    <delete id="deleteAuctionBondById" parameterType="Long">
+        delete
+        from od_auction_bond
+        where auctionbond_id = #{auctionbondId}
+    </delete>
+
+    <delete id="deleteAuctionBondByIds" parameterType="String">
+        delete from od_auction_bond where auctionbond_id in
+        <foreach item="auctionbondId" collection="array" open="(" separator="," close=")">
+            #{auctionbondId}
+        </foreach>
+    </delete>
+
+    <select id="selectApiAuctionBond" parameterType="long" resultMap="AuctionBondResult">
+        <include refid="selectAuctionBondVo"/>
+        WHERE member_id = #{memberId} AND goods_id = #{goodsId}
+        <if test="status != null"> and payment_status != #{status}</if>
+    </select>
+    <select id="selectByAuctionOrderNo" resultMap="AuctionBondResult">
+        <include refid="selectAuctionBondVo"/>
+        where auction_orderno =#{orderNo}
+    </select>
+
+    <select id="selectAuctionBondForAuctionId" parameterType="long" resultMap="AuctionBondResult">
+        SELECT * FROM od_auction_bond WHERE auction_id = #{auctionId} AND win IS NULL AND other_orderno IS NOT NULL
+    </select>
+
+    <select id="selectAuctionBondOwnForAuctionId" parameterType="long" resultMap="AuctionBondResult">
+        SELECT * FROM od_auction_bond WHERE auction_id = #{auctionId} AND win IS NOT NULL AND other_orderno IS NOT NULL
+    </select>
+
+</mapper>

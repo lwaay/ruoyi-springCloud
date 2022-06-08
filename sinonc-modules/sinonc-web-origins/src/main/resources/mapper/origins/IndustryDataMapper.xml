@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.IndustryDataMapper">
+
+    <resultMap type="IndustryData" id="IndustryDataResult">
+        <result property="id" column="id"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="year" column="year"/>
+        <result property="plantScale" column="plant_scale"/>
+        <result property="yield" column="yield"/>
+        <result property="value" column="value"/>
+        <result property="breed" column="breed"/>
+        <result property="area" column="area"/>
+        <result property="unitYield" column="unit_yield"/>
+        <result property="unitValue" column="unit_value"/>
+        <result property="operator" column="operator"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap id="IndustryDataWithArea" type="com.sinonc.origins.dto.IndustryDataWithArea">
+        <result property="plantScale" column="plant_scale"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="breed"    column="breed"/>
+        <result property="yield"    column="yield"/>
+        <result property="value" column="value"/>
+    </resultMap>
+
+    <sql id="selectIndustryDataVo">
+        select id,
+               area_code, year, plant_scale, yield, value, area, unit_yield, unit_value, breed, operator, create_by, create_time, update_by, update_time
+        from display_industry_data
+    </sql>
+
+    <select id="selectIndustryDataList" parameterType="IndustryData" resultMap="IndustryDataResult">
+        <include refid="selectIndustryDataVo"/>
+        <where>
+            <if test="areaCode != null  and areaCode != ''">
+                and area_code like concat(#{areaCode}, '%')
+            </if>
+            <if test="year != null  and year != ''">
+                and year = #{year}
+            </if>
+            <if test="plantScale != null  and plantScale != ''">
+                and plant_scale = #{plantScale}
+            </if>
+            <if test="yield != null  and yield != ''">
+                and yield = #{yield}
+            </if>
+            <if test="value != null  and value != ''">
+                and value = #{value}
+            </if>
+            <if test="area != null  and area != ''">
+                and area = #{area}
+            </if>
+            <if test="unitValue != null  and unitValue != ''">
+                and unit_value = #{unitValue}
+            </if>
+            <if test="unitYield != null  and unitYield != ''">
+                and unit_yield = #{unitYield}
+            </if>
+            <if test="breed != null  and breed != ''">
+                and breed = #{breed}
+            </if>
+            <if test="operator != null  and operator != ''">
+                and operator = #{operator}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectIndustryDataById" parameterType="Long" resultMap="IndustryDataResult">
+        <include refid="selectIndustryDataVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectIndustryDataGroupByAreaCode" parameterType="string" resultMap="IndustryDataWithArea">
+        SELECT
+            a.plant_scale,b.*
+        FROM
+            ( SELECT area_code, Round(sum( plant_scale ),2) AS plant_scale FROM display_industry_data
+            <where>
+                <if test="year != null and year != ''">
+                    and year = #{year}
+                </if>
+                <if test="1 == 1">
+                    and area_code != '451000'
+                </if>
+            </where>
+            GROUP BY area_code ) a
+            LEFT JOIN
+            ( SELECT area_code, Round(sum( `value` ),2) AS `value` FROM display_industry_data
+            <where>
+                <if test="year != null and year != ''">
+                    and year = #{year}
+                </if>
+                <if test="1 == 1">
+                    and area_code != '451000'
+                </if>
+            </where>
+            GROUP BY area_code ) b ON a.area_code = b.area_code
+            ORDER BY plant_scale DESC LIMIT 10
+    </select>
+    <select id="selectIndustryDataGroupByBreed" parameterType="string" resultMap="IndustryDataWithArea">
+        SELECT
+        a.yield,b.*
+        FROM
+        ( SELECT breed, Round(sum( yield ), 2) AS yield FROM display_industry_data
+        <where>
+            <if test="year != null and year != ''">
+                and year = #{year}
+            </if>
+            <if test="1 == 1">
+                and area_code != '451000'
+            </if>
+        </where>
+        GROUP BY breed ) a
+        LEFT JOIN
+        ( SELECT breed, Round(sum( `value` ),2) AS `value` FROM display_industry_data
+        <where>
+            <if test="year != null and year != ''">
+                and year = #{year}
+            </if>
+            <if test="1 == 1">
+                and area_code != '451000'
+            </if>
+        </where>
+        GROUP BY breed ) b ON a.breed = b.breed
+        ORDER BY yield DESC LIMIT 10
+    </select>
+    <select id="selectIndustryDataGroupByBreedLimitFive" parameterType="string" resultMap="IndustryDataWithArea">
+        SELECT
+            breed,
+            sum( plant_scale ) AS plant_scale
+        FROM
+            display_industry_data
+        <where>
+            <if test="year != null and year != ''">
+                and year = #{year}
+            </if>
+            <if test="1 == 1">
+                and area_code != '451000'
+            </if>
+        </where>
+        GROUP BY
+            breed
+        ORDER BY
+            plant_scale DESC
+            LIMIT 5
+    </select>
+
+    <insert id="insertIndustryData" parameterType="IndustryData" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into display_industry_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaCode != null">area_code,
+            </if>
+            <if test="year != null">year,
+            </if>
+            <if test="plantScale != null">plant_scale,
+            </if>
+            <if test="yield != null">yield,
+            </if>
+            <if test="value != null">value,
+            </if>
+            <if test="breed != null">breed,
+            </if>
+            <if test="operator != null">operator,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="area != null">area,
+            </if>
+            <if test="unitValue != null">unit_value,
+            </if>
+            <if test="unitYield != null">unit_yield,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaCode != null">#{areaCode},
+            </if>
+            <if test="year != null">#{year},
+            </if>
+            <if test="plantScale != null">#{plantScale},
+            </if>
+            <if test="yield != null">#{yield},
+            </if>
+            <if test="value != null">#{value},
+            </if>
+            <if test="breed != null">#{breed},
+            </if>
+            <if test="operator != null">#{operator},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="area != null">#{area},
+            </if>
+            <if test="unitValue != null">#{unitValue},
+            </if>
+            <if test="unitYield != null">#{unitYield},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateIndustryData" parameterType="IndustryData">
+        update display_industry_data
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaCode != null">area_code =
+                #{areaCode},
+            </if>
+            <if test="year != null">year =
+                #{year},
+            </if>
+            <if test="plantScale != null">plant_scale =
+                #{plantScale},
+            </if>
+            <if test="yield != null">yield =
+                #{yield},
+            </if>
+            <if test="value != null">value =
+                #{value},
+            </if>
+            <if test="breed != null">breed =
+                #{breed},
+            </if>
+            <if test="operator != null">operator =
+                #{operator},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="area != null">area =
+                #{area},
+            </if>
+            <if test="unitValue != null">unit_value =
+                #{unitValue},
+            </if>
+            <if test="unitYield != null">unit_yield =
+                #{unitYield},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteIndustryDataById" parameterType="Long">
+        delete
+        from display_industry_data
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteIndustryDataByIds" parameterType="String">
+        delete from display_industry_data where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

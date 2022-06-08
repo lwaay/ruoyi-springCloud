@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.PolicynewsCommentMapper">
+    
+    <resultMap type="com.sinonc.agriculture.domain.PolicynewsComment" id="PolicynewsCommentResult">
+        <result property="replyId"    column="reply_id"    />
+        <result property="policynewsIdP"    column="policynews_id_p"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="replyContent"    column="reply_content"    />
+        <result property="replyMemberIdP"    column="reply_member_id_p"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+    </resultMap>
+
+    <sql id="selectPolicynewsCommentVo">
+        select reply_id, policynews_id_p, member_id_p, reply_content, reply_member_id_p, create_time, create_user from policynews_comment
+    </sql>
+
+    <select id="selectPolicynewsCommentList" parameterType="com.sinonc.agriculture.domain.PolicynewsComment" resultMap="PolicynewsCommentResult">
+        <include refid="selectPolicynewsCommentVo"/>
+        <where>  
+            <if test="policynewsIdP != null "> and policynews_id_p = #{policynewsIdP}</if>
+            <if test="memberIdP != null "> and member_id_p = #{memberIdP}</if>
+            <if test="replyContent != null  and replyContent != ''"> and reply_content = #{replyContent}</if>
+            <if test="replyMemberIdP != null "> and reply_member_id_p = #{replyMemberIdP}</if>
+            <if test="createUser != null  and createUser != ''"> and create_user = #{createUser}</if>
+        </where>
+    </select>
+    
+    <select id="selectPolicynewsCommentById" parameterType="Long" resultMap="PolicynewsCommentResult">
+        <include refid="selectPolicynewsCommentVo"/>
+        where reply_id = #{replyId}
+    </select>
+        
+    <insert id="insertPolicynewsComment" parameterType="com.sinonc.agriculture.domain.PolicynewsComment" useGeneratedKeys="true" keyProperty="replyId">
+        insert into policynews_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="policynewsIdP != null ">policynews_id_p,</if>
+            <if test="memberIdP != null ">member_id_p,</if>
+            <if test="replyContent != null  and replyContent != ''">reply_content,</if>
+            <if test="replyMemberIdP != null ">reply_member_id_p,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="policynewsIdP != null ">#{policynewsIdP},</if>
+            <if test="memberIdP != null ">#{memberIdP},</if>
+            <if test="replyContent != null  and replyContent != ''">#{replyContent},</if>
+            <if test="replyMemberIdP != null ">#{replyMemberIdP},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePolicynewsComment" parameterType="com.sinonc.agriculture.domain.PolicynewsComment">
+        update policynews_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="policynewsIdP != null ">policynews_id_p = #{policynewsIdP},</if>
+            <if test="memberIdP != null ">member_id_p = #{memberIdP},</if>
+            <if test="replyContent != null  and replyContent != ''">reply_content = #{replyContent},</if>
+            <if test="replyMemberIdP != null ">reply_member_id_p = #{replyMemberIdP},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+        </trim>
+        where reply_id = #{replyId}
+    </update>
+
+    <delete id="deletePolicynewsCommentById" parameterType="Long">
+        delete from policynews_comment where reply_id = #{replyId}
+    </delete>
+
+    <delete id="deletePolicynewsCommentByIds" parameterType="String">
+        delete from policynews_comment where reply_id in 
+        <foreach item="replyId" collection="array" open="(" separator="," close=")">
+            #{replyId}
+        </foreach>
+    </delete>
+    
+</mapper>

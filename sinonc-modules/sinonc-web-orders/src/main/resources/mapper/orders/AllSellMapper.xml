@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AllSellMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.AllSell" id="AllSellResult">
+        <result property="id"    column="id"    />
+        <result property="farmId"    column="farm_id"    />
+        <result property="farmName"    column="farm_name"    />
+        <result property="type"    column="type"    />
+        <result property="buyer"    column="buyer"    />
+        <result property="platform"    column="platform"    />
+        <result property="price"    column="price"    />
+        <result property="units"    column="units"    />
+        <result property="amount"    column="amount"    />
+        <result property="money"    column="money"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectAllSellVo">
+        select id, farm_id, farm_name, type, buyer, platform, price, units, amount, money, create_time, remark from od_all_sell
+    </sql>
+	
+    <select id="selectAllSellList" parameterType="com.sinonc.orders.domain.AllSell" resultMap="AllSellResult">
+        <include refid="selectAllSellVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="farmId != null "> and farm_id = #{farmId}</if>
+             <if test="farmName != null  and farmName != '' "> and farm_name = #{farmName}</if>
+             <if test="type != null "> and type = #{type}</if>
+             <if test="buyer != null  and buyer != '' "> and buyer = #{buyer}</if>
+             <if test="platform != null "> and platform = #{platform}</if>
+             <if test="price != null "> and price = #{price}</if>
+             <if test="units != null "> and units = #{units}</if>
+             <if test="amount != null "> and amount = #{amount}</if>
+             <if test="money != null "> and money = #{money}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+         order by create_time desc
+    </select>
+    
+    <select id="selectAllSellById" parameterType="Long" resultMap="AllSellResult">
+        <include refid="selectAllSellVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertAllSell" parameterType="com.sinonc.orders.domain.AllSell" useGeneratedKeys="true" keyProperty="id">
+        insert into od_all_sell(farm_id, farm_name, type, buyer, platform, price, units, amount, money, create_time, remark)
+       values
+            <foreach collection="list" item="AllSell" index="index" separator=",">
+                (
+                #{AllSell.farmId},#{AllSell.farmName},#{AllSell.type},#{AllSell.buyer},#{AllSell.platform},#{AllSell.price},#{AllSell.units},#{AllSell.amount},#{AllSell.money},#{AllSell.createTime},#{AllSell.remark}
+
+                )
+            </foreach>
+    </insert>
+	 
+    <update id="updateAllSell" parameterType="com.sinonc.orders.domain.AllSell">
+        update od_all_sell
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="farmId != null  ">farm_id = #{farmId},</if>
+            <if test="farmName != null  and farmName != ''  ">farm_name = #{farmName},</if>
+            <if test="type != null  ">type = #{type},</if>
+            <if test="buyer != null  and buyer != ''  ">buyer = #{buyer},</if>
+            <if test="platform != null  ">platform = #{platform},</if>
+            <if test="price != null  ">price = #{price},</if>
+            <if test="units != null  ">units = #{units},</if>
+            <if test="amount != null  ">amount = #{amount},</if>
+            <if test="money != null  ">money = #{money},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteAllSellById" parameterType="Long">
+        delete from od_all_sell where id = #{id}
+    </delete>
+	
+    <delete id="deleteAllSellByIds" parameterType="String">
+        delete from od_all_sell where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

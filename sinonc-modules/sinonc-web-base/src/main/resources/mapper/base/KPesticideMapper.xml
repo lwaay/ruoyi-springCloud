@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.KPesticideMapper">
+
+    <resultMap type="KPesticide" id="KPesticideResult">
+        <result property="id" column="id"/>
+        <result property="pesticideCode" column="pesticide_code"/>
+        <result property="pesticideName" column="pesticide_name"/>
+        <result property="forbidden" column="forbidden"/>
+        <result property="safePeriod" column="safe_period"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+    </resultMap>
+
+    <sql id="selectKPesticideVo">
+        select id,
+               pesticide_code,
+               pesticide_name,
+               forbidden,
+               safe_period,
+               remark,
+               create_time,
+               create_user
+        from k_pesticide
+    </sql>
+
+    <select id="selectKPesticideList" parameterType="KPesticide" resultMap="KPesticideResult">
+        <include refid="selectKPesticideVo"/>
+        <where>
+            <if test="pesticideCode != null  and pesticideCode != ''">
+                and pesticide_code = #{pesticideCode}
+            </if>
+            <if test="pesticideName != null  and pesticideName != ''">
+                and pesticide_name like concat('%', #{pesticideName}, '%')
+            </if>
+            <if test="forbidden != null  and forbidden != ''">
+                and forbidden = #{forbidden}
+            </if>
+            <if test="safePeriod != null  and safePeriod != ''">
+                and safe_period = #{safePeriod}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectKPesticideById" parameterType="Long" resultMap="KPesticideResult">
+        <include refid="selectKPesticideVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKPesticide" parameterType="KPesticide" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into k_pesticide
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pesticideCode != null">pesticide_code,
+            </if>
+            <if test="pesticideName != null">pesticide_name,
+            </if>
+            <if test="forbidden != null">forbidden,
+            </if>
+            <if test="safePeriod != null">safe_period,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="createUser != null">create_user,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pesticideCode != null">#{pesticideCode},
+            </if>
+            <if test="pesticideName != null">#{pesticideName},
+            </if>
+            <if test="forbidden != null">#{forbidden},
+            </if>
+            <if test="safePeriod != null">#{safePeriod},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="createUser != null">#{createUser},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateKPesticide" parameterType="KPesticide">
+        update k_pesticide
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pesticideCode != null">pesticide_code =
+                #{pesticideCode},
+            </if>
+            <if test="pesticideName != null">pesticide_name =
+                #{pesticideName},
+            </if>
+            <if test="forbidden != null">forbidden =
+                #{forbidden},
+            </if>
+            <if test="safePeriod != null">safe_period =
+                #{safePeriod},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="createUser != null">create_user =
+                #{createUser},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKPesticideById" parameterType="Long">
+        delete
+        from k_pesticide
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteKPesticideByIds" parameterType="String">
+        delete from k_pesticide where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.RefundMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Refund" id="RefundResult">
+        <result property="rfId"    column="rf_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="refundNo"    column="refund_no"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="orderAmount"    column="order_amount"    />
+        <result property="rfReason"    column="rf_reason"    />
+        <result property="rfImg"    column="rf_img"    />
+        <result property="rfAmount"    column="rf_amount"    />
+        <result property="rfDescribe"    column="rf_describe"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="confirmTime"    column="confirm_time"    />
+        <result property="confirmBy"    column="confirm_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="tradeId"    column="trade_id"    />
+        <result property="rfStatus"    column="rf_status"    />
+    </resultMap>
+
+	<sql id="selectRefundVo">
+        select rf_id, order_id, order_no,refund_no, member_id, order_amount, rf_reason, rf_img, rf_amount, rf_describe, shop_id, create_time, confirm_time,confirm_by, update_time, trade_id, rf_status from od_refund
+    </sql>
+
+    <select id="selectRefundList" parameterType="com.sinonc.orders.domain.Refund" resultMap="RefundResult">
+        <include refid="selectRefundVo"/>
+        <where>
+            <if test="rfId != null "> and rf_id = #{rfId}</if>
+             <if test="orderId != null "> and order_id = #{orderId}</if>
+             <if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
+             <if test="memberId != null "> and member_id = #{memberId}</if>
+             <if test="orderAmount != null "> and order_amount = #{orderAmount}</if>
+             <if test="rfReason != null  and rfReason != '' "> and rf_reason = #{rfReason}</if>
+             <if test="rfImg != null  and rfImg != '' "> and rf_img = #{rfImg}</if>
+             <if test="rfAmount != null "> and rf_amount = #{rfAmount}</if>
+             <if test="rfDescribe != null  and rfDescribe != '' "> and rf_describe = #{rfDescribe}</if>
+             <if test="shopId != null "> and shop_id = #{shopId}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="confirmTime != null "> and confirm_time = #{confirmTime}</if>
+             <if test="confirmBy != null "> and confirm_by = #{confirmBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="tradeId != null "> and trade_id = #{tradeId}</if>
+             <if test="rfStatus != null "> and rf_status = #{rfStatus}</if>
+         </where>
+            order by create_time desc
+    </select>
+
+    <select id="selectRefundById" parameterType="Long" resultMap="RefundResult">
+        <include refid="selectRefundVo"/>
+        where rf_id = #{rfId}
+    </select>
+    <select id="selectRefundByOrderNo" resultMap="RefundResult">
+        <include refid="selectRefundVo"/>
+        where order_no = #{orderNo}
+    </select>
+
+    <insert id="insertRefund" parameterType="com.sinonc.orders.domain.Refund" useGeneratedKeys="true" keyProperty="rfId">
+        insert into od_refund
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orderId != null  ">order_id,</if>
+			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+			<if test="refundNo != null  and refundNo != ''  ">refund_no,</if>
+			<if test="memberId != null  ">member_id,</if>
+			<if test="orderAmount != null  ">order_amount,</if>
+			<if test="rfReason != null  and rfReason != ''  ">rf_reason,</if>
+			<if test="rfImg != null  and rfImg != ''  ">rf_img,</if>
+			<if test="rfAmount != null  ">rf_amount,</if>
+			<if test="rfDescribe != null  and rfDescribe != ''  ">rf_describe,</if>
+			<if test="shopId != null  ">shop_id,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="confirmTime != null  ">confirm_time,</if>
+			<if test="confirmBy != null  ">confirm_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="tradeId != null  ">trade_id,</if>
+			<if test="rfStatus != null  ">rf_status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orderId != null  ">#{orderId},</if>
+			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+			<if test="refundNo != null  and refundNo != ''  ">#{refundNo},</if>
+			<if test="memberId != null  ">#{memberId},</if>
+			<if test="orderAmount != null  ">#{orderAmount},</if>
+			<if test="rfReason != null  and rfReason != ''  ">#{rfReason},</if>
+			<if test="rfImg != null  and rfImg != ''  ">#{rfImg},</if>
+			<if test="rfAmount != null  ">#{rfAmount},</if>
+			<if test="rfDescribe != null  and rfDescribe != ''  ">#{rfDescribe},</if>
+			<if test="shopId != null  ">#{shopId},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="confirmTime != null  ">#{confirmTime},</if>
+			<if test="confirmBy != null  ">#{confirmBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="tradeId != null  ">#{tradeId},</if>
+			<if test="rfStatus != null  ">#{rfStatus},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRefund" parameterType="com.sinonc.orders.domain.Refund">
+        update od_refund
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="refundNo != null  and refundNo != ''  ">refund_no = #{refundNo},</if>
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="orderAmount != null  ">order_amount = #{orderAmount},</if>
+            <if test="rfReason != null  and rfReason != ''  ">rf_reason = #{rfReason},</if>
+            <if test="rfImg != null  and rfImg != ''  ">rf_img = #{rfImg},</if>
+            <if test="rfAmount != null  ">rf_amount = #{rfAmount},</if>
+            <if test="rfDescribe != null  and rfDescribe != ''  ">rf_describe = #{rfDescribe},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="confirmTime != null  ">confirm_time = #{confirmTime},</if>
+            <if test="confirmBy != null  ">confirm_by = #{confirmBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="tradeId != null  ">trade_id = #{tradeId},</if>
+            <if test="rfStatus != null  ">rf_status = #{rfStatus},</if>
+        </trim>
+        where rf_id = #{rfId}
+    </update>
+
+	<delete id="deleteRefundById" parameterType="Long">
+        delete from od_refund where rf_id = #{rfId}
+    </delete>
+
+    <delete id="deleteRefundByIds" parameterType="String">
+        delete from od_refund where rf_id in
+        <foreach item="rfId" collection="array" open="(" separator="," close=")">
+            #{rfId}
+        </foreach>
+    </delete>
+
+</mapper>

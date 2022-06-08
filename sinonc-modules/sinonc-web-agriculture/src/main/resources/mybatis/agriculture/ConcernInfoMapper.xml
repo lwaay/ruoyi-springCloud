@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.ConcernInfoMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.ConcernInfo" id="ConcernInfoResult">
+        <result property="concernId" column="concern_id"/>
+        <result property="targetId" column="target_id"/>
+        <result property="targetType" column="target_type"/>
+        <result property="memberId" column="member_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectConcernInfoVo">
+        select concern_id, target_id, target_type, member_id, create_time
+        from concern_info
+    </sql>
+
+    <select id="selectConcernInfoList" parameterType="com.sinonc.agriculture.domain.ConcernInfo"
+            resultMap="ConcernInfoResult">
+        <include refid="selectConcernInfoVo"/>
+        <where>
+            <if test="targetId != null ">and target_id = #{targetId}</if>
+            <if test="targetType != null ">and target_type = #{targetType}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+        </where>
+    </select>
+
+    <select id="selectConcernInfoById" parameterType="Long" resultMap="ConcernInfoResult">
+        <include refid="selectConcernInfoVo"/>
+        where concern_id = #{concernId}
+    </select>
+
+    <insert id="insertConcernInfo" parameterType="com.sinonc.agriculture.domain.ConcernInfo" useGeneratedKeys="true"
+            keyProperty="concernId">
+        insert into concern_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="concernId != null ">concern_id,</if>
+            <if test="targetId != null ">target_id,</if>
+            <if test="targetType != null ">target_type,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="createTime != null ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="concernId != null ">#{concernId},</if>
+            <if test="targetId != null ">#{targetId},</if>
+            <if test="targetType != null ">#{targetType},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="createTime != null ">#{createTime},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsert" parameterType="com.sinonc.agriculture.domain.ConcernInfo">
+        insert into concern_info(target_id, target_type, member_id, create_time) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.targetId},#{item.targetType},#{item.memberId},#{item.createTime})
+        </foreach>
+    </insert>
+
+    <update id="updateConcernInfo" parameterType="com.sinonc.agriculture.domain.ConcernInfo">
+        update concern_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="targetId != null ">target_id = #{targetId},</if>
+            <if test="targetType != null ">target_type = #{targetType},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where concern_id = #{concernId}
+    </update>
+
+    <delete id="deleteConcernInfoById" parameterType="Long">
+        delete
+        from concern_info
+        where concern_id = #{concernId}
+    </delete>
+
+    <delete id="deleteConcernInfoByIds" parameterType="String">
+        delete from concern_info where concern_id in
+        <foreach item="concernId" collection="array" open="(" separator="," close=")">
+            #{concernId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteConcernInfo" parameterType="com.sinonc.agriculture.domain.ConcernInfo">
+        delete
+        from concern_info
+        where target_id = #{targetId}
+          and target_type = #{targetType}
+          and member_id = #{memberId}
+    </delete>
+
+    <select id="selectConcernInfoByIdforMerber" parameterType="long" resultType="java.util.Map">
+        SELECT c.*
+        FROM concern_info c
+        WHERE c.`target_id` = #{expertId}
+          AND c.`target_type` IN (0, 3)
+    </select>
+
+    <select id="selectOwnConcernByMemberId" parameterType="long" resultMap="ConcernInfoResult">
+        SELECT *
+        FROM concern_info
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="selectConcernInfoByTargetIds" resultMap="ConcernInfoResult">
+        <include refid="selectConcernInfoVo"/>
+        where member_id = #{param1} and target_type = #{param2}
+        <foreach collection="param3" item="item" separator="," open=" and target_id in (" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectMemberConcernInfoByTargetId" resultMap="ConcernInfoResult">
+        <include refid="selectConcernInfoVo"/>
+        where member_id = #{param1} and target_type = #{param2} and target_id = #{param3}
+    </select>
+
+    <select id="getConcernInfoByMemberIdByExpertInfo" parameterType="long" resultMap="ConcernInfoResult">
+        SELECT *
+        FROM concern_info
+        WHERE member_id = #{memberId}
+          and target_type = 3
+    </select>
+
+    <select id="selectByMemberIdAndType" resultMap="ConcernInfoResult">
+        <include refid="selectConcernInfoVo"/>
+        where member_id = #{param1} and target_type = #{param2}
+    </select>
+
+    <select id="selectByMemberIdAndTypeAndTargetId" resultMap="ConcernInfoResult">
+        <include refid="selectConcernInfoVo"/>
+        where member_id = #{param1} and target_type = #{param2} and target_id = #{param3}
+    </select>
+
+    <select id="selectConcernMemberInfo" resultType="java.lang.String">
+        SELECT member_info.nike_name
+        FROM concern_info
+                 LEFT JOIN member_info ON concern_info.member_id = member_info.member_id
+        WHERE concern_info.target_id = #{param1}
+          AND concern_info.target_type = #{param2}
+    </select>
+
+    <select id="selectByTypeAndTargetId" resultMap="ConcernInfoResult">
+        <include refid="selectConcernInfoVo"/>
+        where target_type = #{param1} and target_id = #{param2}
+    </select>
+
+</mapper>

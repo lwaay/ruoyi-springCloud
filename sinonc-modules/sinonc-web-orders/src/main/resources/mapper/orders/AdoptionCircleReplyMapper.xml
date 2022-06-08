@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AdoptionCircleReplyMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AdoptionCircleReply" id="AdoptionCircleReplyResult">
+        <result property="replyId" column="reply_id"/>
+        <result property="content" column="content"/>
+        <result property="adoptionId" column="adoption_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="memberId" column="member_id"/>
+        <result property="targetId" column="target_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="delFlg" column="del_flg"/>
+    </resultMap>
+
+    <sql id="selectAdoptionCircleReplyVo">
+        select reply_id, content, adoption_id, create_by, member_id, target_id, create_time, del_flg
+        from adoption_circle_reply
+    </sql>
+
+    <select id="selectAdoptionCircleReplyList"
+            resultMap="AdoptionCircleReplyResult">
+        <include refid="selectAdoptionCircleReplyVo"/>
+        <where>
+            <if test="content != null  and content != ''">
+                and content like concat('%',#{content},'%')
+            </if>
+            <if test="adoptionId != null ">
+                and adoption_id = #{adoptionId}
+            </if>
+            <if test="memberId != null ">
+                and member_id = #{memberId}
+            </if>
+            <if test="delFlg != null ">
+                and del_flg = #{delFlg}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAdoptionCircleReplyById" parameterType="Long" resultMap="AdoptionCircleReplyResult">
+        <include refid="selectAdoptionCircleReplyVo"/>
+        where reply_id = #{replyId}
+    </select>
+    <select id="selectAdoptionCircleReplyCount" resultType="java.lang.Integer">
+        select count(*) from adoption_circle_reply
+        <where>
+            <if test="adoptionId != null ">
+                and adoption_id = #{adoptionId}
+            </if>
+            <if test="memberId != null ">
+                and member_id = #{memberId}
+            </if>
+            <if test="delFlg != null ">
+                and del_flg = #{delFlg}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertAdoptionCircleReply">
+        insert into adoption_circle_reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="replyId != null">reply_id,
+            </if>
+            <if test="content != null">content,
+            </if>
+            <if test="adoptionId != null">adoption_id,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="memberId != null">member_id,
+            </if>
+            <if test="targetId != null">target_id,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="delFlg != null">del_flg,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="replyId != null">#{replyId},
+            </if>
+            <if test="content != null">#{content},
+            </if>
+            <if test="adoptionId != null">#{adoptionId},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="memberId != null">#{memberId},
+            </if>
+            <if test="targetId != null">#{targetId},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="delFlg != null">#{delFlg},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateAdoptionCircleReply">
+        update adoption_circle_reply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null">content =
+                #{content},
+            </if>
+            <if test="adoptionId != null">adoption_id =
+                #{adoptionId},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="memberId != null">member_id =
+                #{memberId},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="delFlg != null">del_flg =
+                #{delFlg},
+            </if>
+            <if test="targetId != null">target_id =
+                #{targetId},
+            </if>
+        </trim>
+        where reply_id = #{replyId}
+    </update>
+
+    <update id="updateAdoptionCircleReplyWithId">
+        update adoption_circle_reply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null">content =
+                #{content},
+            </if>
+            <if test="adoptionId != null">adoption_id =
+                #{adoptionId},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="delFlg != null">del_flg =
+                #{delFlg},
+            </if>
+            <if test="targetId != null">target_id =
+                #{targetId},
+            </if>
+        </trim>
+        where reply_id = #{replyId} and member_id = #{memberId}
+    </update>
+
+    <delete id="deleteAdoptionCircleReplyById" parameterType="Long">
+        delete
+        from adoption_circle_reply
+        where reply_id = #{replyId}
+    </delete>
+
+    <delete id="deleteAdoptionCircleReplyByIds" parameterType="String">
+        delete from adoption_circle_reply where reply_id in
+        <foreach item="replyId" collection="array" open="(" separator="," close=")">
+            #{replyId}
+        </foreach>
+    </delete>
+
+</mapper>

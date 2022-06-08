@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AuctionMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Auction" id="AuctionResult">
+        <result property="auctionId" column="auction_id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="auctionNum" column="auction_num"/>
+        <result property="auctionName" column="auction_name"/>
+        <result property="auctionDesc" column="auction_desc"/>
+        <result property="auctionBegintime" column="auction_begintime"/>
+        <result property="auctionEndtime" column="auction_endtime"/>
+        <result property="referencePrice" column="reference_price"/>
+        <result property="auctionStartingprice" column="auction_startingprice"/>
+        <result property="auctionNowprice" column="auction_nowprice"/>
+        <result property="createUser" column="create_user"/>
+        <result property="lowprice" column="lowprice"/>
+        <result property="mostprice" column="mostprice"/>
+        <result property="type" column="type"/>
+        <result property="isEnd" column="is_end"/>
+        <result property="auctionBond" column="auction_bond"/>
+    </resultMap>
+
+    <sql id="auctionVo">
+        select auction_id,
+               goods_id,
+               auction_num,
+               auction_name,
+               auction_desc,
+               auction_begintime,
+               auction_endtime,
+               reference_price,
+               auction_startingprice,
+               auction_nowprice,
+               create_user,
+               lowprice,
+               mostprice,
+               type,
+               auction_bond
+        from od_auction
+    </sql>
+
+    <sql id="selectAuctionVo">
+        select auction_id,
+               od_auction.goods_id,
+               auction_num,
+               auction_name,
+               auction_desc,
+               auction_begintime,
+               auction_endtime,
+               reference_price,
+               auction_startingprice,
+               auction_nowprice,
+               create_user,
+               lowprice,
+               mostprice,
+               od_auction.type,
+               is_end,
+               auction_bond
+        from od_auction
+    </sql>
+
+    <select id="selectAuctionList" parameterType="com.sinonc.orders.domain.Auction" resultMap="AuctionResult">
+        <include refid="selectAuctionVo"/>
+        left join od_goods on od_goods.goods_id=od_auction.goods_id
+        <where>
+            <if test="auctionId != null ">and auction_id = #{auctionId}</if>
+            <if test="goodsId != null ">and goods_id = #{goodsId}</if>
+            <if test="auctionNum != null  and auctionNum != '' ">and auction_num = #{auctionNum}</if>
+            <if test="auctionName != null  and auctionName != '' ">and auction_name = #{auctionName}</if>
+            <if test="auctionDesc != null  and auctionDesc != '' ">and auction_desc = #{auctionDesc}</if>
+            <if test="auctionBegintime != null ">and auction_begintime = #{auctionBegintime}</if>
+            <if test="auctionEndtime != null ">and auction_endtime = #{auctionEndtime}</if>
+            <if test="auctionStartingprice != null ">and auction_startingprice = #{auctionStartingprice}</if>
+            <if test="auctionNowprice != null ">and auction_nowprice = #{auctionNowprice}</if>
+            <if test="createUser != null  and createUser != '' ">and create_user = #{createUser}</if>
+            <if test="lowprice != null ">and lowprice = #{lowprice}</if>
+            <if test="mostprice != null ">and mostprice = #{mostprice}</if>
+            <if test="type != null ">and type = #{type}</if>
+            <if test="isEnd != null ">and is_end = #{isEnd}</if>
+            <if test="auctionBond != null ">and auction_bond = #{auctionBond}</if>
+            <if test="beginTime != null and beginTime != ''"><!-- 开始时间检索 -->
+                and date_format(auction_begintime,'%y%m%d') &gt;= date_format(#{beginTime},'%y%m%d')
+            </if>
+            <if test="endTime != null and endTime != ''"><!-- 结束时间检索 -->
+                and date_format(auction_endtime,'%y%m%d') &lt;= date_format(#{endTime},'%y%m%d')
+            </if>
+        </where>
+        order by auction_id desc
+    </select>
+
+    <select id="selectAuctionById" parameterType="Long" resultMap="AuctionResult">
+        <include refid="selectAuctionVo"/>
+        where auction_id = #{auctionId}
+    </select>
+
+    <insert id="insertAuction" parameterType="com.sinonc.orders.domain.Auction" useGeneratedKeys="true"
+            keyProperty="auctionId">
+        insert into od_auction
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null  ">goods_id,</if>
+            <if test="auctionNum != null  and auctionNum != ''  ">auction_num,</if>
+            <if test="auctionName != null  and auctionName != ''  ">auction_name,</if>
+            <if test="auctionDesc != null  and auctionDesc != ''  ">auction_desc,</if>
+            <if test="auctionBegintime != null  ">auction_begintime,</if>
+            <if test="auctionEndtime != null  ">auction_endtime,</if>
+            <if test="referencePrice != null  ">reference_price,</if>
+            <if test="auctionStartingprice != null  ">auction_startingprice,</if>
+            <if test="auctionNowprice != null  ">auction_nowprice,</if>
+            <if test="createUser != null  and createUser != ''  ">create_user,</if>
+            <if test="lowprice != null  ">lowprice,</if>
+            <if test="mostprice != null  ">mostprice,</if>
+            <if test="type != null  ">type,</if>
+            <if test="isEnd != null  ">is_end,</if>
+            <if test="auctionBond != null  ">auction_bond,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null  ">#{goodsId},</if>
+            <if test="auctionNum != null  and auctionNum != ''  ">#{auctionNum},</if>
+            <if test="auctionName != null  and auctionName != ''  ">#{auctionName},</if>
+            <if test="auctionDesc != null  and auctionDesc != ''  ">#{auctionDesc},</if>
+            <if test="auctionBegintime != null  ">#{auctionBegintime},</if>
+            <if test="auctionEndtime != null  ">#{auctionEndtime},</if>
+            <if test="referencePrice != null  ">#{referencePrice},</if>
+            <if test="auctionStartingprice != null  ">#{auctionStartingprice},</if>
+            <if test="auctionNowprice != null  ">#{auctionNowprice},</if>
+            <if test="createUser != null  and createUser != ''  ">#{createUser},</if>
+            <if test="lowprice != null  ">#{lowprice},</if>
+            <if test="mostprice != null  ">#{mostprice},</if>
+            <if test="type != null  ">#{type},</if>
+            <if test="isEnd != null  ">#{isEnd},</if>
+            <if test="auctionBond != null  ">#{auctionBond},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAuction" parameterType="com.sinonc.orders.domain.Auction">
+        update od_auction
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="auctionNum != null  and auctionNum != ''  ">auction_num = #{auctionNum},</if>
+            <if test="auctionName != null  and auctionName != ''  ">auction_name = #{auctionName},</if>
+            <if test="auctionDesc != null  and auctionDesc != ''  ">auction_desc = #{auctionDesc},</if>
+            <if test="auctionBegintime != null  ">auction_begintime = #{auctionBegintime},</if>
+            <if test="auctionEndtime != null  ">auction_endtime = #{auctionEndtime},</if>
+            <if test="referencePrice != null  ">reference_price = #{referencePrice},</if>
+            <if test="auctionStartingprice != null  ">auction_startingprice = #{auctionStartingprice},</if>
+            <if test="auctionNowprice != null  ">auction_nowprice = #{auctionNowprice},</if>
+            <if test="createUser != null  and createUser != ''  ">create_user = #{createUser},</if>
+            <if test="lowprice != null  ">lowprice = #{lowprice},</if>
+            <if test="mostprice != null  ">mostprice = #{mostprice},</if>
+            <if test="type != null  ">type = #{type},</if>
+            <if test="isEnd != null  ">is_end = #{isEnd},</if>
+            <if test="auctionBond != null  ">auction_bond = #{auctionBond},</if>
+        </trim>
+        where auction_id = #{auctionId}
+    </update>
+
+    <delete id="deleteAuctionById" parameterType="Long">
+        delete
+        from od_auction
+        where auction_id = #{auctionId}
+    </delete>
+
+    <delete id="deleteAuctionByIds" parameterType="String">
+        delete from od_auction where auction_id in
+        <foreach item="auctionId" collection="array" open="(" separator="," close=")">
+            #{auctionId}
+        </foreach>
+    </delete>
+
+    <select id="selectGoodsForAuction" resultType="com.sinonc.orders.domain.Goods">
+        SELECT goods_id    goodsId,
+               brand_id    brandId,
+               shop_id     shopId,
+               name,
+               remark,
+               image,
+               video,
+               type,
+               content,
+               sale_able   saleAble,
+               discount,
+               final_price finalPrice,
+               cost_price  costPrice,
+               create_by   createBy,
+               create_time createTime,
+               update_by   updateBy,
+               update_time updateTime,
+               category_id categoryId,
+               specs_ids   specsIds
+        FROM od_goods
+        WHERE type = 3
+    </select>
+
+    <select id="selectAuctionByGoodsIdForUpdate" parameterType="long" resultMap="AuctionResult">
+        <include refid="selectAuctionVo"/>
+        where goods_id = #{goodsId} for update
+    </select>
+
+    <select id="selectAuctionForGoodsId" parameterType="long" resultMap="AuctionResult">
+        <include refid="selectAuctionVo"/>
+        where goods_id = #{goodsId}
+    </select>
+
+    <select id="selectMyAuction" parameterType="long" resultType="java.util.Map">
+        SELECT
+            t.*,
+            g.finalPrice
+        FROM
+            (
+                SELECT
+                    am.goods_id goodsId,
+                    am.member_id memberId,
+                    g.NAME
+                FROM
+                    od_auctionmember am
+                        INNER JOIN od_goods g ON am.goods_id = g.goods_id
+                WHERE
+                    member_id = #{memberId}
+                GROUP BY
+                    am.goods_id
+            ) t
+        LEFT JOIN ( SELECT am.goods_id goodsId, MAX( now_price ) finalPrice FROM od_auctionmember am GROUP BY am.goods_id ) g
+        ON t.goodsId = g.goodsId
+    </select>
+
+    <select id="listAuctionDesc" resultType="map">
+        SELECT a.auction_id,
+               a.goods_id,
+               a.auction_num,
+               a.auction_name,
+               a.auction_desc,
+               a.auction_begintime,
+               a.auction_endtime,
+               a.auction_startingprice,
+               a.auction_nowprice,
+               a.create_user,
+               a.lowprice,
+               a.mostprice,
+               a.type,
+               a.auction_bond,
+               a.is_end,
+               g.image
+        FROM od_goods g
+        inner join od_auction a on g.goods_id = a.goods_id
+        where g.del_flag != 1 and a.is_end != 0 and g.sale_able != 1
+        order by a.auction_id desc
+    </select>
+
+    <select id="selectAuctionBygoodsId" parameterType="long" resultMap="AuctionResult">
+        <include refid="selectAuctionVo"/>
+        where goods_id = #{goodsId}
+#         and is_end = 1
+    </select>
+
+</mapper>

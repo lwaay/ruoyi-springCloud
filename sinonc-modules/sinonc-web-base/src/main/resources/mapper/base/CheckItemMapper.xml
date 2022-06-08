@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.CheckItemMapper">
+
+    <resultMap type="com.sinonc.base.domain.CheckItem" id="CheckItemResult">
+        <result property="checkItemId" column="check_item_id"/>
+        <result property="checkItem" column="check_item"/>
+        <result property="valueType" column="value_type"/>
+        <result property="checkValue" column="check_value"/>
+        <result property="checkUnit" column="check_unit"/>
+        <result property="comment" column="comment"/>
+        <result property="checkIdP" column="check_id_p"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+    </resultMap>
+
+    <sql id="selectCheckItemVo">
+        select check_item_id,
+               check_item,
+               value_type,
+               check_value,
+               check_unit,
+               comment,
+               check_id_p,
+               create_time,
+               create_by,
+               update_time,
+               update_by
+        from base_check_item
+    </sql>
+
+    <select id="selectCheckItemList" parameterType="com.sinonc.base.domain.CheckItem" resultMap="CheckItemResult">
+        <include refid="selectCheckItemVo"/>
+        <where>
+            <if test="checkItemId != null ">and check_item_id = #{checkItemId}</if>
+            <if test="checkItem != null  and checkItem != '' ">and check_item = #{checkItem}</if>
+            <if test="valueType != null  and valueType != '' ">and value_type = #{valueType}</if>
+            <if test="checkValue != null ">and check_value = #{checkValue}</if>
+            <if test="checkUnit != null  and checkUnit != '' ">and check_unit = #{checkUnit}</if>
+            <if test="checkIdP != null ">and check_id_p = #{checkIdP}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="createBy != null  and createBy != '' ">and create_by = #{createBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+        </where>
+    </select>
+
+    <select id="selectCheckItemById" parameterType="Long" resultMap="CheckItemResult">
+        <include refid="selectCheckItemVo"/>
+        where check_item_id = #{checkItemId}
+    </select>
+
+    <insert id="insertCheckItem" parameterType="com.sinonc.base.domain.CheckItem" useGeneratedKeys="true"
+            keyProperty="checkItemId">
+        insert into base_check_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="valueType != null  and valueType != ''  ">value_type,</if>
+            <if test="checkItem != null  ">check_item,</if>
+            <if test="checkValue != null  ">check_value,</if>
+            <if test="checkUnit != null  and checkUnit != ''  ">check_unit,</if>
+            <if test="comment != null  and comment != ''  ">comment,</if>
+            <if test="checkIdP != null  ">check_id_p,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="valueType != null  and valueType != ''  ">#{valueType},</if>
+            <if test="checkItem != null  ">#{checkItem},</if>
+            <if test="checkValue != null  ">#{checkValue},</if>
+            <if test="checkUnit != null  and checkUnit != ''  ">#{checkUnit},</if>
+            <if test="comment != null  and comment != ''  ">#{comment},</if>
+            <if test="checkIdP != null  ">#{checkIdP},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCheckItem" parameterType="com.sinonc.base.domain.CheckItem">
+        update base_check_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="valueType != null  and valueType != ''  ">value_type = #{valueType},</if>
+            <if test="checkItem != null  ">check_item = #{checkItem},</if>
+            <if test="checkValue != null  ">check_value = #{checkValue},</if>
+            <if test="checkUnit != null  and checkUnit != ''  ">check_unit = #{checkUnit},</if>
+            <if test="comment != null  and comment != ''  ">comment = #{comment},</if>
+            <if test="checkIdP != null  ">check_id_p = #{checkIdP},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+        </trim>
+        where check_item_id = #{checkItemId}
+    </update>
+
+    <delete id="deleteCheckItemById" parameterType="Long">
+        delete
+        from base_check_item
+        where check_item_id = #{checkItemId}
+    </delete>
+
+    <delete id="deleteCheckItemByCheckIdP" parameterType="Long">
+        delete
+        from base_check_item
+        where check_id_p = #{checkIdP}
+    </delete>
+
+    <delete id="deleteCheckItemByIds" parameterType="String">
+        delete from base_check_item where check_item_id in
+        <foreach item="checkItemId" collection="array" open="(" separator="," close=")">
+            #{checkItemId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectCheckItemListByCheckId" parameterType="String" resultMap="CheckItemResult">
+        SELECT FORMAT(AVG(check_value), 2) AS check_value,
+               check_item,
+               ANY_VALUE(comment) AS comment,
+               ANY_VALUE(check_unit) AS check_unit,
+               ANY_VALUE(value_type) AS value_type
+        FROM base_check_item
+        WHERE FIND_IN_SET(check_id_p, #{checkId})
+          AND value_type = '0'
+        GROUP BY check_item
+    </select>
+
+</mapper>

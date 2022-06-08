@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.ExpPriceMapper">
+
+    <resultMap type="com.sinonc.orders.domain.ExpPrice" id="ExpPriceResult">
+        <result property="expPriceId"    column="exp_price_id"    />
+        <result property="province"    column="province"    />
+        <result property="expPrice"    column="exp_price"    />
+        <result property="minCount"    column="min_count"    />
+        <result property="maxCount"    column="max_count"    />
+        <result property="shopIdP"    column="shop_id_p"    />
+        <result property="goodsIdP"    column="goods_id_p"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+	<sql id="selectExpPriceVo">
+        select exp_price_id, province, exp_price, min_count, max_count, shop_id_p, goods_id_p, create_time, create_by, update_time, update_by from od_exp_price
+    </sql>
+
+    <select id="selectExpPriceList" parameterType="com.sinonc.orders.domain.ExpPrice" resultMap="ExpPriceResult">
+        <include refid="selectExpPriceVo"/>
+        <where>
+            <if test="expPriceId != null "> and exp_price_id = #{expPriceId}</if>
+             <if test="province != null  and province != '' "> and province = #{province}</if>
+             <if test="expPrice != null "> and exp_price = #{expPrice}</if>
+             <if test="minCount != null "> and min_count = #{minCount}</if>
+             <if test="maxCount != null "> and max_count = #{maxCount}</if>
+             <if test="shopIdP != null "> and shop_id_p = #{shopIdP}</if>
+             <if test="goodsIdP != null "> and goods_id_p = #{goodsIdP}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+         </where>
+    </select>
+
+    <select id="selectExpPriceById" parameterType="Long" resultMap="ExpPriceResult">
+        <include refid="selectExpPriceVo"/>
+        where exp_price_id = #{expPriceId}
+    </select>
+
+    <insert id="insertExpPrice" parameterType="com.sinonc.orders.domain.ExpPrice" useGeneratedKeys="true" keyProperty="expPriceId">
+        insert into od_exp_price
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="province != null  and province != ''  ">province,</if>
+			<if test="expPrice != null  ">exp_price,</if>
+			<if test="minCount != null  ">min_count,</if>
+			<if test="maxCount != null  ">max_count,</if>
+			<if test="shopIdP != null  ">shop_id_p,</if>
+			<if test="goodsIdP != null  ">goods_id_p,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="province != null  and province != ''  ">#{province},</if>
+			<if test="expPrice != null  ">#{expPrice},</if>
+			<if test="minCount != null  ">#{minCount},</if>
+			<if test="maxCount != null  ">#{maxCount},</if>
+			<if test="shopIdP != null  ">#{shopIdP},</if>
+			<if test="goodsIdP != null  ">#{goodsIdP},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExpPrice" parameterType="com.sinonc.orders.domain.ExpPrice">
+        update od_exp_price
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="province != null  and province != ''  ">province = #{province},</if>
+            <if test="expPrice != null  ">exp_price = #{expPrice},</if>
+            <if test="minCount != null  ">min_count = #{minCount},</if>
+            <if test="maxCount != null  ">max_count = #{maxCount},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="goodsIdP != null  ">goods_id_p = #{goodsIdP},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+        </trim>
+        where exp_price_id = #{expPriceId}
+    </update>
+
+	<delete id="deleteExpPriceById" parameterType="Long">
+        delete from od_exp_price where exp_price_id = #{expPriceId}
+    </delete>
+
+    <delete id="deleteExpPriceByShopId" parameterType="Long">
+        delete from od_exp_price where shop_id_p = #{shopId}
+    </delete>
+
+    <delete id="deleteExpPriceByIds" parameterType="String">
+        delete from od_exp_price where exp_price_id in
+        <foreach item="expPriceId" collection="array" open="(" separator="," close=")">
+            #{expPriceId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AddressMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Address" id="AddressResult">
+        <result property="addressId"    column="address_id"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="county"    column="county"    />
+        <result property="mergerName" column="merger_name"/>
+        <result property="addr"    column="addr"    />
+        <result property="defaults" column="defaults"/>
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="memberName"    column="memberName"    />
+    </resultMap>
+
+	<sql id="selectAddressVo">
+        select address_id, member_id_p, `name`, phone, province, city, county, addr,merger_name,`defaults`, create_time, update_time, del_flag from od_address
+    </sql>
+
+    <select id="selectAddressList" parameterType="com.sinonc.orders.domain.Address" resultMap="AddressResult">
+        SELECT
+        odadd.address_id,
+        odadd.member_id_p,
+        odadd.NAME,
+        odadd.phone,
+        odadd.province,
+        odadd.city,
+        odadd.county,
+        odadd.merger_name,
+        odadd.addr,
+        odadd.defaults,
+        odadd.create_time,
+        odadd.update_time,
+        odadd.del_flag,
+        odmen.name as memberName
+        FROM
+        od_address  odadd
+        LEFT JOIN  od_member  odmen ON  odadd.member_id_p=odmen.member_id
+        <where>
+            <if test="addressId != null "> and odadd.address_id = #{addressId}</if>
+             <if test="memberIdP != null "> and odadd.member_id_p = #{memberIdP}</if>
+             <if test="name != null  and name != '' "> and odadd.name = #{name}</if>
+             <if test="phone != null  and phone != '' "> and odadd.phone = #{phone}</if>
+             <if test="province != null  and province != '' "> and odadd.province = #{province}</if>
+             <if test="city != null  and city != '' "> and odadd.city = #{city}</if>
+             <if test="county != null  and county != '' "> and odadd.county = #{county}</if>
+             <if test="addr != null  and addr != '' "> and odadd.addr = #{addr}</if>
+             <if test="createTime != null "> and odadd.create_time = #{createTime}</if>
+             <if test="updateTime != null "> and odadd.update_time = #{updateTime}</if>
+             <if test="delFlag != null "> and odadd.del_flag = #{delFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectAddressById" parameterType="Long" resultMap="AddressResult">
+        <include refid="selectAddressVo"/>
+        where address_id = #{addressId}
+    </select>
+
+    <insert id="insertAddress" parameterType="com.sinonc.orders.domain.Address" useGeneratedKeys="true" keyProperty="addressId">
+        insert into od_address
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memberIdP != null  ">member_id_p,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="province != null  and province != ''  ">province,</if>
+			<if test="city != null  and city != ''  ">city,</if>
+			<if test="county != null  and county != ''  ">county,</if>
+            <if test="mergerName !=null and mergerName != ''">merger_name,</if>
+			<if test="addr != null  and addr != ''  ">addr,</if>
+            <if test="defaults !=null">`defaults`,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="delFlag != null  ">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="memberIdP != null  ">#{memberIdP},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="province != null  and province != ''  ">#{province},</if>
+			<if test="city != null  and city != ''  ">#{city},</if>
+			<if test="county != null  and county != ''  ">#{county},</if>
+            <if test="mergerName !=null and mergerName != ''">#{mergerName},</if>
+			<if test="addr != null  and addr != ''  ">#{addr},</if>
+            <if test="defaults !=null">#{defaults},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="delFlag != null  ">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAddress" parameterType="com.sinonc.orders.domain.Address">
+        update od_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="province != null  and province != ''  ">province = #{province},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="county != null  and county != ''  ">county = #{county},</if>
+            <if test="mergerName !=null and mergerName != ''">merger_name = #{mergerName},</if>
+            <if test="addr != null  and addr != ''  ">addr = #{addr},</if>
+            <if test="defaults !=null">`defaults` = #{defaults},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="delFlag != null  ">del_flag = #{delFlag},</if>
+        </trim>
+        where address_id = #{addressId}
+    </update>
+
+	<delete id="deleteAddressById" parameterType="Long">
+        delete from od_address where address_id = #{addressId}
+    </delete>
+
+    <delete id="deleteAddressByIds" parameterType="String">
+        delete from od_address where address_id in
+        <foreach item="addressId" collection="array" open="(" separator="," close=")">
+            #{addressId}
+        </foreach>
+    </delete>
+
+    <select id="getDefaults" parameterType="Long" resultMap="AddressResult">
+        <include refid="selectAddressVo"/>
+        where member_id_p = #{memberId}
+        order by `defaults` desc ,address_id asc
+        limit 1
+    </select>
+</mapper>

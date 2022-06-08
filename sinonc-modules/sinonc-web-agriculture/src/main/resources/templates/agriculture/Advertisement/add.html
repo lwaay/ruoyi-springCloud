@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('新增轮播图')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+    <th:block th:include="include :: select2-css"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+    <th:block th:include="include :: summernote-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-Advertisement-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label"><span style="color: red; ">*</span>轮播图：</label>
+            <div class="col-sm-8">
+
+                <input id="upload" name="file" type="file">
+                <input id="imageUrl" name="imageUrl" type="hidden">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">web路径：</label>
+            <div class="col-sm-8">
+                <textarea name="webUrl" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">描述：</label>
+            <div class="col-sm-8">
+                <textarea name="description" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">创建人：</label>
+            <div class="col-sm-8">
+                <input name="createUser" class="form-control" type="text">
+            </div>
+        </div>
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+
+<th:block th:include="include :: select2-js"/>
+<th:block th:include="include :: summernote-js"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+
+<script th:inline="javascript">
+    var ctx = [[${#request.getContextPath()}]];
+    var prefix = ctx + "/agriculture/Advertisement"
+
+    $("#form-Advertisement-add").validate({
+        focusCleanup: true
+    });
+
+    $(document).ready(function () {
+        $("#upload").fileinput({
+            theme: 'explorer-fas',
+            uploadUrl: ctx + "/oss/upload",
+            enctype: 'multipart/form-data',
+            overwriteInitial: false,
+            initialPreviewAsData: true,
+            //图片最大7M
+            maxFileSize: 1024 * 7,
+            allowedFileTypes: ['image'],    // allow only images
+        }).on('fileuploaded', function (event, data) {
+            data = data.response;
+            if (data.code !== 0) {
+                console.error(data.msg);
+            } else {
+                $("#imageUrl").val(data.data);
+            }
+        }).on('fileuploaderror', function (event, data, msg) {
+            console.log('File Upload Error', 'ID: ' + data.fileId + ', Thumb ID: ' + data.previewId);
+        }).on('filebatchuploadcomplete', function (event, preview, config, tags, extraData) {
+            console.log('File Batch Uploaded', preview, config, tags, extraData);
+        });
+    });
+
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-Advertisement-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.GoodsSpecsMapper">
+
+    <resultMap type="com.sinonc.orders.domain.GoodsSpecs" id="GoodsSpecsResult">
+        <result property="goodsSpecId" column="goods_spec_id"/>
+        <result property="goodsIdP" column="goods_id_p"/>
+        <result property="specsIdP" column="specs_id_p"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectGoodsSpecsVo">
+        select goods_spec_id, goods_id_p, specs_id_p, create_by, create_time, update_time
+        from od_goods_specs
+    </sql>
+
+    <select id="selectGoodsSpecsList" parameterType="com.sinonc.orders.domain.GoodsSpecs" resultMap="GoodsSpecsResult">
+        <include refid="selectGoodsSpecsVo"/>
+        <where>
+            <if test="goodsSpecId != null ">and goods_spec_id = #{goodsSpecId}</if>
+            <if test="goodsIdP != null ">and goods_id_p = #{goodsIdP}</if>
+            <if test="specsIdP != null ">and specs_id_p = #{specsIdP}</if>
+            <if test="createBy != null  and createBy != '' ">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectGoodsSpecsById" parameterType="Long" resultMap="GoodsSpecsResult">
+        <include refid="selectGoodsSpecsVo"/>
+        where goods_spec_id = #{goodsSpecId}
+    </select>
+    <select id="selectGoodsIdAndSpecsId" resultMap="GoodsSpecsResult">
+        <include refid="selectGoodsSpecsVo"/>
+        where goods_id_p = #{goodsIdP} AND specs_id_p = #{specsIdP}
+    </select>
+
+    <select id="selectGoodsSpecsByGoodsId" resultMap="GoodsSpecsResult">
+        <include refid="selectGoodsSpecsVo"/>
+        where goods_id_p = #{goodsIdP} limit 1
+    </select>
+
+    <insert id="insertGoodsSpecs" parameterType="com.sinonc.orders.domain.GoodsSpecs" useGeneratedKeys="true" keyProperty="goodsSpecId">
+        insert into od_goods_specs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsIdP != null  ">goods_id_p,</if>
+            <if test="specsIdP != null  ">specs_id_p,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateTime != null  ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsIdP != null  ">#{goodsIdP},</if>
+            <if test="specsIdP != null  ">#{specsIdP},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsert" parameterType="com.sinonc.orders.domain.GoodsSpecs" useGeneratedKeys="true" keyProperty="goodsSpecId">
+        insert into od_goods_specs(goods_id_p, specs_id_p, create_by, create_time, update_time) values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.goodsIdP},
+                #{item.specsIdP},
+                #{item.createBy},
+                #{item.createTime},
+                #{item.updateTime}
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updateGoodsSpecs" parameterType="com.sinonc.orders.domain.GoodsSpecs">
+        update od_goods_specs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsIdP != null  ">goods_id_p = #{goodsIdP},</if>
+            <if test="specsIdP != null  ">specs_id_p = #{specsIdP},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where goods_spec_id = #{goodsSpecId}
+    </update>
+
+    <delete id="deleteGoodsSpecsById" parameterType="Long">
+        delete
+        from od_goods_specs
+        where goods_spec_id = #{goodsSpecId}
+    </delete>
+
+    <delete id="deleteGoodsSpecsByIds" parameterType="String">
+        delete from od_goods_specs where goods_spec_id in
+        <foreach item="goodsSpecId" collection="array" open="(" separator="," close=")">
+            #{goodsSpecId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteGoodsSpecsByGoodsId">
+        delete from od_goods_specs where goods_id_p = #{value}
+    </delete>
+
+
+    <delete id="deleteGoodsSpecsByGoodsIds">
+        delete from od_goods_specs where goods_id_p in
+        <foreach item="item" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

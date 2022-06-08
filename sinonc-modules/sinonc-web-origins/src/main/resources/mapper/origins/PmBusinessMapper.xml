@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.PmBusinessMapper">
+
+    <resultMap id="PmBusinessResult" type="com.sinonc.origins.api.domain.PmBusiness">
+        <result property="busiId" column="busi_Id"/>
+        <result property="busiEntityname" column="busi_entityName"/>
+        <result property="busiMainname" column="busi_mainName"/>
+        <result property="busiMaintype" column="busi_mainType"/>
+        <result property="baseArea" column="base_area"/>
+        <result property="busiInduSn" column="busi_indu_sn"/>
+        <result property="busiMainintroduce" column="busi_mainIntroduce"/>
+        <result property="busiCertification" column="busi_certification"/>
+        <result property="busiAuthentication" column="busi_authentication"/>
+        <result property="busiRemark" column="busi_remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="deptIdP" column="dept_id_p"/>
+        <result property="contactName" column="contact_name"/>
+        <result property="contactPhone" column="contact_phone"/>
+    </resultMap>
+
+    <sql id="selectPmBusinessVo">
+        select busi_Id, busi_entityName, busi_mainName, busi_mainType, base_area, busi_indu_sn, busi_mainIntroduce, busi_certification, busi_authentication, busi_remark,
+               create_time, update_time ,dept_id_p,contact_name,contact_phone from pm_business
+    </sql>
+
+    <select id="selectPmBusinessList" parameterType="com.sinonc.origins.api.domain.PmBusiness" resultMap="PmBusinessResult">
+        <include refid="selectPmBusinessVo"/>
+        <where>
+            <if test="busiEntityname != null  and busiEntityname != ''">
+                and busi_entityName like concat('%', #{busiEntityname}, '%')
+            </if>
+            <if test="busiMainname != null  and busiMainname != ''">
+                and busi_mainName like concat('%', #{busiMainname}, '%')
+            </if>
+            <if test="busiMaintype != null ">
+                and busi_mainType = #{busiMaintype}
+            </if>
+            <if test="baseArea != null  and baseArea != ''">
+                and base_area = #{baseArea}
+            </if>
+            <if test="busiInduSn != null  and busiInduSn != ''">
+                and busi_indu_sn = #{busiInduSn}
+            </if>
+            <if test="busiMainintroduce != null  and busiMainintroduce != ''">
+                and busi_mainIntroduce = #{busiMainintroduce}
+            </if>
+            <if test="busiCertification != null  and busiCertification != ''">
+                and busi_certification = #{busiCertification}
+            </if>
+            <if test="busiAuthentication != null ">
+                and busi_authentication = #{busiAuthentication}
+            </if>
+            <if test="busiRemark != null  and busiRemark != ''">
+                and busi_remark = #{busiRemark}
+            </if>
+            <if test="deptIdP != null">
+                and dept_id_p = #{deptIdP}
+            </if>
+            <if test="contactName !=null and contactName !=''">
+                and contact_name = concat(#{contactName},'%')
+            </if>
+            <if test="contactPhone !=null and contactPhone !=''">
+                and contact_phone = concat(#{contactPhone},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAreaCount" resultType="long" parameterType="string">
+        SELECT
+        count(DISTINCT pi.tillmain_id_p)
+        FROM
+        pro_product_info pi
+        LEFT JOIN pm_business pb ON pi.tillmain_id_p = pb.busi_Id
+        <where>
+            <if test="baseArea != null and baseArea != ''">
+                and pi.base_area = #{baseArea}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectPmBusinessById" parameterType="Long" resultMap="PmBusinessResult">
+        <include refid="selectPmBusinessVo"/>
+        where busi_Id = #{busiId}
+    </select>
+
+    <select id="selectPmBusinessByDeptId" parameterType="Long" resultMap="PmBusinessResult">
+        <include refid="selectPmBusinessVo"/>
+        where dept_id_p = #{deptId}
+        order by busi_id desc limit 1
+    </select>
+
+    <insert id="insertPmBusiness" parameterType="com.sinonc.origins.api.domain.PmBusiness" useGeneratedKeys="true"
+            keyProperty="busiId">
+        insert into pm_business
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="busiEntityname != null">busi_entityName,
+            </if>
+            <if test="busiMainname != null">busi_mainName,
+            </if>
+            <if test="busiMaintype != null">busi_mainType,
+            </if>
+            <if test="baseArea != null">base_area,
+            </if>
+            <if test="busiInduSn != null">busi_indu_sn,
+            </if>
+            <if test="busiMainintroduce != null">busi_mainIntroduce,
+            </if>
+            <if test="busiCertification != null">busi_certification,
+            </if>
+            <if test="busiAuthentication != null">busi_authentication,
+            </if>
+            <if test="busiRemark != null">busi_remark,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="deptIdP != null">dept_id_p,
+            </if>
+            <if test="contactName !=null"> contact_name,
+            </if>
+            <if test="contactPhone !=null">contact_phone,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="busiEntityname != null">#{busiEntityname},
+            </if>
+            <if test="busiMainname != null">#{busiMainname},
+            </if>
+            <if test="busiMaintype != null">#{busiMaintype},
+            </if>
+            <if test="baseArea != null">#{baseArea},
+            </if>
+            <if test="busiInduSn != null">#{busiInduSn},
+            </if>
+            <if test="busiMainintroduce != null">#{busiMainintroduce},
+            </if>
+            <if test="busiCertification != null">#{busiCertification},
+            </if>
+            <if test="busiAuthentication != null">#{busiAuthentication},
+            </if>
+            <if test="busiRemark != null">#{busiRemark},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="deptIdP != null">#{deptIdP},
+            </if>
+            <if test="contactName !=null">#{contactName},
+            </if>
+            <if test="contactPhone !=null">#{contactPhone},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePmBusiness" parameterType="com.sinonc.origins.api.domain.PmBusiness">
+        update pm_business
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="busiEntityname != null">busi_entityName =
+                #{busiEntityname},
+            </if>
+            <if test="busiMainname != null">busi_mainName =
+                #{busiMainname},
+            </if>
+            <if test="busiMaintype != null">busi_mainType =
+                #{busiMaintype},
+            </if>
+            <if test="baseArea != null">base_area =
+                #{baseArea},
+            </if>
+            <if test="busiInduSn != null">busi_indu_sn =
+                #{busiInduSn},
+            </if>
+            <if test="busiMainintroduce != null">busi_mainIntroduce =
+                #{busiMainintroduce},
+            </if>
+            <if test="busiCertification != null">busi_certification =
+                #{busiCertification},
+            </if>
+            <if test="busiAuthentication != null">busi_authentication =
+                #{busiAuthentication},
+            </if>
+            <if test="busiRemark != null">busi_remark =
+                #{busiRemark},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="deptIdP != null">dept_id_p =
+               #{deptIdP},
+            </if>
+            <if test="contactName !=null">contact_name =
+               #{contactName},
+            </if>
+            <if test="contactPhone !=null">contact_phone =
+               #{contactPhone},
+           </if>
+        </trim>
+        where busi_Id = #{busiId}
+    </update>
+
+    <delete id="deletePmBusinessById" parameterType="Long">
+        delete
+        from pm_business where busi_Id = #{busiId}
+    </delete>
+
+    <delete id="deletePmBusinessByIds" parameterType="String">
+        delete from pm_business where busi_Id in
+        <foreach item="busiId" collection="array" open="(" separator="," close=")">
+            #{busiId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.GrowExperMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.GrowExper" id="GrowExperResult">
+        <result property="growexperId" column="growexper_id"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="cropIdP" column="crop_id_p"/>
+        <result property="cropName" column="crop_name"/>
+        <result property="experYear" column="exper_year"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectGrowExperVo">
+        select growexper_id, member_id_p, crop_id_p, crop_name, exper_year, create_time, update_time from grow_exper
+    </sql>
+
+    <select id="selectGrowExperList" parameterType="com.sinonc.agriculture.domain.GrowExper"
+            resultMap="GrowExperResult">
+        <include refid="selectGrowExperVo"/>
+        <where>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="cropIdP != null ">and crop_id_p = #{cropIdP}</if>
+            <if test="cropName != null  and cropName != ''">and crop_name like concat('%', #{cropName}, '%')</if>
+            <if test="experYear != null ">and exper_year = #{experYear}</if>
+        </where>
+    </select>
+
+    <select id="selectGrowExperById" parameterType="Long" resultMap="GrowExperResult">
+        <include refid="selectGrowExperVo"/>
+        where growexper_id = #{growexperId}
+    </select>
+
+    <insert id="insertGrowExper" parameterType="com.sinonc.agriculture.domain.GrowExper" useGeneratedKeys="true"
+            keyProperty="growexperId">
+        insert into grow_exper
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null ">member_id_p,</if>
+            <if test="cropIdP != null ">crop_id_p,</if>
+            <if test="cropName != null  and cropName != ''">crop_name,</if>
+            <if test="experYear != null ">exper_year,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null ">#{memberIdP},</if>
+            <if test="cropIdP != null ">#{cropIdP},</if>
+            <if test="cropName != null  and cropName != ''">#{cropName},</if>
+            <if test="experYear != null ">#{experYear},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGrowExper" parameterType="com.sinonc.agriculture.domain.GrowExper">
+        update grow_exper
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberIdP != null ">member_id_p = #{memberIdP},</if>
+            <if test="cropIdP != null ">crop_id_p = #{cropIdP},</if>
+            <if test="cropName != null  and cropName != ''">crop_name = #{cropName},</if>
+            <if test="experYear != null ">exper_year = #{experYear},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where growexper_id = #{growexperId}
+    </update>
+
+    <delete id="deleteGrowExperById" parameterType="Long">
+        delete from grow_exper where growexper_id = #{growexperId}
+    </delete>
+
+    <delete id="deleteGrowExperByIds" parameterType="String">
+        delete from grow_exper where growexper_id in
+        <foreach item="growexperId" collection="array" open="(" separator="," close=")">
+            #{growexperId}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteGrowExperByMemberId" parameterType="Long">
+        delete from grow_exper where member_id_p = #{memberId}
+    </delete>
+
+</mapper>

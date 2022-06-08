@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.GoodsDetailVoMapper">
+
+    <resultMap id="resultMap" type="com.sinonc.orders.vo.GoodsDetailVo">
+        <result column="goods_id" property="goodsId"/>
+        <result property="content" column="content"/>
+        <result property="image" column="image"/>
+        <result property="name" column="name"/>
+        <result property="remark" column="remark"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="video" column="video"/>
+        <result property="type" column="type"/>
+        <result property="bkStart" column="bk_start_time"/>
+        <result property="bkEnd" column="bk_end_time"/>
+        <result property="bkStatus" column="bk_status"/>
+        <result property="farmId" column="farm_id"/>
+        <result property="productId" column="product_id"/>
+        <collection property="specsList" ofType="com.sinonc.orders.vo.SpecsDetailVo">
+            <id property="specsId" column="specs_id"/>
+            <result property="specsName" column="specs_name"/>
+            <result property="specsPrice" column="specs_price"/>
+            <result property="perWeight" column="per_weight"/>
+            <result property="stock" column="stock"/>
+            <result property="minCount" column="min_count"/>
+            <result property="maxCount" column="max_count"/>
+            <result property="earnest" column="earnest"/>
+            <result property="unit" column="unit"/>
+            <result property="images" column="specs_images"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectGoodsBriefInfo" parameterType="com.sinonc.orders.vo.GoodsDetailVo" resultType="java.util.Map">
+        SELECT
+        g.goods_id goodsId,
+        g.NAME name,
+        SUBSTRING_INDEX( g.image, ',', 1 ) image,
+        g.type type,
+        g.create_time create_time,
+        g.farm_id farm_id,
+        p.specs_price price,
+        p.stock stock,
+        p.earnest earnest,
+        IF(soldNum IS NULL, 0,soldNum) as soldNum
+        <if test="type == 2">
+            ,b.start_time bkStart,
+            b.end_time bkEnd,
+            b.status bkStatus
+        </if>
+        <if test="type == 3">
+            ,au.is_end auctionIsEnd,
+            au.auction_startingprice auctionPrice,
+            au.auction_nowprice auctionNowPrice
+        </if>
+        FROM od_goods g
+        INNER JOIN (
+            SELECT goods_id, MIN(specs_price) specs_price,SUM(stock) stock,min(earnest) earnest FROM od_goods_specs_view
+            GROUP BY goods_id
+        ) p on g.goods_id = p.goods_id
+        <if test="type == 2">
+            inner join od_book_goods b on g.goods_id = b.goods_id
+        </if>
+        <if test="type == 3">
+            inner join od_auction au on au.goods_id = g.goods_id
+        </if>
+        left join (
+            SELECT
+            od_order_item.goods_id_p,
+            SUM(od_order_item.goods_count) as soldNum
+            FROM
+            od_order
+            INNER JOIN od_order_item ON od_order.order_id = od_order_item.order_id_p
+            GROUP BY od_order_item.goods_id_p
+        ) item ON item.goods_id_p = g.goods_id
+        <where>
+            and g.sale_able = 0
+            <if test="type != null">
+                and g.type = #{type}
+            </if>
+            <if test="shopId != null">
+                and g.shop_id = #{shopId}
+            </if>
+            <if test="isRecommend != null">
+                and g.is_recommend = #{isRecommend}
+            </if>
+            <if test="name != null">
+                and g.name like concat('%',#{name},'%')
+            </if>
+            <if test="type == 2">
+                and (b.status != 2 or b.`status` is NULL)
+            </if>
+        </where>
+        ORDER BY `create_time` desc
+    </select>
+
+    <select id="selectByGoodsId" resultMap="resultMap">
+        select g.goods_id,
+               g.content,
+               g.image,
+               g.name,
+               g.remark,
+               g.shop_id,
+               g.video,
+               g.type,
+               g.specs_id,
+               g.specs_name,
+               g.specs_price,
+               g.per_weight,
+               g.stock,
+               g.farm_id,
+               g.max_count,
+               g.min_count,
+               g.unit,
+               g.images       specs_images,
+               g.product_id,
+               g.earnest,
+               obg.status     bk_status,
+               obg.start_time bk_start_time,
+               obg.end_time   bk_end_time
+        from od_goods_specs_view g
+                 left join od_book_goods obg on obg.goods_id = g.goods_id
+        where (obg.`status` != 2 or obg.`status` is null)
+          and g.sale_able = 0
+          and g.goods_id = #{value}
+    </select>
+
+    <select id="selectGoodsBriefInfoIsRecommend" parameterType="com.sinonc.orders.vo.GoodsDetailVo"
+            resultType="java.util.Map">
+        SELECT g.goods_id goodsId,
+        g.NAME name,
+        SUBSTRING_INDEX(g.image,',',1) image,
+        g.type,
+        p.specs_price price,
+        p.stock,
+        p.earnest,
+        b.start_time bkStart,
+        b.end_time bkEnd,
+        b.status bkStatus
+        FROM od_goods g
+        INNER JOIN (
+        SELECT goods_id, MIN(specs_price) specs_price,SUM(stock) stock,min(earnest) earnest FROM od_goods_specs_view
+        GROUP BY goods_id
+        ) p on g.goods_id = p.goods_id left join od_book_goods b on g.goods_id = b.goods_id
+        <where>
+            and g.sale_able = 0
+            <if test="type != null">
+                and g.type = #{type}
+            </if>
+            <if test="shopId != null">
+                and g.shop_id = #{shopId}
+            </if>
+            <if test="isRecommend != null">
+                and g.is_recommend = #{isRecommend}
+            </if>
+            and (b.status != 2 or b.`status` is NULL)
+            and g.is_recommend=1
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.GrowtechLikeMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.GrowtechLike" id="GrowtechLikeResult">
+        <result property="likeId" column="like_id"    />
+        <result property="growtechIdP"    column="growtech_id_p"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectGrowtechLikeVo">
+        select like_id, growtech_id_p, member_id_p, create_by, create_time, update_by, update_time from growtech_like
+    </sql>
+
+    <select id="selectGrowtechLikeList" parameterType="com.sinonc.agriculture.domain.GrowtechLike" resultMap="GrowtechLikeResult">
+        <include refid="selectGrowtechLikeVo"/>
+        <where>
+            <if test="growtechIdP != null "> and growtech_id_p = #{growtechIdP}</if>
+            <if test="memberIdP != null "> and member_id_p = #{memberIdP}</if>
+        </where>
+    </select>
+
+    <select id="selectGrowtechLikeById" parameterType="Long" resultMap="GrowtechLikeResult">
+        <include refid="selectGrowtechLikeVo"/>
+        where like_id = #{likeId}
+    </select>
+
+    <select id="selectGrowtechLikeListByGrowTechIdForMap" parameterType="Long" resultType="java.util.Map">
+        SELECT
+            like_id,
+            growtech_id_p,
+            member_id_p
+        FROM
+            growtech_like
+        where growtech_id_p = #{growTechId}
+    </select>
+
+    <select id="selectGrowtechLikeListByGrowTechIdAndMemberIdForMap" resultType="java.util.Map">
+        SELECT
+            like_id,
+            growtech_id_p,
+            member_id_p
+        FROM
+            growtech_like
+
+        where growtech_id_p = #{growTechId} and member_id_p = #{memberId}
+    </select>
+
+    <insert id="insertGrowtechLike" parameterType="com.sinonc.agriculture.domain.GrowtechLike" useGeneratedKeys="true"
+            keyProperty="likeId">
+        insert into growtech_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="growtechIdP != null ">growtech_id_p,</if>
+            <if test="memberIdP != null ">member_id_p,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="growtechIdP != null ">#{growtechIdP},</if>
+            <if test="memberIdP != null ">#{memberIdP},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGrowtechLike" parameterType="com.sinonc.agriculture.domain.GrowtechLike">
+        update growtech_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="growtechIdP != null ">growtech_id_p = #{growtechIdP},</if>
+            <if test="memberIdP != null ">member_id_p = #{memberIdP},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where like_id = #{likeId}
+    </update>
+
+    <delete id="deleteGrowtechLikeById" parameterType="Long">
+        delete from growtech_like where like_id = #{likeId}
+    </delete>
+
+    <delete id="deleteGrowtechLikeByIds" parameterType="String">
+        delete from growtech_like where like_id in
+        <foreach item="likeId" collection="array" open="(" separator="," close=")">
+            #{likeId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteGrowtechLike" parameterType="com.sinonc.agriculture.domain.GrowtechLike">
+        delete from growtech_like where member_id_p =#{memberIdP}  and growtech_id_p=#{growtechIdP}
+    </delete>
+
+</mapper>

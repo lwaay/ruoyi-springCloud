@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.StudyRecordMapper">
+
+    <resultMap type="StudyRecord" id="StudyRecordResult">
+        <result property="recordId" column="record_id"/>
+        <result property="externalId" column="external_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="type" column="type"/>
+        <result property="title" column="title"/>
+        <result property="img" column="img"/>
+        <result property="recordTime" column="record_time"/>
+    </resultMap>
+
+    <sql id="selectStudyRecordVo">
+        select record_id, external_id, user_id, user_name, type, title, img, record_time
+        from study_record
+    </sql>
+
+    <select id="selectStudyRecordList" parameterType="StudyRecord" resultMap="StudyRecordResult">
+        <include refid="selectStudyRecordVo"/>
+        <where>
+            <if test="externalId != null ">
+                and external_id = #{externalId}
+            </if>
+            <if test="userId != null and userId != 0">
+                and user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name like concat('%',#{userName},'%')
+            </if>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="title != null  and title != ''">
+                and title like concat('%',#{title},'%')
+            </if>
+            <if test="img != null  and img != ''">
+                and img = #{img}
+            </if>
+            <if test="recordTime != null ">
+                and record_time = #{recordTime}
+            </if>
+        </where>
+        order by record_time desc
+    </select>
+
+    <select id="selectStudyRecordByExternalId" resultMap="StudyRecordResult">
+        <include refid="selectStudyRecordVo"/>
+        where external_id = #{param1} and user_id = #{param2}
+        order by record_time desc
+        limit 1
+    </select>
+
+    <select id="selectStudyRecordById" parameterType="Long" resultMap="StudyRecordResult">
+        <include refid="selectStudyRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <insert id="insertStudyRecord" parameterType="StudyRecord" useGeneratedKeys="true"
+            keyProperty="recordId">
+        insert into study_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="externalId != null">external_id,
+            </if>
+            <if test="userId != null">user_id,
+            </if>
+            <if test="userName != null">user_name,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="title != null and title != ''">title,
+            </if>
+            <if test="img != null and img != ''">img,
+            </if>
+            <if test="recordTime != null">record_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="externalId != null">#{externalId},
+            </if>
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="userName != null">#{userName},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="title != null and title != ''">#{title},
+            </if>
+            <if test="img != null and img != ''">#{img},
+            </if>
+            <if test="recordTime != null">#{recordTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateStudyRecord" parameterType="StudyRecord">
+        update study_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="externalId != null">external_id =
+                #{externalId},
+            </if>
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="userName != null">user_name =
+                #{userName},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="title != null and title != ''">title =
+                #{title},
+            </if>
+            <if test="img != null and img != ''">img =
+                #{img},
+            </if>
+            <if test="recordTime != null">record_time =
+                #{recordTime},
+            </if>
+        </trim>
+        where record_id = #{recordId}
+    </update>
+
+    <delete id="deleteStudyRecordById" parameterType="Long">
+        delete
+        from study_record
+        where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteStudyRecordByIds" parameterType="String">
+        delete from study_record where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+</mapper>

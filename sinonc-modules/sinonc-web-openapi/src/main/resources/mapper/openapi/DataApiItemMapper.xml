@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.openapi.mapper.DataApiItemMapper">
+
+    <resultMap type="com.sinonc.openapi.domain.DataApiItem" id="DataApiItemResult">
+        <result property="id" column="id"/>
+        <result property="apiName" column="api_name"/>
+        <result property="status" column="status"/>
+        <result property="apiUrl" column="api_url"/>
+        <result property="apiInfo" column="api_info"/>
+        <result property="maxConnection" column="max_connection"/>
+        <result property="createBy" column="create_by"/>
+        <result property="apiType" column="api_type"/>
+    </resultMap>
+
+    <sql id="selectDataApiItemVo">
+        select id,
+               api_name,
+               status,
+               api_url,
+               api_info,
+               max_connection,
+               create_by,
+               api_type
+        from data_api_item
+    </sql>
+
+    <select id="selectDataApiItemList" parameterType="com.sinonc.openapi.domain.DataApiItem" resultMap="DataApiItemResult">
+        <include refid="selectDataApiItemVo"/>
+        <where>
+            <if test="apiName != null  and apiName != ''">
+                and api_name like concat('%', #{apiName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDataApiItemById" parameterType="Long" resultMap="DataApiItemResult">
+        <include refid="selectDataApiItemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDataApiItem" parameterType="com.sinonc.openapi.domain.DataApiItem" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into data_api_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="apiName != null and apiName != ''">api_name,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="apiUrl != null and apiUrl != ''">api_url,
+            </if>
+            <if test="apiInfo != null and apiInfo != ''">api_info,
+            </if>
+            <if test="maxConnection != null">max_connection,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="apiType != null">api_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="apiName != null and apiName != ''">#{apiName},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="apiUrl != null and apiUrl != ''">#{apiUrl},
+            </if>
+            <if test="apiInfo != null and apiInfo != ''">#{apiInfo},
+            </if>
+            <if test="maxConnection != null">#{maxConnection},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="apiType != null">#{apiType},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateDataApiItem" parameterType="com.sinonc.openapi.domain.DataApiItem">
+        update data_api_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="apiName != null and apiName != ''">api_name =
+                #{apiName},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="apiUrl != null and apiUrl != ''">api_url =
+                #{apiUrl},
+            </if>
+            <if test="apiInfo != null and apiInfo != ''">api_info =
+                #{apiInfo},
+            </if>
+            <if test="maxConnection != null">max_connection =
+                #{maxConnection},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="apiType != null">api_type =
+                #{apiType},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDataApiItemById" parameterType="Long">
+        delete
+        from data_api_item
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDataApiItemByIds" parameterType="String">
+        delete from data_api_item where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

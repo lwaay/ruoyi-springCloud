@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.OwnDynamicMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.OwnDynamic" id="OwnDynamicResult">
+        <result property="owndynaId" column="owndyna_id"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="targetId" column="target_id"/>
+        <result property="type" column="type"/>
+        <result property="dynaContent" column="dyna_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.agriculture.dto.OwnDynamicDto" id="OwnDynamicDtoResult">
+        <result property="owndynaId" column="owndyna_id"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="targetId" column="target_id"/>
+        <result property="type" column="type"/>
+        <result property="dynaContent" column="dyna_content"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectOwnDynamicVo">
+        select owndyna_id, member_id_p, target_id, type, dyna_content, create_time, update_time from own_dynamic
+    </sql>
+
+    <select id="selectOwnDynamicList" parameterType="com.sinonc.agriculture.domain.OwnDynamic"
+            resultMap="OwnDynamicResult">
+        <include refid="selectOwnDynamicVo"/>
+        <where>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="targetId != null ">and target_id = #{targetId}</if>
+            <if test="type != null and type!=0">and type = #{type}</if>
+            <if test="dynaContent != null  and dynaContent != ''">and dyna_content = #{dynaContent}</if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="selectOwnDynamicById" parameterType="Long" resultMap="OwnDynamicResult">
+        <include refid="selectOwnDynamicVo"/>
+        where owndyna_id = #{owndynaId}
+    </select>
+
+    <insert id="insertOwnDynamic" parameterType="com.sinonc.agriculture.domain.OwnDynamic" useGeneratedKeys="true"
+            keyProperty="owndynaId">
+        insert into own_dynamic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null ">member_id_p,</if>
+            <if test="targetId != null ">target_id,</if>
+            <if test="type != null ">type,</if>
+            <if test="dynaContent != null  and dynaContent != ''">dyna_content,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null ">#{memberIdP},</if>
+            <if test="targetId != null ">#{targetId},</if>
+            <if test="type != null ">#{type},</if>
+            <if test="dynaContent != null  and dynaContent != ''">#{dynaContent},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOwnDynamic" parameterType="com.sinonc.agriculture.domain.OwnDynamic">
+        update own_dynamic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberIdP != null ">member_id_p = #{memberIdP},</if>
+            <if test="targetId != null ">target_id = #{targetId},</if>
+            <if test="type != null ">type = #{type},</if>
+            <if test="dynaContent != null  and dynaContent != ''">dyna_content = #{dynaContent},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where owndyna_id = #{owndynaId}
+    </update>
+
+    <delete id="deleteOwnDynamicById" parameterType="Long">
+        delete from own_dynamic where owndyna_id = #{owndynaId}
+    </delete>
+
+    <delete id="deleteOwnDynamicByIds" parameterType="String">
+        delete from own_dynamic where owndyna_id in
+        <foreach item="owndynaId" collection="array" open="(" separator="," close=")">
+            #{owndynaId}
+        </foreach>
+    </delete>
+
+    <select id="selectOwnDynamicListForDto" parameterType="com.sinonc.agriculture.dto.OwnDynamicDto"
+            resultMap="OwnDynamicDtoResult">
+        <include refid="selectOwnDynamicVo"/>
+        <where>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="targetId != null ">and target_id = #{targetId}</if>
+            <if test="type != null and type!=0">and type = #{type}</if>
+            <if test="dynaContent != null  and dynaContent != ''">and dyna_content = #{dynaContent}</if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+
+</mapper>

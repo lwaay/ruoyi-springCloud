@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.KInsectPeriodMapper">
+
+    <resultMap type="KInsectPeriod" id="KInsectPeriodResult">
+                    <result property="id" column="id"/>
+                    <result property="periodMonth" column="period_month"/>
+                    <result property="description" column="description"/>
+                    <result property="solarTime" column="solar_time"/>
+                    <result property="period" column="period"/>
+                    <result property="insectCode" column="insect_code"/>
+                    <result property="commSchema" column="comm_schema"/>
+                    <result property="createTime" column="create_time"/>
+                    <result property="createUser" column="create_user"/>
+            </resultMap>
+
+    <sql id="selectKInsectPeriodVo">
+        select id, period_month, description, solar_time, period, insect_code, comm_schema, create_time, create_user        from k_insect_period
+    </sql>
+
+    <select id="selectKInsectPeriodList" parameterType="KInsectPeriod" resultMap="KInsectPeriodResult">
+        <include refid="selectKInsectPeriodVo"/>
+        <where>
+                                                                                                    <if test="periodMonth != null ">
+                            and period_month = #{periodMonth}
+                        </if>
+                                                                                                            <if test="description != null  and description != ''">
+                            and description = #{description}
+                        </if>
+                                                                                                            <if test="solarTime != null  and solarTime != ''">
+                            and solar_time = #{solarTime}
+                        </if>
+                                                                                                            <if test="period != null  and period != ''">
+                            and period = #{period}
+                        </if>
+                                                                                                            <if test="insectCode != null  and insectCode != ''">
+                            and insect_code = #{insectCode}
+                        </if>
+                                                                                                            <if test="commSchema != null  and commSchema != ''">
+                            and comm_schema = #{commSchema}
+                        </if>
+                                                                                                                </where>
+    </select>
+
+    <select id="selectKInsectPeriodById" parameterType="Long" resultMap="KInsectPeriodResult">
+        <include refid="selectKInsectPeriodVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertKInsectPeriod" parameterType="KInsectPeriod" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into k_insect_period
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                                                                            <if test="periodMonth != null">period_month,
+                    </if>
+                                                                <if test="description != null">description,
+                    </if>
+                                                                <if test="solarTime != null">solar_time,
+                    </if>
+                                                                <if test="period != null">period,
+                    </if>
+                                                                <if test="insectCode != null">insect_code,
+                    </if>
+                                                                <if test="commSchema != null">comm_schema,
+                    </if>
+                                                                <if test="createTime != null">create_time,
+                    </if>
+                                                                <if test="createUser != null">create_user,
+                    </if>
+                                    </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                                                                            <if test="periodMonth != null">#{periodMonth},
+                    </if>
+                                                                <if test="description != null">#{description},
+                    </if>
+                                                                <if test="solarTime != null">#{solarTime},
+                    </if>
+                                                                <if test="period != null">#{period},
+                    </if>
+                                                                <if test="insectCode != null">#{insectCode},
+                    </if>
+                                                                <if test="commSchema != null">#{commSchema},
+                    </if>
+                                                                <if test="createTime != null">#{createTime},
+                    </if>
+                                                                <if test="createUser != null">#{createUser},
+                    </if>
+                                    </trim>
+    </insert>
+
+    <update id="updateKInsectPeriod" parameterType="KInsectPeriod">
+        update k_insect_period
+        <trim prefix="SET" suffixOverrides=",">
+                                                                            <if test="periodMonth != null">period_month =
+                        #{periodMonth},
+                    </if>
+                                                                <if test="description != null">description =
+                        #{description},
+                    </if>
+                                                                <if test="solarTime != null">solar_time =
+                        #{solarTime},
+                    </if>
+                                                                <if test="period != null">period =
+                        #{period},
+                    </if>
+                                                                <if test="insectCode != null">insect_code =
+                        #{insectCode},
+                    </if>
+                                                                <if test="commSchema != null">comm_schema =
+                        #{commSchema},
+                    </if>
+                                                                <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                                                                <if test="createUser != null">create_user =
+                        #{createUser},
+                    </if>
+                                    </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteKInsectPeriodById" parameterType="Long">
+        delete
+        from k_insect_period where id = #{id}
+    </delete>
+
+    <delete id="deleteKInsectPeriodByIds" parameterType="String">
+        delete from k_insect_period where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

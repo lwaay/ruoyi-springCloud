@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>sinonc-modules</artifactId>
+        <groupId>com.sinonc.cloud</groupId>
+        <version>2.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>sinonc-web-agriculture</artifactId>
+
+    <description>
+        轻农业模块
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-sms</artifactId>
+            <version>2.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-api-base</artifactId>
+            <version>2.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-api-agri</artifactId>
+            <version>2.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.sinonc.system.SystemApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>1.8.0</version>
+                <configuration>
+                    <from>
+                        <image>registry.cn-shenzhen.aliyuncs.com/oracle_jdk8/oracle_jdk8</image>
+                    </from>
+                    <to>
+                        <image>registry.cn-hangzhou.aliyuncs.com/sinonc/baise-test</image>
+                        <auth>
+                            <username>1592318850@qq.com</username>
+                            <password>zxyn8888</password>
+                        </auth>
+                        <tags>
+                            <tag>agriculture</tag>
+                        </tags>
+                    </to>
+                    <container>
+                        <ports>
+                            <port>6211</port>
+                        </ports>
+                        <useCurrentTimestamp>true</useCurrentTimestamp>
+                        <args>
+                            <arg>--spring.profiles.active=test</arg>
+                        </args>
+                    </container>
+                    <allowInsecureRegistries>true</allowInsecureRegistries>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

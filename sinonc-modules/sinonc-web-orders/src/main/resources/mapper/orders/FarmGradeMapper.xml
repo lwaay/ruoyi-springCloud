@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.FarmGradeMapper">
+
+    <resultMap type="com.sinonc.orders.domain.FarmGrade" id="FarmGradeResult">
+        <result property="gradeId"    column="grade_id"    />
+        <result property="farmIdP"    column="farm_id_p"    />
+        <result property="gradeType"    column="grade_type"    />
+        <result property="gradeDate"    column="grade_date"    />
+        <result property="gradeValue"    column="grade_value"    />
+        <result property="gradeResult"    column="grade_result"    />
+        <result property="gradeMan"    column="grade_man"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="farmName"    column="farm_name"    />
+    </resultMap>
+
+	<sql id="selectFarmGradeVo">
+        select grade_id, farm_id_p, grade_type, grade_date, grade_value, grade_result, grade_man, remark, create_by, create_time, update_by, update_time from od_farm_grade
+    </sql>
+
+    <select id="selectFarmGradeList" parameterType="com.sinonc.orders.domain.FarmGrade" resultMap="FarmGradeResult">
+        SELECT
+            od_farm_grade.grade_id,
+            od_farm_grade.farm_id_p,
+            od_farm_grade.grade_type,
+            od_farm_grade.grade_date,
+            od_farm_grade.grade_value,
+            od_farm_grade.grade_result,
+            od_farm_grade.grade_man,
+            od_farm_grade.remark,
+            od_farm_grade.create_by,
+            od_farm_grade.create_time,
+            od_farm_grade.update_by,
+            od_farm_grade.update_time,
+            base_farminfo.farm_name
+        FROM
+            od_farm_grade
+        LEFT JOIN base_farminfo ON od_farm_grade.farm_id_p=base_farminfo.farm_id
+        <where>
+            <if test="gradeId != null "> and grade_id = #{gradeId}</if>
+             <if test="farmIdP != null "> and farm_id_p = #{farmIdP}</if>
+             <if test="gradeType != null  and gradeType != '' "> and grade_type = #{gradeType}</if>
+             <if test="gradeDate != null "> and grade_date = #{gradeDate}</if>
+             <if test="gradeValue != null "> and grade_value = #{gradeValue}</if>
+             <if test="gradeResult != null  and gradeResult != '' "> and grade_result = #{gradeResult}</if>
+             <if test="gradeMan != null  and gradeMan != '' "> and grade_man = #{gradeMan}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+         order by grade_id desc
+    </select>
+
+    <select id="selectFarmGradeById" parameterType="Long" resultMap="FarmGradeResult">
+        <include refid="selectFarmGradeVo"/>
+        where grade_id = #{gradeId}
+    </select>
+
+    <insert id="insertFarmGrade" parameterType="com.sinonc.orders.domain.FarmGrade" useGeneratedKeys="true" keyProperty="gradeId">
+        insert into od_farm_grade
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="farmIdP != null  ">farm_id_p,</if>
+			<if test="gradeType != null  and gradeType != ''  ">grade_type,</if>
+			<if test="gradeDate != null  ">grade_date,</if>
+			<if test="gradeValue != null  ">grade_value,</if>
+			<if test="gradeResult != null  and gradeResult != ''  ">grade_result,</if>
+			<if test="gradeMan != null  and gradeMan != ''  ">grade_man,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="farmIdP != null  ">#{farmIdP},</if>
+			<if test="gradeType != null  and gradeType != ''  ">#{gradeType},</if>
+			<if test="gradeDate != null  ">#{gradeDate},</if>
+			<if test="gradeValue != null  ">#{gradeValue},</if>
+			<if test="gradeResult != null  and gradeResult != ''  ">#{gradeResult},</if>
+			<if test="gradeMan != null  and gradeMan != ''  ">#{gradeMan},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFarmGrade" parameterType="com.sinonc.orders.domain.FarmGrade">
+        update od_farm_grade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="farmIdP != null  ">farm_id_p = #{farmIdP},</if>
+            <if test="gradeType != null  and gradeType != ''  ">grade_type = #{gradeType},</if>
+            <if test="gradeDate != null  ">grade_date = #{gradeDate},</if>
+            <if test="gradeValue != null  ">grade_value = #{gradeValue},</if>
+            <if test="gradeResult != null  and gradeResult != ''  ">grade_result = #{gradeResult},</if>
+            <if test="gradeMan != null  and gradeMan != ''  ">grade_man = #{gradeMan},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where grade_id = #{gradeId}
+    </update>
+
+	<delete id="deleteFarmGradeById" parameterType="Long">
+        delete from od_farm_grade where grade_id = #{gradeId}
+    </delete>
+
+    <delete id="deleteFarmGradeByIds" parameterType="String">
+        delete from od_farm_grade where grade_id in
+        <foreach item="gradeId" collection="array" open="(" separator="," close=")">
+            #{gradeId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AccountFlowMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AccountFlow" id="AccountFlowResult">
+        <result property="acctFlowId" column="acct_flow_id"/>
+        <result property="tradeTime" column="trade_time"/>
+        <result property="acctIdP" column="acct_id_p"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="opType" column="op_type"/>
+        <result property="opAmount" column="op_amount"/>
+        <result property="prevAmount" column="prev_amount"/>
+        <result property="inAmount" column="in_amount"/>
+        <result property="outAmount" column="out_amount"/>
+        <result property="remark" column="remark"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="tradeCode" column="trade_code"/>
+    </resultMap>
+
+    <sql id="selectAccountFlowVo">
+        select acct_flow_id,
+               trade_time,
+               acct_id_p,
+               shop_id_p,
+               order_no,
+               op_type,
+               op_amount,
+               prev_amount,
+               in_amount,
+               out_amount,
+               remark,
+               trade_code
+        from od_account_flow
+    </sql>
+
+    <select id="selectAccountFlowList" parameterType="com.sinonc.orders.domain.AccountFlow"
+            resultMap="AccountFlowResult">
+        <include refid="selectAccountFlowVo"/>
+        <where>
+            <if test="acctFlowId != null ">and acct_flow_id = #{acctFlowId}</if>
+            <if test="tradeTime != null ">and trade_time = #{tradeTime}</if>
+            <if test="searchDate != null and searchDate !='' ">and trade_time LIKE CONCAT('%',CONCAT(#{searchDate},'%'))</if>
+            <if test="acctIdP != null ">and acct_id_p = #{acctIdP}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="opType != null ">and op_type = #{opType}</if>
+            <if test="opAmount != null ">and op_amount = #{opAmount}</if>
+            <if test="prevAmount != null ">and prev_amount = #{prevAmount}</if>
+            <if test="inAmount != null ">and in_amount = #{inAmount}</if>
+            <if test="outAmount != null ">and out_amount = #{outAmount}</if>
+            <if test="orderNo != null ">and order_no = #{orderNo}</if>
+            <if test="remark != null ">and remark = #{remark}</if>
+            <if test="minTaskTime != null  and maxTaskTime !=null  "> and  trade_time between  #{minTaskTime} and #{maxTaskTime}</if>
+            <if test="tradeCode != null  and tradeCode !=null  "> and  trade_code = #{trade_code}</if>
+            ${params.dataScope}
+        </where>
+        order by acct_flow_id Desc
+    </select>
+
+    <select id="selectAccountFlowById" parameterType="Integer" resultMap="AccountFlowResult">
+        <include refid="selectAccountFlowVo"/>
+        where acct_flow_id = #{acctFlowId}
+    </select>
+
+    <insert id="insertAccountFlow" parameterType="com.sinonc.orders.domain.AccountFlow" useGeneratedKeys="true"
+            keyProperty="acctFlowId">
+        insert into od_account_flow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeTime != null  ">trade_time,</if>
+            <if test="acctIdP != null  ">acct_id_p,</if>
+            <if test="shopIdP != null  ">shop_id_p,</if>
+            <if test="opType != null  ">op_type,</if>
+            <if test="opAmount != null  ">op_amount,</if>
+            <if test="prevAmount != null  ">prev_amount,</if>
+            <if test="inAmount != null  ">in_amount,</if>
+            <if test="outAmount != null  ">out_amount,</if>
+            <if test="remark != null  ">remark,</if>
+            <if test="orderNo != null  ">order_no,</if>
+            <if test="tradeCode != null  ">trade_code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeTime != null  ">#{tradeTime},</if>
+            <if test="acctIdP != null  ">#{acctIdP},</if>
+            <if test="shopIdP != null  ">#{shopIdP},</if>
+            <if test="opType != null  ">#{opType},</if>
+            <if test="opAmount != null  ">#{opAmount},</if>
+            <if test="prevAmount != null  ">#{prevAmount},</if>
+            <if test="inAmount != null  ">#{inAmount},</if>
+            <if test="outAmount != null  ">#{outAmount},</if>
+            <if test="remark != null  ">#{remark},</if>
+            <if test="orderNo != null  ">#{orderNo},</if>
+            <if test="tradeCode != null  ">#{tradeCode},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAccountFlow" parameterType="com.sinonc.orders.domain.AccountFlow">
+        update od_account_flow
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tradeTime != null  ">trade_time = #{tradeTime},</if>
+            <if test="acctIdP != null  ">acct_id_p = #{acctIdP},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="opType != null  ">op_type = #{opType},</if>
+            <if test="opAmount != null  ">op_amount = #{opAmount},</if>
+            <if test="prevAmount != null  ">prev_amount = #{prevAmount},</if>
+            <if test="inAmount != null  ">in_amount = #{inAmount},</if>
+            <if test="outAmount != null  ">out_amount = #{outAmount},</if>
+            <if test="remark != null  ">remark = #{remark},</if>
+            <if test="orderNo != null  ">order_no = #{orderNo},</if>
+            <if test="tradeCode != null  ">trade_code = #{tradeCode},</if>
+        </trim>
+        where acct_flow_id = #{acctFlowId}
+    </update>
+
+    <delete id="deleteAccountFlowById" parameterType="Integer">
+        delete
+        from od_account_flow
+        where acct_flow_id = #{acctFlowId}
+    </delete>
+
+    <delete id="deleteAccountFlowByIds" parameterType="String">
+        delete from od_account_flow where acct_flow_id in
+        <foreach item="acctFlowId" collection="array" open="(" separator="," close=")">
+            #{acctFlowId}
+        </foreach>
+    </delete>
+
+</mapper>

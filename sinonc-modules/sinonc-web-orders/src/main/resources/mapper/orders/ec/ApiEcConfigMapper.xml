@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.ApiEcConfigMapper">
+
+    <select id="getTables" resultType="java.util.Map">
+        SELECT table_name, table_comment, create_time, update_time FROM information_schema.tables
+        WHERE  table_schema = (SELECT DATABASE());
+    </select>
+
+    <select id="getColumns" resultType="java.util.Map" parameterType="String">
+        SELECT c.column_name,c.column_comment,c.column_type FROM information_schema.columns c WHERE table_schema =
+        (SELECT DATABASE()) AND table_name = #{tableName};
+    </select>
+
+    <select id="queryList"  resultType="java.util.Map" parameterType="java.util.Map" statementType="STATEMENT">
+        select ${columns}
+        from ${tables}
+                 limit ${start},${end}
+    </select>
+</mapper>

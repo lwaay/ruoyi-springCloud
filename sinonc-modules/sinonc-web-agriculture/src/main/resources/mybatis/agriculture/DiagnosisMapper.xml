@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.DiagnosisMapper">
+    
+    <resultMap type="com.sinonc.agriculture.domain.Diagnosis" id="DiagnosisResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="cropIdP"    column="crop_id_p"    />
+    </resultMap>
+
+    <sql id="selectDiagnosisVo">
+        select id, name, crop_id_p from diagnosis
+    </sql>
+
+    <select id="selectDiagnosisList" parameterType="com.sinonc.agriculture.domain.Diagnosis" resultMap="DiagnosisResult">
+        <include refid="selectDiagnosisVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="cropIdP != null "> and crop_id_p = #{cropIdP}</if>
+        </where>
+    </select>
+    
+    <select id="selectDiagnosisById" parameterType="Long" resultMap="DiagnosisResult">
+        <include refid="selectDiagnosisVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDiagnosis" parameterType="com.sinonc.agriculture.domain.Diagnosis" useGeneratedKeys="true" keyProperty="id">
+        insert into diagnosis
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">name,</if>
+            <if test="cropIdP != null ">crop_id_p,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null  and name != ''">#{name},</if>
+            <if test="cropIdP != null ">#{cropIdP},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDiagnosis" parameterType="com.sinonc.agriculture.domain.Diagnosis">
+        update diagnosis
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null  and name != ''">name = #{name},</if>
+            <if test="cropIdP != null ">crop_id_p = #{cropIdP},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDiagnosisById" parameterType="Long">
+        delete from diagnosis where id = #{id}
+    </delete>
+
+    <delete id="deleteDiagnosisByIds" parameterType="String">
+        delete from diagnosis where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.IotWarnSetMapper">
+
+    <resultMap type="com.sinonc.iot.domain.IotWarnSet" id="IotWarnSetResult">
+        <result property="warnsetId" column="warnset_id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="lowLimit" column="low_limit"/>
+        <result property="highLimit" column="high_limit"/>
+        <result property="superLowLimit" column="super_low_limit"/>
+        <result property="isEnble" column="is_enble"/>
+        <result property="handlingSuggestion" column="handling_suggestion"/>
+        <result property="metric" column="metric"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="phone" column="phone"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectIotWarnSetVo">
+        select warnset_id, device_id, low_limit, high_limit, super_low_limit, is_enble, handling_suggestion, metric, phone, create_time, update_time, remark from iot_warn_set
+    </sql>
+
+    <select id="selectIotWarnSetList" parameterType="com.sinonc.iot.domain.IotWarnSet" resultMap="IotWarnSetResult">
+        <include refid="selectIotWarnSetVo"/>
+        <where>
+            <if test="deviceId != null and deviceId !=''">and device_id = #{deviceId}</if>
+            <if test="lowLimit != null ">and low_limit = #{lowLimit}</if>
+            <if test="highLimit != null ">and high_limit = #{highLimit}</if>
+            <if test="superLowLimit != null ">and super_low_limit = #{superLowLimit}</if>
+            <if test="isEnble != null ">and is_enble = #{isEnble}</if>
+            <if test="handlingSuggestion != null  and handlingSuggestion != ''">and handling_suggestion =
+                #{handlingSuggestion}
+            </if>
+            <if test="metric != null  and metric != ''">and metric = #{metric}</if>
+            <if test="phone !=null and phone != '' ">and phone like concat("%",#{phone},"%")</if>
+        </where>
+    </select>
+
+    <select id="selectIotWarnSetById" parameterType="Long" resultMap="IotWarnSetResult">
+        <include refid="selectIotWarnSetVo"/>
+        where warnset_id = #{warnsetId}
+    </select>
+
+    <insert id="insertIotWarnSet" parameterType="com.sinonc.iot.domain.IotWarnSet" useGeneratedKeys="true"
+            keyProperty="warnsetId">
+        insert into iot_warn_set
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null ">device_id,</if>
+            <if test="lowLimit != null ">low_limit,</if>
+            <if test="highLimit != null ">high_limit,</if>
+            <if test="superLowLimit != null ">super_low_limit,</if>
+            <if test="isEnble != null ">is_enble,</if>
+            <if test="handlingSuggestion != null  and handlingSuggestion != ''">handling_suggestion,</if>
+            <if test="metric != null  and metric != ''">metric,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="phone !=null">phone,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null ">#{deviceId},</if>
+            <if test="lowLimit != null ">#{lowLimit},</if>
+            <if test="highLimit != null ">#{highLimit},</if>
+            <if test="superLowLimit != null ">#{superLowLimit},</if>
+            <if test="isEnble != null ">#{isEnble},</if>
+            <if test="handlingSuggestion != null  and handlingSuggestion != ''">#{handlingSuggestion},</if>
+            <if test="metric != null  and metric != ''">#{metric},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="phone !=null">#{phone},</if>
+        </trim>
+    </insert>
+
+    <update id="updateIotWarnSet" parameterType="com.sinonc.iot.domain.IotWarnSet">
+        update iot_warn_set
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null ">device_id = #{deviceId},</if>
+            <if test="lowLimit != null ">low_limit = #{lowLimit},</if>
+            <if test="highLimit != null ">high_limit = #{highLimit},</if>
+            <if test="superLowLimit != null ">super_low_limit = #{superLowLimit},</if>
+            <if test="isEnble != null ">is_enble = #{isEnble},</if>
+            <if test="handlingSuggestion != null  and handlingSuggestion != ''">handling_suggestion =
+                #{handlingSuggestion},
+            </if>
+            <if test="metric != null  and metric != ''">metric = #{metric},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="phone !=null">phone = #{phone}</if>
+        </trim>
+        where warnset_id = #{warnsetId}
+    </update>
+
+    <delete id="deleteIotWarnSetById" parameterType="Long">
+        delete from iot_warn_set where warnset_id = #{warnsetId}
+    </delete>
+
+    <delete id="deleteIotWarnSetByIds" parameterType="String">
+        delete from iot_warn_set where warnset_id in
+        <foreach item="warnsetId" collection="array" open="(" separator="," close=")">
+            #{warnsetId}
+        </foreach>
+    </delete>
+
+</mapper>

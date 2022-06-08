@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.CropInfoMapper">
+
+    <resultMap type="com.sinonc.base.domain.CropInfo" id="CropInfoResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="area" column="area"/>
+        <result property="count" column="count"/>
+        <result property="createAt" column="create_at"/>
+    </resultMap>
+
+    <sql id="selectCropInfoVo">
+        select id, name, area, count, create_at
+        from crop_info
+    </sql>
+
+    <select id="selectCropInfoList" parameterType="com.sinonc.base.domain.CropInfo" resultMap="CropInfoResult">
+        <include refid="selectCropInfoVo"/>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="area != null ">and area = #{area}</if>
+            <if test="count != null ">and count = #{count}</if>
+            <if test="createAt != null ">and create_at = #{createAt}</if>
+        </where>
+    </select>
+
+    <select id="selectCropInfoById" parameterType="Long" resultMap="CropInfoResult">
+        <include refid="selectCropInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCropInfo" parameterType="com.sinonc.base.domain.CropInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into crop_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="area != null">area,</if>
+            <if test="count != null">count,</if>
+            <if test="createAt != null">create_at,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="area != null">#{area},</if>
+            <if test="count != null">#{count},</if>
+            <if test="createAt != null">#{createAt},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCropInfo" parameterType="com.sinonc.base.domain.CropInfo">
+        update crop_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="createAt != null">create_at = #{createAt},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCropInfoById" parameterType="Long">
+        delete
+        from crop_info
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteCropInfoByIds" parameterType="String">
+        delete from crop_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

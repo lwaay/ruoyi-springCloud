@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.AccpetScoreMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.AccpetScore" id="AccpetScoreResult">
+        <result property="id"    column="id"    />
+        <result property="expertId"    column="expert_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="scoreValue"    column="score_value"    />
+        <result property="mannerScore"    column="manner_score"    />
+        <result property="speedScore"    column="speed_score"    />
+        <result property="abilityScore"    column="ability_score"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="expertName"    column="real_name"    />
+    </resultMap>
+
+    <sql id="selectAccpetScoreVo">
+        select id, expert_id, member_id, score_value, manner_score, speed_score, ability_score, remark, create_time, create_by from accpet_score
+    </sql>
+
+    <select id="selectAccpetScoreList" parameterType="com.sinonc.agriculture.domain.AccpetScore" resultMap="AccpetScoreResult">
+        select a.*,b.real_name from accpet_score a left join expert_info b on a.expert_id = b.expert_id
+        <where>
+            <if test="expertId != null "> and a.expert_id = #{expertId}</if>
+            <if test="memberId != null "> and a.member_id = #{memberId}</if>
+            <if test="scoreValue != null  and scoreValue != ''"> and a.score_value = #{scoreValue}</if>
+            <if test="mannerScore != null  and mannerScore != ''"> and a.manner_score = #{mannerScore}</if>
+            <if test="speedScore != null  and speedScore != ''"> and a.speed_score = #{speedScore}</if>
+            <if test="abilityScore != null  and abilityScore != ''"> and a.ability_score = #{abilityScore}</if>
+
+            <if test="createTime != null "> and a.create_time = #{createTime}</if>
+            <if test="expertName != null and expertName !=''"> and b.real_name like CONCAT('%',#{expertName},'%')</if>
+        </where>
+    </select>
+
+    <select id="selectAccpetScoreById" parameterType="Long" resultMap="AccpetScoreResult">
+        <include refid="selectAccpetScoreVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAccpetScore" parameterType="com.sinonc.agriculture.domain.AccpetScore" useGeneratedKeys="true" keyProperty="id">
+        insert into accpet_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="expertId != null ">expert_id,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="scoreValue != null  and scoreValue != ''">score_value,</if>
+            <if test="mannerScore != null  and mannerScore != ''">manner_score,</if>
+            <if test="speedScore != null  and speedScore != ''">speed_score,</if>
+            <if test="abilityScore != null  and abilityScore != ''">ability_score,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="expertId != null ">#{expertId},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="scoreValue != null  and scoreValue != ''">#{scoreValue},</if>
+            <if test="mannerScore != null  and mannerScore != ''">#{mannerScore},</if>
+            <if test="speedScore != null  and speedScore != ''">#{speedScore},</if>
+            <if test="abilityScore != null  and abilityScore != ''">#{abilityScore},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAccpetScore" parameterType="com.sinonc.agriculture.domain.AccpetScore">
+        update accpet_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="expertId != null ">expert_id = #{expertId},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="scoreValue != null  and scoreValue != ''">score_value = #{scoreValue},</if>
+            <if test="mannerScore != null  and mannerScore != ''">manner_score = #{mannerScore},</if>
+            <if test="speedScore != null  and speedScore != ''">speed_score = #{speedScore},</if>
+            <if test="abilityScore != null  and abilityScore != ''">ability_score = #{abilityScore},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAccpetScoreById" parameterType="Long">
+        delete from accpet_score where id = #{id}
+    </delete>
+
+    <delete id="deleteAccpetScoreByIds" parameterType="String">
+        delete from accpet_score where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

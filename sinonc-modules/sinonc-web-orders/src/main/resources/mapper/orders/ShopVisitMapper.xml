@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.ShopVisitMapper">
+
+    <resultMap type="com.sinonc.orders.domain.ShopVisit" id="ShopVisitResult">
+        <result property="visitId" column="visit_id"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="visitDate" column="visit_date"/>
+        <result property="visitNumber" column="visit_number"/>
+    </resultMap>
+
+    <sql id="selectShopVisitVo">
+        select visit_id, shop_id_p, member_id_p, visit_date, visit_number from od_shop_visit
+    </sql>
+
+    <select id="selectShopVisitList" parameterType="com.sinonc.orders.domain.ShopVisit" resultMap="ShopVisitResult">
+        <include refid="selectShopVisitVo"/>
+        <where>
+            <if test="visitId != null ">and visit_id = #{visitId}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="visitDate != null ">and DATE_FORMAT(visit_date,'%m-%d-%Y') =
+                DATE_FORMAT(#{visitDate},'%m-%d-%Y')
+            </if>
+            <if test="visitNumber != null ">and visit_number = #{visitNumber}</if>
+        </where>
+    </select>
+
+
+    <select id="sumShopVisitList" parameterType="com.sinonc.orders.domain.ShopVisit" resultType="java.lang.Long">
+        SELECT
+        ifnull(sum(visit_number),0)
+        FROM
+        od_shop_visit
+        <where>
+            shop_id_p = #{shopIdP}
+        </where>
+    </select>
+    <select id="countVisit" resultType="long">
+        select sum(visit_number) from od_shop_visit
+    </select>
+
+    <select id="selectShopVisitById" parameterType="Long" resultMap="ShopVisitResult">
+        <include refid="selectShopVisitVo"/>
+        where visit_id = #{visitId}
+    </select>
+    <select id="selectTodayVisit" resultType="long" parameterType="com.sinonc.orders.domain.ShopVisit">
+        select IFNULL(SUM(visit_number),0) from od_shop_visit
+         <where>
+             and DATE_FORMAT(NOW(),'%Y-%m-%d')=DATE_FORMAT(visit_date,'%Y-%m-%d')
+             ${params.dataScope}
+         </where>
+
+    </select>
+    <insert id="insertShopVisit" parameterType="com.sinonc.orders.domain.ShopVisit" useGeneratedKeys="true"
+            keyProperty="visitId">
+        insert into od_shop_visit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopIdP != null  ">shop_id_p,</if>
+            <if test="memberIdP != null  ">member_id_p,</if>
+            <if test="visitDate != null  ">visit_date,</if>
+            <if test="visitNumber != null  ">visit_number,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopIdP != null  ">#{shopIdP},</if>
+            <if test="memberIdP != null  ">#{memberIdP},</if>
+            <if test="visitDate != null  ">#{visitDate},</if>
+            <if test="visitNumber != null  ">#{visitNumber},</if>
+        </trim>
+    </insert>
+
+    <update id="updateShopVisit" parameterType="com.sinonc.orders.domain.ShopVisit">
+        update od_shop_visit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="visitDate != null  ">visit_date = #{visitDate},</if>
+            <if test="visitNumber != null  ">visit_number = #{visitNumber},</if>
+        </trim>
+        where visit_id = #{visitId}
+    </update>
+
+    <delete id="deleteShopVisitById" parameterType="Long">
+        delete from od_shop_visit where visit_id = #{visitId}
+    </delete>
+
+    <delete id="deleteShopVisitByIds" parameterType="String">
+        delete from od_shop_visit where visit_id in
+        <foreach item="visitId" collection="array" open="(" separator="," close=")">
+            #{visitId}
+        </foreach>
+    </delete>
+
+</mapper>

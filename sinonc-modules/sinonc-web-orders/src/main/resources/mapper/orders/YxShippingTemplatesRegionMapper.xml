@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.YxShippingTemplatesRegionMapper">
+
+    <resultMap type="com.sinonc.orders.domain.YxShippingTemplatesRegion" id="YxShippingTemplatesRegionResult">
+        <result property="id" column="id"/>
+        <result property="provinceId" column="province_id"/>
+        <result property="tempId" column="temp_id"/>
+        <result property="cityId" column="city_id"/>
+        <result property="first" column="first"/>
+        <result property="firstPrice" column="first_price"/>
+        <result property="continues" column="continues"/>
+        <result property="continuePrice" column="continue_price"/>
+        <result property="type" column="type"/>
+        <result property="uniqid" column="uniqid"/>
+    </resultMap>
+
+    <sql id="selectYxShippingTemplatesRegionVo">
+        select id, province_id, temp_id, city_id, first, first_price, continues, continue_price, type, uniqid
+        from yx_shipping_templates_region
+    </sql>
+
+    <select id="selectYxShippingTemplatesRegionList" parameterType="com.sinonc.orders.domain.YxShippingTemplatesRegion"
+            resultMap="YxShippingTemplatesRegionResult">
+        <include refid="selectYxShippingTemplatesRegionVo"/>
+        <where>
+            <if test="provinceId != null ">
+                and province_id = #{provinceId}
+            </if>
+            <if test="tempId != null ">
+                and temp_id = #{tempId}
+            </if>
+            <if test="cityId != null ">
+                and city_id = #{cityId}
+            </if>
+            <if test="first != null ">
+                and first = #{first}
+            </if>
+            <if test="firstPrice != null ">
+                and first_price = #{firstPrice}
+            </if>
+            <if test="continues != null ">
+                and continues = #{continues}
+            </if>
+            <if test="continuePrice != null ">
+                and continue_price = #{continuePrice}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="uniqid != null  and uniqid != ''">
+                and uniqid = #{uniqid}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectYxShippingTemplatesRegionById" parameterType="Long" resultMap="YxShippingTemplatesRegionResult">
+        <include refid="selectYxShippingTemplatesRegionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertYxShippingTemplatesRegion" parameterType="com.sinonc.orders.domain.YxShippingTemplatesRegion" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into yx_shipping_templates_region
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">province_id,
+            </if>
+            <if test="tempId != null">temp_id,
+            </if>
+            <if test="cityId != null">city_id,
+            </if>
+            <if test="first != null">first,
+            </if>
+            <if test="firstPrice != null">first_price,
+            </if>
+            <if test="continues != null">continues,
+            </if>
+            <if test="continuePrice != null">continue_price,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="uniqid != null and uniqid != ''">uniqid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">#{provinceId},
+            </if>
+            <if test="tempId != null">#{tempId},
+            </if>
+            <if test="cityId != null">#{cityId},
+            </if>
+            <if test="first != null">#{first},
+            </if>
+            <if test="firstPrice != null">#{firstPrice},
+            </if>
+            <if test="continues != null">#{continues},
+            </if>
+            <if test="continuePrice != null">#{continuePrice},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="uniqid != null and uniqid != ''">#{uniqid},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateYxShippingTemplatesRegion" parameterType="com.sinonc.orders.domain.YxShippingTemplatesRegion">
+        update yx_shipping_templates_region
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceId != null">province_id =
+                #{provinceId},
+            </if>
+            <if test="tempId != null">temp_id =
+                #{tempId},
+            </if>
+            <if test="cityId != null">city_id =
+                #{cityId},
+            </if>
+            <if test="first != null">first =
+                #{first},
+            </if>
+            <if test="firstPrice != null">first_price =
+                #{firstPrice},
+            </if>
+            <if test="continues != null">continues =
+                #{continues},
+            </if>
+            <if test="continuePrice != null">continue_price =
+                #{continuePrice},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="uniqid != null and uniqid != ''">uniqid =
+                #{uniqid},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteYxShippingTemplatesRegionById" parameterType="Long">
+        delete
+        from yx_shipping_templates_region
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteYxShippingTemplatesRegionByIds" parameterType="String">
+        delete from yx_shipping_templates_region where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteRegionByTempId" parameterType="Integer">
+        delete from yx_shipping_templates_region where temp_id  = #{tempId}
+    </delete>
+
+    <select id="listRegionByTempAndCity" resultMap="YxShippingTemplatesRegionResult">
+        <include refid="selectYxShippingTemplatesRegionVo"/>
+        where temp_id in
+        <foreach collection="temps" item="temp" open="(" separator="," close=")">
+            #{temp}
+        </foreach>
+         and city_id in
+        <foreach collection="citys" item="city" open="(" separator="," close=")">
+            #{city}
+        </foreach>
+         order by city_id asc
+    </select>
+
+</mapper>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.DeviceInfoMapper">
+
+    <resultMap type="DeviceInfo" id="DeviceInfoResult">
+        <result property="id" column="id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceTypeId" column="device_type_id"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="corpName" column="corp_name"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="ip" column="ip"/>
+        <result property="port" column="port"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lastTime" column="last_time"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="remark" column="remark"/>
+        <result property="unitId" column="unit_id"/>
+    </resultMap>
+    <resultMap type="com.sinonc.iot.vo.DeviceInfoVo" id="DeviceInfoVoResult">
+        <result property="id" column="id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="deviceTypeId" column="device_type_id"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="corpName" column="corp_name"/>
+        <result property="deviceName" column="device_name"/>
+        <result property="ip" column="ip"/>
+        <result property="port" column="port"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lastTime" column="last_time"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="remark" column="remark"/>
+        <result property="unitId" column="unit_id"/>
+        <result property="typeName" column="type_name"/>
+        <result property="type" column="device_type"/>
+    </resultMap>
+
+    <sql id="selectDeviceInfoVo">
+        select id,
+               device_id,
+               device_type_id,
+               del_flag,
+               corp_name,
+               device_name,
+               ip,
+               port,
+               create_time,
+               update_time,
+               last_time,
+               latitude,
+               longitude,
+               remark,
+               unit_id
+        from device_info
+    </sql>
+
+    <select id="selectDeviceInfoList" parameterType="DeviceInfo" resultMap="DeviceInfoResult">
+        <include refid="selectDeviceInfoVo"/>
+        <where>
+            <if test="deviceTypeId != null  and deviceTypeId != ''">and device_type_id = #{deviceTypeId}</if>
+            <if test="corpName != null  and corpName != ''">and corp_name like concat('%', #{corpName}, '%')</if>
+            <if test="deviceName != null  and deviceName != ''">and device_name like concat('%', #{deviceName}, '%')
+            </if>
+            <if test="ip != null  and ip != ''">and ip = #{ip}</if>
+            <if test="port != null  and port != ''">and port = #{port}</if>
+            <if test="lastTime != null  and lastTime != ''">and last_time = #{lastTime}</if>
+            <if test="latitude != null  and latitude != ''">and latitude = #{latitude}</if>
+            <if test="longitude != null  and longitude != ''">and longitude = #{longitude}</if>
+            <if test="unitId != null  and unitId != ''">and unit_id = #{unitId}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDeviceInfoById" parameterType="Long" resultMap="DeviceInfoResult">
+        <include refid="selectDeviceInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDeviceInfo" parameterType="DeviceInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into device_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">device_id,</if>
+            <if test="deviceTypeId != null">device_type_id,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="corpName != null">corp_name,</if>
+            <if test="deviceName != null">device_name,</if>
+            <if test="ip != null">ip,</if>
+            <if test="port != null">port,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="lastTime != null">last_time,</if>
+            <if test="latitude != null">latitude,</if>
+            <if test="longitude != null">longitude,</if>
+            <if test="remark != null">remark,</if>
+            <if test="unitId != null">unit_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="deviceTypeId != null">#{deviceTypeId},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="corpName != null">#{corpName},</if>
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="ip != null">#{ip},</if>
+            <if test="port != null">#{port},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="lastTime != null">#{lastTime},</if>
+            <if test="latitude != null">#{latitude},</if>
+            <if test="longitude != null">#{longitude},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="unitId != null">#{unitId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateDeviceInfo" parameterType="DeviceInfo">
+        update device_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null">device_id = #{deviceId},</if>
+            <if test="deviceTypeId != null">device_type_id = #{deviceTypeId},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="corpName != null">corp_name = #{corpName},</if>
+            <if test="deviceName != null">device_name = #{deviceName},</if>
+            <if test="ip != null">ip = #{ip},</if>
+            <if test="port != null">port = #{port},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="lastTime != null">last_time = #{lastTime},</if>
+            <if test="latitude != null">latitude = #{latitude},</if>
+            <if test="longitude != null">longitude = #{longitude},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="unitId != null">unit_id = #{unitId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDeviceInfoById" parameterType="Long">
+        delete
+        from device_info
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDeviceInfoByIds" parameterType="String">
+        delete from device_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="getDeviceListByIds" parameterType="string" resultMap="DeviceInfoResult">
+        select * from device_info where device_id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+    <select id="getCount" resultType="integer">
+        select count(id)
+        from device_info
+    </select>
+    <select id="getDeviceListByBaseId" parameterType="long" resultMap="DeviceInfoResult">
+        select di.device_id,di.device_name,di.device_type_id from device_info di,device_base db
+        where di.device_id=db.device_id and db.base_id=#{id}
+    </select>
+    <select id="getDeviceInfoByDeviceId" parameterType="string" resultMap="DeviceInfoResult">
+        <include refid="selectDeviceInfoVo"/>
+        where device_id = #{id}  order by create_time desc
+    </select>
+    <select id="getDeviceByType" parameterType="string" resultMap="DeviceInfoResult">
+        <include refid="selectDeviceInfoVo"/>
+        where device_type_id = #{id}  order by create_time desc
+    </select>
+    <select id="getDeviceInfoList" parameterType="DeviceInfo" resultMap="DeviceInfoVoResult">
+        select di.id,di.device_id,dt.name as type_name,di.device_name,di.create_time from device_info di,device_type dt where di.device_type_id=dt.id
+    </select>
+    <select id="getDeviceInfo" resultMap="DeviceInfoVoResult" parameterType="string">
+        select di.id,di.device_id,dt.name as type_name,dt.type as device_type,di.device_name,di.create_time,di.device_type_id from device_info di,device_type dt
+        where di.device_type_id=dt.id and di.device_id=#{deviceId}
+    </select>
+
+    <select id="selectDeviceList" resultType="com.sinonc.iot.vo.InfoVo">
+
+    </select>
+</mapper>

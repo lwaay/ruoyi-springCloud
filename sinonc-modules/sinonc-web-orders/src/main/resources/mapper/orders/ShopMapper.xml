@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.ShopMapper">
+
+    <resultMap type="com.sinonc.order.api.domain.Shop" id="ShopResult">
+        <result property="shopId" column="shop_id"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="shopCode" column="shop_code"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="ownerMemberid" column="owner_memberid"/>
+        <result property="shopLogo" column="shop_logo"/>
+        <result property="backPic" column="back_pic"/>
+        <result property="shopAddress" column="shop_address"/>
+        <result property="concats" column="concats"/>
+        <result property="concatNumber" column="concat_number"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="status" column="status"/>
+        <result property="isRecommend" column="is_recommend"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectShopVo">
+        select shop_id,
+               entity_id,
+               shop_code,
+               shop_name,
+               owner_memberid,
+               shop_logo,
+               back_pic,
+               shop_address,
+               concats,
+               concat_number,
+               del_flag,
+               status,
+               is_recommend,
+               create_time,
+               update_time,
+               remark
+        from od_shop
+    </sql>
+
+    <select id="selectShopList" parameterType="com.sinonc.order.api.domain.Shop" resultMap="ShopResult">
+        <include refid="selectShopVo"/>
+        <where>
+            <if test="entityId != null ">
+                and entity_id = #{entityId}
+            </if>
+            <if test="shopCode != null  and shopCode != ''">
+                and shop_code = #{shopCode}
+            </if>
+            <if test="shopName != null  and shopName != ''">
+                and shop_name like concat('%', #{shopName}, '%')
+            </if>
+            <if test="ownerMemberid != null  and ownerMemberid != ''">
+                and owner_memberid = #{ownerMemberid}
+            </if>
+            <if test="shopLogo != null  and shopLogo != ''">
+                and shop_logo = #{shopLogo}
+            </if>
+            <if test="shopAddress != null  and shopAddress != ''">
+                and shop_address = #{shopAddress}
+            </if>
+            <if test="concats != null  and concats != ''">
+                and concats = #{concats}
+            </if>
+            <if test="concatNumber != null  and concatNumber != ''">
+                and concat_number = #{concatNumber}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+            <if test="isRecommend != null  and isRecommend != ''">
+                and is_recommend = #{isRecommend}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectShopByEntity" parameterType="Long" resultMap="ShopResult">
+        <include refid="selectShopVo"/>
+        where entity_id = #{entityId}
+    </select>
+
+    <select id="selectShopById" parameterType="Long" resultMap="ShopResult">
+        <include refid="selectShopVo"/>
+        where shop_id = #{shopId}
+    </select>
+
+    <insert id="insertShop" parameterType="com.sinonc.order.api.domain.Shop" useGeneratedKeys="true"
+            keyProperty="shopId">
+        insert into od_shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">entity_id,
+            </if>
+            <if test="shopCode != null">shop_code,
+            </if>
+            <if test="shopName != null">shop_name,
+            </if>
+            <if test="ownerMemberid != null">owner_memberid,
+            </if>
+            <if test="shopLogo != null">shop_logo,
+            </if>
+            <if test="backPic != null">back_pic,
+            </if>
+            <if test="shopAddress != null">shop_address,
+            </if>
+            <if test="concats != null">concats,
+            </if>
+            <if test="concatNumber != null">concat_number,
+            </if>
+            <if test="delFlag != null">del_flag,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="isRecommend != null">is_recommend,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">#{entityId},
+            </if>
+            <if test="shopCode != null">#{shopCode},
+            </if>
+            <if test="shopName != null">#{shopName},
+            </if>
+            <if test="ownerMemberid != null">#{ownerMemberid},
+            </if>
+            <if test="shopLogo != null">#{shopLogo},
+            </if>
+            <if test="backPic != null">#{backPic},
+            </if>
+            <if test="shopAddress != null">#{shopAddress},
+            </if>
+            <if test="concats != null">#{concats},
+            </if>
+            <if test="concatNumber != null">#{concatNumber},
+            </if>
+            <if test="delFlag != null">#{delFlag},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="isRecommend != null">#{isRecommend},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateShop" parameterType="com.sinonc.order.api.domain.Shop">
+        update od_shop
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entityId != null">entity_id =
+                #{entityId},
+            </if>
+            <if test="shopCode != null">shop_code =
+                #{shopCode},
+            </if>
+            <if test="shopName != null">shop_name =
+                #{shopName},
+            </if>
+            <if test="ownerMemberid != null">owner_memberid =
+                #{ownerMemberid},
+            </if>
+            <if test="shopLogo != null">shop_logo =
+                #{shopLogo},
+            </if>
+            <if test="backPic != null">back_pic =
+                #{backPic},
+            </if>
+            <if test="shopAddress != null">shop_address =
+                #{shopAddress},
+            </if>
+            <if test="concats != null">concats =
+                #{concats},
+            </if>
+            <if test="concatNumber != null">concat_number =
+                #{concatNumber},
+            </if>
+            <if test="delFlag != null">del_flag =
+                #{delFlag},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="isRecommend != null">is_recommend =
+                #{isRecommend},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+        </trim>
+        where shop_id = #{shopId}
+    </update>
+
+    <delete id="deleteShopById" parameterType="Long">
+        delete
+        from od_shop
+        where shop_id = #{shopId}
+    </delete>
+
+    <delete id="deleteShopByIds" parameterType="String">
+        delete from od_shop where shop_id in
+        <foreach item="shopId" collection="array" open="(" separator="," close=")">
+            #{shopId}
+        </foreach>
+    </delete>
+
+</mapper>

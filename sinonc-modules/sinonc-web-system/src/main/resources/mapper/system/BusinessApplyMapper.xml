@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.system.mapper.BusinessApplyMapper">
+
+    <resultMap type="BusinessApply" id="BusinessApplyResult">
+        <result property="applyId" column="apply_id"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="companyId" column="company_id"/>
+        <result property="certIds" column="cert_ids"/>
+        <result property="auditStatus" column="audit_status"/>
+        <result property="auditTime" column="audit_time"/>
+        <result property="auditSystemuserid" column="audit_systemuserid"/>
+        <result property="businessMaintype" column="business_maintype"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectBusinessApplyVo">
+        select apply_id, entity_id, company_id, cert_ids, audit_status, audit_time, audit_systemuserid, business_maintype, create_time, update_time        from business_apply
+    </sql>
+
+    <select id="selectBusinessApplyList" parameterType="BusinessApply" resultMap="BusinessApplyResult">
+        <include refid="selectBusinessApplyVo"/>
+        <where>
+            <if test="entityId != null ">
+                and entity_id = #{entityId}
+            </if>
+            <if test="companyId != null ">
+                and company_id = #{companyId}
+            </if>
+            <if test="certIds != null  and certIds != ''">
+                and cert_ids = #{certIds}
+            </if>
+            <if test="auditStatus != null  and auditStatus != ''">
+                and audit_status = #{auditStatus}
+            </if>
+            <if test="auditTime != null ">
+                and audit_time = #{auditTime}
+            </if>
+            <if test="auditSystemuserid != null ">
+                and audit_systemuserid = #{auditSystemuserid}
+            </if>
+            <if test="businessMaintype != null  and businessMaintype != ''">
+                and business_maintype = #{businessMaintype}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBusinessApplyById" parameterType="Long" resultMap="BusinessApplyResult">
+        <include refid="selectBusinessApplyVo"/>
+        where apply_id = #{applyId}
+    </select>
+
+    <insert id="insertBusinessApply" parameterType="BusinessApply" useGeneratedKeys="true"
+            keyProperty="applyId">
+        insert into business_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">entity_id,
+            </if>
+            <if test="companyId != null">company_id,
+            </if>
+            <if test="certIds != null">cert_ids,
+            </if>
+            <if test="auditStatus != null">audit_status,
+            </if>
+            <if test="auditTime != null">audit_time,
+            </if>
+            <if test="auditSystemuserid != null">audit_systemuserid,
+            </if>
+            <if test="businessMaintype != null">business_maintype,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">#{entityId},
+            </if>
+            <if test="companyId != null">#{companyId},
+            </if>
+            <if test="certIds != null">#{certIds},
+            </if>
+            <if test="auditStatus != null">#{auditStatus},
+            </if>
+            <if test="auditTime != null">#{auditTime},
+            </if>
+            <if test="auditSystemuserid != null">#{auditSystemuserid},
+            </if>
+            <if test="businessMaintype != null">#{businessMaintype},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBusinessApply" parameterType="BusinessApply">
+        update business_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entityId != null">entity_id =
+                #{entityId},
+            </if>
+            <if test="companyId != null">company_id =
+                #{companyId},
+            </if>
+            <if test="certIds != null">cert_ids =
+                #{certIds},
+            </if>
+            <if test="auditStatus != null">audit_status =
+                #{auditStatus},
+            </if>
+            <if test="auditTime != null">audit_time =
+                #{auditTime},
+            </if>
+            <if test="auditSystemuserid != null">audit_systemuserid =
+                #{auditSystemuserid},
+            </if>
+            <if test="businessMaintype != null">business_maintype =
+                #{businessMaintype},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteBusinessApplyById" parameterType="Long">
+        delete
+        from business_apply where apply_id = #{applyId}
+    </delete>
+
+    <delete id="deleteBusinessApplyByIds" parameterType="String">
+        delete from business_apply where apply_id in
+        <foreach item="applyId" collection="array" open="(" separator="," close=")">
+            #{applyId}
+        </foreach>
+    </delete>
+
+</mapper>

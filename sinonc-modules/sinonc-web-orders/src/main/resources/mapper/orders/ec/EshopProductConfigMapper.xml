@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.EshopProductConfigMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.EshopProductConfig" id="EshopProductConfigResult">
+        <result property="configId" column="config_id"/>
+        <result property="fiveminute" column="fiveMinute"/>
+        <result property="halfhour" column="halfHour"/>
+        <result property="daily" column="daily"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateName" column="update_name"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectEshopProductConfigVo">
+        select config_id, fiveMinute, halfHour, daily, update_by, update_name, update_time
+        from eshop_product_config
+    </sql>
+
+    <select id="selectEshopProductConfigList" parameterType="com.sinonc.orders.ec.domain.EshopProductConfig" resultMap="EshopProductConfigResult">
+        <include refid="selectEshopProductConfigVo"/>
+        <where>
+            <if test="fiveminute != null ">
+                and fiveMinute = #{fiveminute}
+            </if>
+            <if test="halfhour != null ">
+                and halfHour = #{halfhour}
+            </if>
+            <if test="daily != null ">
+                and daily = #{daily}
+            </if>
+            <if test="updateName != null  and updateName != ''">
+                and update_name like concat('%', #{updateName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEshopProductConfigById" parameterType="Long" resultMap="EshopProductConfigResult">
+        <include refid="selectEshopProductConfigVo"/>
+        where config_id = #{configId}
+    </select>
+
+    <select id="selectEshopProductConfig" parameterType="Long" resultMap="EshopProductConfigResult">
+        <include refid="selectEshopProductConfigVo"/>
+        order by config_id desc limit 1
+    </select>
+
+    <insert id="insertEshopProductConfig" parameterType="com.sinonc.orders.ec.domain.EshopProductConfig" useGeneratedKeys="true"
+            keyProperty="configId">
+        insert into eshop_product_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fiveminute != null">fiveMinute,
+            </if>
+            <if test="halfhour != null">halfHour,
+            </if>
+            <if test="daily != null">daily,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateName != null">update_name,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fiveminute != null">#{fiveminute},
+            </if>
+            <if test="halfhour != null">#{halfhour},
+            </if>
+            <if test="daily != null">#{daily},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateName != null">#{updateName},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateEshopProductConfig" parameterType="com.sinonc.orders.ec.domain.EshopProductConfig">
+        update eshop_product_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fiveminute != null">fiveMinute =
+                #{fiveminute},
+            </if>
+            <if test="halfhour != null">halfHour =
+                #{halfhour},
+            </if>
+            <if test="daily != null">daily =
+                #{daily},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateName != null">update_name =
+                #{updateName},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where config_id = #{configId}
+    </update>
+
+    <delete id="deleteEshopProductConfigById" parameterType="Long">
+        delete
+        from eshop_product_config
+        where config_id = #{configId}
+    </delete>
+
+    <delete id="deleteEshopProductConfigByIds" parameterType="String">
+        delete from eshop_product_config where config_id in
+        <foreach item="configId" collection="array" open="(" separator="," close=")">
+            #{configId}
+        </foreach>
+    </delete>
+
+</mapper>

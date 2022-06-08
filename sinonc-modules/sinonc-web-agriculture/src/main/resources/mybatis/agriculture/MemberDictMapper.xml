@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.MemberDictMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.MemberDict" id="MemberDictResult">
+        <result property="dictId" column="dict_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="dictType" column="dict_type"/>
+        <result property="dictValue" column="dict_value"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectMemberDictVo">
+        select dict_id, member_id, dict_type, dict_value, create_time, update_time
+        from member_dict
+    </sql>
+
+    <select id="selectMemberDictList" parameterType="com.sinonc.agriculture.domain.MemberDict"
+            resultMap="MemberDictResult">
+        <include refid="selectMemberDictVo"/>
+        <where>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="dictType != null  and dictType != ''">and dict_type = #{dictType}</if>
+            <if test="dictValue != null  and dictValue != ''">and dict_value = #{dictValue}</if>
+        </where>
+    </select>
+
+    <select id="selectMemberDictById" parameterType="Long" resultMap="MemberDictResult">
+        <include refid="selectMemberDictVo"/>
+        where dict_id = #{dictId}
+    </select>
+
+    <insert id="insertMemberDict" parameterType="com.sinonc.agriculture.domain.MemberDict">
+        insert into member_dict
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dictId != null ">dict_id,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="dictType != null  and dictType != ''">dict_type,</if>
+            <if test="dictValue != null  and dictValue != ''">dict_value,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dictId != null ">#{dictId},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="dictType != null  and dictType != ''">#{dictType},</if>
+            <if test="dictValue != null  and dictValue != ''">#{dictValue},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+    <insert id="batchInsert" parameterType="com.sinonc.agriculture.domain.MemberDict">
+        insert into member_dict(member_id, dict_type, dict_value, create_time, update_time) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.memberId},#{item.dictType},#{item.dictValue},#{item.createTime},#{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <update id="updateMemberDict" parameterType="com.sinonc.agriculture.domain.MemberDict">
+        update member_dict
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="dictType != null  and dictType != ''">dict_type = #{dictType},</if>
+            <if test="dictValue != null  and dictValue != ''">dict_value = #{dictValue},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where dict_id = #{dictId}
+    </update>
+
+    <delete id="deleteMemberDictById" parameterType="Long">
+        delete
+        from member_dict
+        where dict_id = #{dictId}
+    </delete>
+
+    <delete id="deleteMemberDictByIds" parameterType="String">
+        delete from member_dict where dict_id in
+        <foreach item="dictId" collection="array" open="(" separator="," close=")">
+            #{dictId}
+        </foreach>
+    </delete>
+
+    <select id="getMemberDictByMemberId" parameterType="long" resultMap="MemberDictResult">
+        SELECT *
+        FROM member_dict
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="selectDictByMemberIdAndType" resultMap="MemberDictResult">
+        <include refid="selectMemberDictVo"/>
+        where member_id = #{param1} and dict_type = #{param2}
+    </select>
+
+    <select id="selectDictByMemberIdAndTypes" resultMap="MemberDictResult">
+        <include refid="selectMemberDictVo"/>
+        where member_id = #{param1} and dict_type in
+        <foreach collection="param2" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+
+    <select id="selectMemberDictGroupByMemberId"  resultType="java.util.Map">
+        SELECT
+            member_id as memberId,
+            FORMAT((sum(IF (dict_type = 'answerTotal',dict_value,0)) / sum(IF (dict_type = 'addQuestionTotal',dict_value,1))),2) AS revrate
+        FROM
+            member_dict
+        GROUP BY
+            member_id
+        ORDER BY
+            revrate DESC  LIMIT  0,6
+    </select>
+
+    <select id="selectMemberDictGroupByMemberIdSingle" parameterType="long" resultType="java.util.Map">
+        SELECT
+            member_id as memberId,
+            FORMAT((sum(IF (dict_type = 'answerTotal',dict_value,0)) / sum(IF (dict_type = 'addQuestionTotal',dict_value,1))),2) AS revrate
+        FROM
+            member_dict WHERE member_id = #{memberId}
+        GROUP BY
+            member_id
+        ORDER BY
+            revrate DESC  LIMIT  0,1
+    </select>
+
+</mapper>

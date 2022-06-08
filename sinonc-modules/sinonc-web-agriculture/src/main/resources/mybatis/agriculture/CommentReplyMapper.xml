@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.CommentReplyMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.CommentReply" id="CommentReplyResult">
+        <result property="replyId"    column="reply_id"    />
+        <result property="growtechIdP"    column="growtech_id_p"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="replyContent"    column="reply_content"    />
+        <result property="replyMemberIdP"    column="reply_member_id_p"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createUser"    column="create_user"    />
+    </resultMap>
+
+    <sql id="selectCommentReplyVo">
+        select reply_id, growtech_id_p, member_id_p, reply_content, reply_member_id_p, create_time, create_user from comment_reply
+    </sql>
+
+    <select id="selectCommentReplyList" parameterType="com.sinonc.agriculture.domain.CommentReply" resultMap="CommentReplyResult">
+        <include refid="selectCommentReplyVo"/>
+        <where>
+            <if test="replyContent != null  and replyContent != ''"> and reply_content like concat('%',#{replyContent},'%')</if>
+        </where>
+    </select>
+
+    <select id="selectCommentReplyById" parameterType="Long" resultMap="CommentReplyResult">
+        <include refid="selectCommentReplyVo"/>
+        where reply_id = #{replyId}
+    </select>
+
+    <insert id="insertCommentReply" parameterType="com.sinonc.agriculture.domain.CommentReply" useGeneratedKeys="true" keyProperty="replyId">
+        insert into comment_reply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="growtechIdP != null ">growtech_id_p,</if>
+            <if test="memberIdP != null ">member_id_p,</if>
+            <if test="replyContent != null  and replyContent != ''">reply_content,</if>
+            <if test="replyMemberIdP != null ">reply_member_id_p,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="createUser != null  and createUser != ''">create_user,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="growtechIdP != null ">#{growtechIdP},</if>
+            <if test="memberIdP != null ">#{memberIdP},</if>
+            <if test="replyContent != null  and replyContent != ''">#{replyContent},</if>
+            <if test="replyMemberIdP != null ">#{replyMemberIdP},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createUser != null  and createUser != ''">#{createUser},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCommentReply" parameterType="com.sinonc.agriculture.domain.CommentReply">
+        update comment_reply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="growtechIdP != null ">growtech_id_p = #{growtechIdP},</if>
+            <if test="memberIdP != null ">member_id_p = #{memberIdP},</if>
+            <if test="replyContent != null  and replyContent != ''">reply_content = #{replyContent},</if>
+            <if test="replyMemberIdP != null ">reply_member_id_p = #{replyMemberIdP},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="createUser != null  and createUser != ''">create_user = #{createUser},</if>
+        </trim>
+        where reply_id = #{replyId}
+    </update>
+
+    <delete id="deleteCommentReplyById" parameterType="Long">
+        delete from comment_reply where reply_id = #{replyId}
+    </delete>
+
+    <delete id="deleteCommentReplyByIds" parameterType="String">
+        delete from comment_reply where reply_id in
+        <foreach item="replyId" collection="array" open="(" separator="," close=")">
+            #{replyId}
+        </foreach>
+    </delete>
+
+    <select id="selectCommentReplyListForMap" parameterType="Long" resultType="java.util.Map">
+        SELECT
+            c1.member_id_p memberId,
+            c2.reply_id,
+            c2.growtech_id_p,
+            c2.member_id_p replyMemberId,
+            c2.reply_member_id_p,
+            c2.reply_content,
+            c2.create_time createTime
+        FROM
+            comment_reply c1
+        INNER JOIN comment_reply c2 ON c1.reply_id = c2.reply_member_id_p
+        WHERE
+            c1.reply_id = #{replyMemberIdP}
+    </select>
+
+
+</mapper>

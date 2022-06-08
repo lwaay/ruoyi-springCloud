@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.SpecsMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Specs" id="SpecsResult">
+        <result property="specsId" column="specs_id"/>
+        <result property="specsName" column="specs_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="specsPrice" column="specs_price"/>
+        <result property="stock" column="stock"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="minCount" column="min_count"/>
+        <result property="maxCount" column="max_count"/>
+        <result property="images" column="images"/>
+        <result property="earnest" column="earnest"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="perWeight" column="per_weight"/>
+        <result property="fareIdP" column="fare_id_p"/>
+    </resultMap>
+
+    <sql id="selectSpecsVo">
+        select specs_id,
+               specs_name,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               specs_price,
+               stock,
+               shop_id,
+               min_count,
+               max_count,
+               unit,
+               images,
+               earnest,
+               del_flag,
+               per_weight,
+               fare_id_p
+        from od_specs
+    </sql>
+
+    <select id="selectSpecsList" parameterType="com.sinonc.orders.domain.Specs" resultMap="SpecsResult">
+        <include refid="selectSpecsVo"/>
+        <where>
+            <if test="specsId != null ">and specs_id = #{specsId}</if>
+            <if test="specsName != null  and specsName != '' ">and specs_name = #{specsName}</if>
+            <if test="createBy != null  and createBy != '' ">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="specsPrice != null ">and specs_price = #{specsPrice}</if>
+            <if test="stock != null ">and stock = #{stock}</if>
+            <if test="shopId != null ">and shop_id = #{shopId}</if>
+            <if test="minCount != null ">and min_count = #{minCount}</if>
+            <if test="maxCount != null ">and max_count = #{maxCount}</if>
+            <if test="earnest != null ">and earnest = #{earnest}</if>
+            ${params.dataScope}
+        </where>
+    </select>
+
+    <select id="selectSpecsById" parameterType="Long" resultMap="SpecsResult">
+        <include refid="selectSpecsVo"/>
+        where specs_id = #{specsId}
+    </select>
+
+    <select id="selectSpecsByFareId" parameterType="Long" resultMap="SpecsResult">
+        <include refid="selectSpecsVo"/>
+        where fare_id_p = #{fareId}
+    </select>
+
+    <select id="selectSpecsByIdForUpdate" parameterType="Long" resultMap="SpecsResult">
+        <include refid="selectSpecsVo"/>
+        where specs_id = #{specsId} for update
+    </select>
+
+    <insert id="insertSpecs" parameterType="com.sinonc.orders.domain.Specs" useGeneratedKeys="true"
+            keyProperty="specsId">
+        insert into od_specs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="specsName != null  and specsName != ''  ">specs_name,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="specsPrice != null  ">specs_price,</if>
+            <if test="stock != null  ">stock,</if>
+            <if test="shopId != null">shop_id,</if>
+            <if test="minCount != null ">min_count,</if>
+            <if test="maxCount != null ">max_count,</if>
+            <if test="images != null and images != ''">images,</if>
+            <if test="unit != null and unit != ''">unit,</if>
+
+            <if test="earnest != null ">earnest,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="perWeight != null ">per_weight,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="specsName != null  and specsName != ''  ">#{specsName},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="specsPrice != null  ">#{specsPrice},</if>
+            <if test="stock != null  ">#{stock},</if>
+            <if test="shopId != null  ">#{shopId},</if>
+            <if test="minCount != null ">#{minCount},</if>
+            <if test="maxCount != null ">#{maxCount},</if>
+            <if test="images != null and images != ''">#{images},</if>
+            <if test="unit != null and unit != ''">#{unit},</if>
+
+            <if test="earnest != null ">#{earnest},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="perWeight != null ">#{perWeight},</if>
+        </trim>
+    </insert>
+
+    <insert id="batchInsertSpecs" useGeneratedKeys="true" keyProperty="specsId">
+        insert into od_specs (specs_name, create_by, create_time, update_by, update_time, specs_price, stock, shop_id,
+        min_count, max_count, unit, images, earnest,del_flag,per_weight) values
+        <foreach collection="list" item="item" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                #{item.specsName},
+                #{item.createBy},
+                #{item.createTime},
+                #{item.updateBy},
+                #{item.updateTime},
+                #{item.specsPrice},
+                #{item.stock},
+                #{item.shopId},
+                ifnull(#{item.minCount},0),
+                ifnull(#{item.maxCount},0),
+                #{item.unit},
+                #{item.images},
+                ifnull(#{item.earnest},0),
+                ifnull(#{item.delFlag},"0"),
+                ifnull(#{item.perWeight},0),
+            </trim>
+        </foreach>
+    </insert>
+
+    <update id="updateSpecs" parameterType="com.sinonc.orders.domain.Specs">
+        update od_specs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="specsName != null  and specsName != ''  ">specs_name = #{specsName},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="specsPrice != null  ">specs_price = #{specsPrice},</if>
+            <if test="stock != null  ">stock = #{stock},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="minCount != null ">min_count = #{minCount},</if>
+            <if test="maxCount != null ">max_count = #{maxCount},</if>
+            <if test="images != null and images != ''">images = #{images},</if>
+            <if test="unit != null and unit != ''">unit = #{unit},</if>
+            <if test="earnest != null and earnest != ''">earnest = #{earnest},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="perWeight != null">per_weight = #{perWeight},</if>
+
+            <if test="fareIdP != null">fare_id_p = #{fareIdP},</if>
+
+        </trim>
+        where specs_id = #{specsId}
+    </update>
+
+
+
+    <update id="updateSpecsClearByFareId" parameterType="Long">
+        update od_specs
+        <trim prefix="SET" suffixOverrides=",">
+
+            <if test="fareIdP != null">fare_id_p = 0,</if>
+
+        </trim>
+        where fare_id_p = #{fareId}
+    </update>
+
+
+    <delete id="deleteSpecsById" parameterType="Long">
+        delete
+        from od_specs
+        where specs_id = #{specsId}
+    </delete>
+
+    <delete id="deleteSpecsByIds" parameterType="String">
+        delete from od_specs where specs_id in
+        <foreach item="specsId" collection="array" open="(" separator="," close=")">
+            #{specsId}
+        </foreach>
+    </delete>
+
+    <select id="listSelectSpecs" resultMap="SpecsResult">
+        <include refid="selectSpecsVo"/>
+    </select>
+
+    <select id="selectSpecsByIds" parameterType="String" resultMap="SpecsResult">
+        <include refid="selectSpecsVo"/>
+        where specs_id in
+        <foreach item="specsId" collection="array" open="(" separator="," close=")">
+            #{specsId}
+        </foreach>
+        and del_flag=0
+    </select>
+
+</mapper>

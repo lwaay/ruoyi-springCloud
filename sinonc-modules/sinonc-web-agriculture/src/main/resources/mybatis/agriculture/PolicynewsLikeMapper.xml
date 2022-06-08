@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.PolicynewsLikeMapper">
+    
+    <resultMap type="com.sinonc.agriculture.domain.PolicynewsLike" id="PolicynewsLikeResult">
+        <result property="likeId"    column="like_id"    />
+        <result property="newsIdP"    column="news_id_p"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPolicynewsLikeVo">
+        select like_id, news_id_p, member_id_p, create_by, create_time, update_by, update_time from policynews_like
+    </sql>
+
+    <select id="selectPolicynewsLikeList" parameterType="com.sinonc.agriculture.domain.PolicynewsLike" resultMap="PolicynewsLikeResult">
+        <include refid="selectPolicynewsLikeVo"/>
+        <where>  
+            <if test="newsIdP != null "> and news_id_p = #{newsIdP}</if>
+            <if test="memberIdP != null "> and member_id_p = #{memberIdP}</if>
+        </where>
+    </select>
+    
+    <select id="selectPolicynewsLikeById" parameterType="Long" resultMap="PolicynewsLikeResult">
+        <include refid="selectPolicynewsLikeVo"/>
+        where like_id = #{likeId}
+    </select>
+        
+    <insert id="insertPolicynewsLike" parameterType="com.sinonc.agriculture.domain.PolicynewsLike" useGeneratedKeys="true" keyProperty="likeId">
+        insert into policynews_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="newsIdP != null ">news_id_p,</if>
+            <if test="memberIdP != null ">member_id_p,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="newsIdP != null ">#{newsIdP},</if>
+            <if test="memberIdP != null ">#{memberIdP},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePolicynewsLike" parameterType="com.sinonc.agriculture.domain.PolicynewsLike">
+        update policynews_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newsIdP != null ">news_id_p = #{newsIdP},</if>
+            <if test="memberIdP != null ">member_id_p = #{memberIdP},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where like_id = #{likeId}
+    </update>
+
+    <delete id="deletePolicynewsLikeById" parameterType="Long">
+        delete from policynews_like where like_id = #{likeId}
+    </delete>
+
+    <delete id="deletePolicynewsLikeByIds" parameterType="String">
+        delete from policynews_like where like_id in 
+        <foreach item="likeId" collection="array" open="(" separator="," close=")">
+            #{likeId}
+        </foreach>
+    </delete>
+    
+</mapper>

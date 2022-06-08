@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.IotWarnMapper">
+
+    <resultMap type="com.sinonc.iot.domain.IotWarn" id="IotWarnResult">
+        <result property="warnId" column="warn_id"/>
+        <result property="deviceId" column="device_id"/>
+        <result property="metric" column="metric"/>
+        <result property="metricValue" column="metric_value"/>
+        <result property="metricTime" column="metric_time"/>
+        <result property="warnInfo" column="warn_info"/>
+        <result property="isHandle" column="is_handle"/>
+        <result property="handleRecord" column="handle_record"/>
+        <result property="warnType" column="warn_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectIotWarnVo">
+        select warn_id, device_id, metric, metric_value, metric_time, warn_info, is_handle, handle_record, warn_type, create_time, update_time, remark from iot_warn
+    </sql>
+
+    <select id="selectIotWarnList" parameterType="com.sinonc.iot.domain.IotWarn" resultMap="IotWarnResult">
+        <include refid="selectIotWarnVo"/>
+        <where>
+            <if test="deviceId != null and deviceId != ''">and device_id = #{deviceId}</if>
+            <if test="metric != null  and metric != ''">and metric = #{metric}</if>
+            <if test="metricValue != null ">and metric_value = #{metricValue}</if>
+            <if test="metricTime != null ">and metric_time = #{metricTime}</if>
+            <if test="warnInfo != null  and warnInfo != ''">and warn_info = #{warnInfo}</if>
+            <if test="isHandle != null ">and is_handle = #{isHandle}</if>
+            <if test="handleRecord != null  and handleRecord != ''">and handle_record = #{handleRecord}</if>
+            <if test="warnType != null ">and warn_type = #{warnType}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="listIotWarm" parameterType="com.sinonc.iot.domain.IotWarn" resultMap="IotWarnResult">
+        <include refid="selectIotWarnVo"/>
+        <where>
+            <if test="deviceId != null and deviceId != ''">and device_id = #{deviceId}</if>
+            <if test="metric != null  and metric != ''">and metric = #{metric}</if>
+            <if test="metricValue != null ">and metric_value = #{metricValue}</if>
+            <if test="metricTime != null ">and metric_time = #{metricTime}</if>
+            <if test="warnInfo != null  and warnInfo != ''">and warn_info = #{warnInfo}</if>
+            <if test="isHandle != null ">and is_handle = #{isHandle}</if>
+            <if test="handleRecord != null  and handleRecord != ''">and handle_record = #{handleRecord}</if>
+            and warn_type != 2
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectIotWarnById" parameterType="Long" resultMap="IotWarnResult">
+        <include refid="selectIotWarnVo"/>
+        where warn_id = #{warnId}
+    </select>
+    <select id="warnCount" resultType="java.lang.Integer">
+        select count(0) from iot_warn
+    </select>
+
+    <insert id="insertIotWarn" parameterType="com.sinonc.iot.domain.IotWarn" useGeneratedKeys="true"
+            keyProperty="warnId">
+        insert into iot_warn
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null ">device_id,</if>
+            <if test="metric != null  and metric != ''">metric,</if>
+            <if test="metricValue != null ">metric_value,</if>
+            <if test="metricTime != null ">metric_time,</if>
+            <if test="warnInfo != null  and warnInfo != ''">warn_info,</if>
+            <if test="isHandle != null ">is_handle,</if>
+            <if test="handleRecord != null  and handleRecord != ''">handle_record,</if>
+            <if test="warnType != null ">warn_type,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="remark != null  and remark != ''">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null ">#{deviceId},</if>
+            <if test="metric != null  and metric != ''">#{metric},</if>
+            <if test="metricValue != null ">#{metricValue},</if>
+            <if test="metricTime != null ">#{metricTime},</if>
+            <if test="warnInfo != null  and warnInfo != ''">#{warnInfo},</if>
+            <if test="isHandle != null ">#{isHandle},</if>
+            <if test="handleRecord != null  and handleRecord != ''">#{handleRecord},</if>
+            <if test="warnType != null ">#{warnType},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="remark != null  and remark != ''">#{remark},</if>
+        </trim>
+    </insert>
+
+    <update id="updateIotWarn" parameterType="com.sinonc.iot.domain.IotWarn">
+        update iot_warn
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null ">device_id = #{deviceId},</if>
+            <if test="metric != null  and metric != ''">metric = #{metric},</if>
+            <if test="metricValue != null ">metric_value = #{metricValue},</if>
+            <if test="metricTime != null ">metric_time = #{metricTime},</if>
+            <if test="warnInfo != null  and warnInfo != ''">warn_info = #{warnInfo},</if>
+            <if test="isHandle != null ">is_handle = #{isHandle},</if>
+            <if test="handleRecord != null  and handleRecord != ''">handle_record = #{handleRecord},</if>
+            <if test="warnType != null ">warn_type = #{warnType},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''">remark = #{remark},</if>
+        </trim>
+        where warn_id = #{warnId}
+    </update>
+
+    <delete id="deleteIotWarnById" parameterType="Long">
+        delete from iot_warn where warn_id = #{warnId}
+    </delete>
+
+    <delete id="deleteIotWarnByIds" parameterType="String">
+        delete from iot_warn where warn_id in
+        <foreach item="warnId" collection="array" open="(" separator="," close=")">
+            #{warnId}
+        </foreach>
+    </delete>
+
+</mapper>

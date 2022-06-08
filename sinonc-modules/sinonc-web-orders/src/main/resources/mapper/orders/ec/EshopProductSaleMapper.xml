@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.EshopProductSaleMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.EshopProductSale" id="EshopProductSaleResult">
+        <result property="id" column="id"/>
+        <result property="goodsId" column="goods_id"/>
+        <result property="cout" column="cout"/>
+        <result property="sale" column="sale"/>
+        <result property="stock" column="stock"/>
+        <result property="createTime" column="create_time"/>
+        <result property="goodsStore" column="goods_store"/>
+        <result property="goodsType" column="goods_type"/>
+        <result property="goodsOrigin" column="goods_origin"/>
+        <association property="eshopProduct" column="goods_id" javaType="com.sinonc.orders.ec.domain.EshopProduct"
+                     select="com.sinonc.orders.ec.mapper.EshopProductMapper.selectProductByGoodsId"/>
+    </resultMap>
+
+    <sql id="selectEshopProductSaleVo">
+        select id, goods_id, cout, sale, stock, create_time, goods_store, goods_type, goods_origin        from eshop_product_sale
+    </sql>
+
+    <select id="selectEshopProductSaleList" parameterType="com.sinonc.orders.ec.domain.EshopProductSale" resultMap="EshopProductSaleResult">
+        <include refid="selectEshopProductSaleVo"/>
+        <where>
+            <if test="goodsId != null ">
+                and goods_id = #{goodsId}
+            </if>
+            <if test="goodsStore != null  and goodsStore != ''">
+                and goods_store like concat("%",#{goodsStore},"%")
+            </if>
+            <if test="goodsType != null  and goodsType != ''">
+                and goods_type = #{goodsType}
+            </if>
+            <if test="goodsOrigin != null ">
+                and goods_origin = #{goodsOrigin}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectEshopProductSaleById" parameterType="Long" resultMap="EshopProductSaleResult">
+        <include refid="selectEshopProductSaleVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEshopProductSale" parameterType="com.sinonc.orders.ec.domain.EshopProductSale" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into eshop_product_sale
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">goods_id,
+            </if>
+            <if test="cout != null">cout,
+            </if>
+            <if test="sale != null">sale,
+            </if>
+            <if test="stock != null">stock,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="goodsStore != null and goodsStore != ''">goods_store,
+            </if>
+            <if test="goodsType != null and goodsType != ''">goods_type,
+            </if>
+            <if test="goodsOrigin != null">goods_origin,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsId != null">#{goodsId},
+            </if>
+            <if test="cout != null">#{cout},
+            </if>
+            <if test="sale != null">#{sale},
+            </if>
+            <if test="stock != null">#{stock},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="goodsStore != null and goodsStore != ''">#{goodsStore},
+            </if>
+            <if test="goodsType != null and goodsType != ''">#{goodsType},
+            </if>
+            <if test="goodsOrigin != null">#{goodsOrigin},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateEshopProductSale" parameterType="com.sinonc.orders.ec.domain.EshopProductSale">
+        update eshop_product_sale
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsId != null">goods_id =
+                #{goodsId},
+            </if>
+            <if test="cout != null">cout =
+                #{cout},
+            </if>
+            <if test="sale != null">sale =
+                #{sale},
+            </if>
+            <if test="stock != null">stock =
+                #{stock},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="goodsStore != null and goodsStore != ''">goods_store =
+                #{goodsStore},
+            </if>
+            <if test="goodsType != null and goodsType != ''">goods_type =
+                #{goodsType},
+            </if>
+            <if test="goodsOrigin != null">goods_origin =
+                #{goodsOrigin},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEshopProductSaleById" parameterType="Long">
+        delete
+        from eshop_product_sale where id = #{id}
+    </delete>
+
+    <delete id="deleteEshopProductSaleByIds" parameterType="String">
+        delete from eshop_product_sale where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getStoreRealTimeStatisticDataToday" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT e1.goods_id     AS goodsId,
+               e1.cout         AS cout,
+               e1.sale         AS sale,
+               e1.stock        AS stock,
+               e1.create_time  AS createTime,
+               e1.goods_store  AS goodsStore,
+               e1.goods_origin AS goodsOrigin,
+               e1.goods_type   AS goodsType
+        FROM eshop_product_sale e1,(
+            SELECT MAX(e2.create_time) AS maxtime,e2.goods_id
+            FROM eshop_product_sale AS e2
+            WHERE DATE_FORMAT(e2.create_time, '%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d')
+            GROUP BY e2.goods_id
+        ) t2
+        WHERE e1.create_time = t2.maxtime
+          AND  e1.goods_id = t2.goods_id
+          AND e1.goods_store = #{goodsStore}
+    </select>
+
+    <select id="getStoreRealTimeStatisticDataYesterday" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT e1.goods_id     AS goodsId,
+               e1.cout         AS cout,
+               e1.sale         AS sale,
+               e1.stock        AS stock,
+               e1.create_time  AS createTime,
+               e1.goods_store  AS goodsStore,
+               e1.goods_origin AS goodsOrigin,
+               e1.goods_type   AS goodsType
+        FROM eshop_product_sale e1
+        WHERE e1.create_time = (
+            SELECT max(e2.create_time)
+            FROM eshop_product_sale AS e2
+            WHERE e1.goods_id = e2.goods_id
+              AND date_format(e2.create_time, '%Y-%m-%d') = date_add(curdate(), INTERVAL - 1 DAY )
+        )
+          AND e1.goods_store = #{goodsStore}
+    </select>
+
+    <select id="getStoreRealTimeStatisticDataAfter" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT e1.goods_id     AS goodsId,
+               e1.cout         AS cout,
+               e1.sale         AS sale,
+               e1.stock        AS stock,
+               e1.create_time  AS createTime,
+               e1.goods_store  AS goodsStore,
+               e1.goods_origin AS goodsOrigin,
+               e1.goods_type   AS goodsType
+        FROM eshop_product_sale e1
+        WHERE e1.create_time = (
+            SELECT max(e2.create_time)
+            FROM eshop_product_sale AS e2
+            WHERE e1.goods_id = e2.goods_id
+              AND date_format(e2.create_time, '%Y-%m-%d') = date_add(curdate(), INTERVAL - 2 DAY )
+        )
+          AND e1.goods_store = #{goodsStore}
+          AND e1.goods_id = #{goodsId}
+        order by e1.create_time desc limit 1
+    </select>
+
+    <select id="getStoreRealTimeStatisticDataLast" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT e1.goods_id     AS goodsId,
+               e1.cout         AS cout,
+               e1.sale         AS sale,
+               e1.stock        AS stock,
+               e1.create_time  AS createTime,
+               e1.goods_store  AS goodsStore,
+               e1.goods_origin AS goodsOrigin,
+               e1.goods_type   AS goodsType
+        FROM eshop_product_sale e1
+        WHERE DATE_FORMAT(e1.create_time, "%Y%m%d") &lt; DATE_FORMAT(#{nowDate}, "%Y%m%d")
+          AND DATE_FORMAT(e1.create_time, "%Y%m") = DATE_FORMAT(#{nowDate}, "%Y%m")
+          AND e1.goods_store = #{goodsStore}
+          AND e1.goods_id = #{goodsId}
+        order by e1.create_time desc limit 1
+    </select>
+
+    <select id="getTypeRealTimeStatisticDataLast" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT SUM(cout) AS cout, SUM(sale) AS sale, MAX(t1.create_time) AS createTime
+        FROM eshop_product_sale t1
+                 INNER JOIN
+             (SELECT e1.goods_type, e1.goods_id, MAX(e1.create_time) AS maxtime
+              FROM eshop_product_sale e1
+              WHERE DATE_FORMAT(e1.create_time, "%Y%m%d") &lt; DATE_FORMAT(#{nowDate}, "%Y%m%d")
+                AND DATE_FORMAT(e1.create_time, "%Y%m") = DATE_FORMAT(#{nowDate}, "%Y%m")
+                AND e1.goods_type = #{goodsType}
+              GROUP BY e1.goods_id) t2
+             ON t1.goods_type = t2.goods_type
+                 AND t1.goods_id = t2.goods_id
+                 AND t1.create_time = t2.maxtime
+    </select>
+
+    <select id="getTypeRealTimeStatisticDataToday" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT SUM(t1.cout) AS cout, SUM(t1.sale) AS sale, MAX(t1.create_time) AS createTime
+        FROM eshop_product_sale t1
+                 INNER JOIN
+             (SELECT e1.goods_id,
+                     e1.goods_type,
+                     MAX(e1.create_time) AS maxtime
+              FROM eshop_product_sale e1
+              WHERE DATE_FORMAT(e1.create_time, "%Y%m%d") = DATE_FORMAT(NOW(), "%Y%m%d")
+                AND e1.goods_type = #{goodsType}
+              GROUP BY e1.goods_id) t2 ON t1.goods_type = t2.goods_type
+                 AND t1.create_time = t2.maxtime AND t1.goods_id = t2.goods_id
+    </select>
+
+    <select id="listTypeRealTimeStatisticDataLast" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT t1.goods_id     AS goodsId,
+               t1.cout         AS cout,
+               t1.sale         AS sale,
+               t1.stock        AS stock,
+               t1.create_time  AS createTime,
+               t1.goods_store  AS goodsStore,
+               t1.goods_origin AS goodsOrigin,
+               t1.goods_type   AS goodsType
+        FROM eshop_product_sale t1
+                 INNER JOIN
+             (SELECT e1.goods_id,
+                     e1.goods_type,
+                     MAX(e1.create_time) AS maxtime
+              FROM eshop_product_sale e1
+              WHERE DATE_FORMAT(e1.create_time, "%Y%m%d") &lt; DATE_FORMAT(#{nowDate}, "%Y%m%d")
+                AND DATE_FORMAT(e1.create_time, "%Y%m") = DATE_FORMAT(#{nowDate}, "%Y%m")
+                AND e1.goods_type = #{goodsType}
+              GROUP BY e1.goods_id
+             ) t2 ON t1.goods_type = t2.goods_type
+                 AND t1.create_time = t2.maxtime AND t1.goods_id = t2.goods_id
+    </select>
+
+    <select id="listTypeRealTimeStatisticDataToday" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT
+            t1.goods_id AS goodsId,
+            t1.cout AS cout,
+            t1.sale AS sale,
+            t1.stock AS stock,
+            t1.create_time AS createTime,
+            t1.goods_store AS goodsStore,
+            t1.goods_origin AS goodsOrigin,
+            t1.goods_type AS goodsType
+        FROM
+            eshop_product_sale t1
+        INNER JOIN (
+            SELECT
+                e1.goods_id,
+                e1.goods_type,
+                MAX(e1.create_time) AS maxtime
+            FROM
+                eshop_product_sale e1
+            WHERE
+                e1.goods_type = #{goodsType}
+            AND DATE_FORMAT(e1.create_time, "%Y%m%d") = DATE_FORMAT(NOW(), "%Y%m%d")
+            GROUP BY
+                e1.goods_id,
+                e1.goods_type
+        ) t2 ON t1.goods_type = t2.goods_type
+        AND t1.create_time = t2.maxtime
+        AND t1.goods_id = t2.goods_id
+    </select>
+
+    <select id="getRealTimeStatisticDataLast" resultType="com.sinonc.orders.ec.domain.EshopProductSale">
+        SELECT t1.goods_id     AS goodsId,
+               t1.cout         AS cout,
+               t1.sale         AS sale,
+               t1.stock        AS stock,
+               t1.create_time  AS createTime,
+               t1.goods_store  AS goodsStore,
+               t1.goods_origin AS goodsOrigin,
+               t1.goods_type   AS goodsType
+        FROM eshop_product_sale t1
+                 INNER JOIN
+             (SELECT e1.goods_id,
+                     MAX(e1.create_time) AS maxtime
+              FROM eshop_product_sale e1
+              WHERE DATE_FORMAT(e1.create_time, "%Y%m%d") &lt; DATE_FORMAT(#{nowDate}, "%Y%m%d")
+                AND DATE_FORMAT(e1.create_time, "%Y%m") = DATE_FORMAT(#{nowDate}, "%Y%m")
+                AND e1.goods_id = #{goodsId}
+              GROUP BY e1.goods_id
+             ) t2 on t1.create_time = t2.maxtime AND t1.goods_id = t2.goods_id
+    </select>
+</mapper>

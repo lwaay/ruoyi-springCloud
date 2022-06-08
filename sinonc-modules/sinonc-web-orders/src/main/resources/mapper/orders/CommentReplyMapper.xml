@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.CommentReplyMapper">
+
+    <resultMap type="com.sinonc.orders.domain.CommentReply" id="CommentReplyResult">
+        <result property="commentreplyId"    column="commentreply_id"    />
+        <result property="goodsIdP"    column="goods_id_p"    />
+        <result property="userId"    column="user_id"    />
+        <result property="replyId"    column="reply_id"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+	<sql id="selectCommentReplyVo">
+        select commentreply_id, goods_id_p, user_id, reply_id, content, create_time,type from od_comment_reply
+    </sql>
+
+    <select id="selectCommentReplyList" parameterType="com.sinonc.orders.domain.CommentReply" resultMap="CommentReplyResult">
+        select commentreply_id, goods_id_p, cr.user_id, reply_id, content, cr.create_time,type
+
+        FROM
+        od_comment_reply cr
+
+        <where>
+            <if test="commentreplyId != null "> and commentreply_id = #{commentreplyId}</if>
+             <if test="goodsIdP != null "> and goods_id_p = #{goodsIdP}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="replyId != null "> and reply_id = #{replyId}</if>
+             <if test="content != null  and content != '' "> and content like concat('%', #{content}, '%')</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="type != null "> and type = #{type}</if>
+         </where>
+         order by create_time desc
+    </select>
+
+    <select id="selectCommentReplyById" parameterType="Long" resultMap="CommentReplyResult">
+        <include refid="selectCommentReplyVo"/>
+        where commentreply_id = #{commentreplyId}
+    </select>
+
+    <insert id="insertCommentReply" parameterType="com.sinonc.orders.domain.CommentReply" useGeneratedKeys="true" keyProperty="commentreplyId">
+        insert into od_comment_reply
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="goodsIdP != null  ">goods_id_p,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="replyId != null  ">reply_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="type != null  ">type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="goodsIdP != null  ">#{goodsIdP},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="replyId != null  ">#{replyId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="type != null  ">#{type},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCommentReply" parameterType="com.sinonc.orders.domain.CommentReply">
+        update od_comment_reply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsIdP != null  ">goods_id_p = #{goodsIdP},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="replyId != null  ">reply_id = #{replyId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="type != null  ">type = #{type},</if>
+        </trim>
+        where commentreply_id = #{commentreplyId}
+    </update>
+
+	<delete id="deleteCommentReplyById" parameterType="Long">
+        delete from od_comment_reply where commentreply_id = #{commentreplyId}
+    </delete>
+
+    <delete id="deleteCommentReplyByIds" parameterType="String">
+        delete from od_comment_reply where commentreply_id in
+        <foreach item="commentreplyId" collection="array" open="(" separator="," close=")">
+            #{commentreplyId}
+        </foreach>
+    </delete>
+
+    <select id="selectCommentList" parameterType="Long" resultType="com.sinonc.orders.vo.CommentReplyUserVo">
+                  SELECT
+              cr.`commentreply_id` commentreplyId,
+              cr.`content` content,
+              cr.`create_time` createTime,
+              cr.`goods_id_p` goodsIdP,
+              cr.`reply_id` replyId,
+              cr.`user_id` userId
+            FROM
+              od_comment_reply cr
+            WHERE cr.`goods_id_p` = #{goodsId}
+              AND cr.`reply_id` = 0 AND cr.`type` = 0
+            ORDER BY cr.`create_time` DESC
+    </select>
+
+    <select id="findCommentreplyByid" parameterType="Long" resultType="com.sinonc.orders.vo.CommentReplyUserVo">
+                SELECT
+                  c1.user_id uid,
+                  c2.`commentreply_id` commentreplyId,
+                  c2.`goods_id_p` goodsIdP,
+                  c2.`user_id` userId,
+                  c2.`reply_id` replyId,
+                  c2.`content` content,
+                  c2.create_time createTime
+                FROM
+                  od_comment_reply c1
+                  INNER JOIN od_comment_reply c2
+                    ON c1.commentreply_id = c2.reply_id
+                WHERE c1.commentreply_id = #{commentreplyId} AND c2.type = 0
+                ORDER BY c2.create_time DESC
+    </select>
+
+    <select id="selectCommontReplyByTypeAndGoodIdP" parameterType="Long" resultType="java.util.Map">
+        SELECT
+          cr.`commentreply_id`,
+          cr.`content`,
+          cr.`create_time`,
+          cr.`goods_id_p`,
+          cr.`reply_id`,
+          cr.`type`,
+          cr.`user_id`
+        FROM
+          od_comment_reply cr
+        WHERE TYPE = 1
+          AND goods_id_p = #{adoptionId}
+    </select>
+
+</mapper>

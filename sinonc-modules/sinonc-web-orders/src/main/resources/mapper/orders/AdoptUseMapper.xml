@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AdoptUseMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.AdoptUse" id="AdoptUseResult">
+        <result property="useId"    column="use_id"    />
+        <result property="itemIdP"    column="item_id_p"    />
+        <result property="specsValue"    column="specs_value"    />
+        <result property="numbers"    column="numbers"    />
+        <result property="unit"    column="unit"    />
+        <result property="useInfo"    column="use_info"    />
+        <result property="itemType"    column="item_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+	
+	<sql id="selectAdoptUseVo">
+        select use_id, item_id_p, specs_value, numbers, unit, use_info, item_type, create_time, create_by, del_flag from od_adopt_use
+    </sql>
+	
+    <select id="selectAdoptUseList" parameterType="com.sinonc.orders.domain.AdoptUse" resultMap="AdoptUseResult">
+        <include refid="selectAdoptUseVo"/>
+        <where>  
+            <if test="useId != null "> and use_id = #{useId}</if>
+             <if test="itemIdP != null "> and item_id_p = #{itemIdP}</if>
+             <if test="specsValue != null  and specsValue != '' "> and specs_value = #{specsValue}</if>
+             <if test="numbers != null "> and numbers = #{numbers}</if>
+             <if test="unit != null  and unit != '' "> and unit = #{unit}</if>
+             <if test="useInfo != null  and useInfo != '' "> and use_info = #{useInfo}</if>
+             <if test="itemType != null "> and item_type = #{itemType}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="delFlag != null "> and del_flag = #{delFlag}</if>
+         </where>
+    </select>
+    
+    <select id="selectAdoptUseById" parameterType="Integer" resultMap="AdoptUseResult">
+        <include refid="selectAdoptUseVo"/>
+        where use_id = #{useId}
+    </select>
+        
+    <insert id="insertAdoptUse" parameterType="com.sinonc.orders.domain.AdoptUse" useGeneratedKeys="true" keyProperty="useId">
+        insert into od_adopt_use
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="itemIdP != null  ">item_id_p,</if>
+			<if test="specsValue != null  and specsValue != ''  ">specs_value,</if>
+			<if test="numbers != null  ">numbers,</if>
+			<if test="unit != null  and unit != ''  ">unit,</if>
+			<if test="useInfo != null  and useInfo != ''  ">use_info,</if>
+			<if test="itemType != null  ">item_type,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="delFlag != null  ">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="itemIdP != null  ">#{itemIdP},</if>
+			<if test="specsValue != null  and specsValue != ''  ">#{specsValue},</if>
+			<if test="numbers != null  ">#{numbers},</if>
+			<if test="unit != null  and unit != ''  ">#{unit},</if>
+			<if test="useInfo != null  and useInfo != ''  ">#{useInfo},</if>
+			<if test="itemType != null  ">#{itemType},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="delFlag != null  ">#{delFlag},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateAdoptUse" parameterType="com.sinonc.orders.domain.AdoptUse">
+        update od_adopt_use
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="itemIdP != null  ">item_id_p = #{itemIdP},</if>
+            <if test="specsValue != null  and specsValue != ''  ">specs_value = #{specsValue},</if>
+            <if test="numbers != null  ">numbers = #{numbers},</if>
+            <if test="unit != null  and unit != ''  ">unit = #{unit},</if>
+            <if test="useInfo != null  and useInfo != ''  ">use_info = #{useInfo},</if>
+            <if test="itemType != null  ">item_type = #{itemType},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="delFlag != null  ">del_flag = #{delFlag},</if>
+        </trim>
+        where use_id = #{useId}
+    </update>
+
+	<delete id="deleteAdoptUseById" parameterType="Integer">
+        delete from od_adopt_use where use_id = #{useId}
+    </delete>
+	
+    <delete id="deleteAdoptUseByIds" parameterType="String">
+        delete from od_adopt_use where use_id in 
+        <foreach item="useId" collection="array" open="(" separator="," close=")">
+            #{useId}
+        </foreach>
+    </delete>
+    
+</mapper>

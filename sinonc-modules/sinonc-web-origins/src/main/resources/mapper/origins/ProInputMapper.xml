@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.ProInputMapper">
+
+    <resultMap type="ProInput" id="ProInputResult">
+        <result property="inputId" column="input_id"/>
+        <result property="inputType" column="input_type"/>
+        <result property="specs" column="specs"/>
+        <result property="brand" column="brand"/>
+        <result property="inputNum" column="input_num"/>
+        <result property="inoutUnit" column="inout_unit"/>
+        <result property="oprateMan" column="oprate_man"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="inputTime" column="input_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectProInputVo">
+        select input_id,
+               input_type,
+               specs,
+               brand,
+               input_num,
+               inout_unit,
+               oprate_man,
+               entity_id,
+               input_time,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from pro_input
+    </sql>
+
+    <select id="selectProInputList" parameterType="ProInput" resultMap="ProInputResult">
+        <include refid="selectProInputVo"/>
+        <where>
+            <if test="inputType != null  and inputType != ''">
+                and input_type = #{inputType}
+            </if>
+            <if test="specs != null  and specs != ''">
+                and specs = #{specs}
+            </if>
+            <if test="brand != null  and brand != ''">
+                and brand = #{brand}
+            </if>
+            <if test="inputNum != null ">
+                and input_num = #{inputNum}
+            </if>
+            <if test="inoutUnit != null  and inoutUnit != ''">
+                and inout_unit = #{inoutUnit}
+            </if>
+            <if test="oprateMan != null  and oprateMan != ''">
+                and oprate_man like concat('%', #{oprateMan}, '%')
+            </if>
+            <if test="entityId != null ">
+                and entity_id = #{entityId}
+            </if>
+            <if test="inputTime != null ">
+                and input_time = #{inputTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProInputById" parameterType="Long" resultMap="ProInputResult">
+        <include refid="selectProInputVo"/>
+        where input_id = #{inputId}
+    </select>
+
+    <insert id="insertProInput" parameterType="ProInput" useGeneratedKeys="true"
+            keyProperty="inputId">
+        insert into pro_input
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inputType != null">input_type,
+            </if>
+            <if test="specs != null">specs,
+            </if>
+            <if test="brand != null">brand,
+            </if>
+            <if test="inputNum != null">input_num,
+            </if>
+            <if test="inoutUnit != null">inout_unit,
+            </if>
+            <if test="oprateMan != null">oprate_man,
+            </if>
+            <if test="entityId != null">entity_id,
+            </if>
+            <if test="inputTime != null">input_time,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inputType != null">#{inputType},
+            </if>
+            <if test="specs != null">#{specs},
+            </if>
+            <if test="brand != null">#{brand},
+            </if>
+            <if test="inputNum != null">#{inputNum},
+            </if>
+            <if test="inoutUnit != null">#{inoutUnit},
+            </if>
+            <if test="oprateMan != null">#{oprateMan},
+            </if>
+            <if test="entityId != null">#{entityId},
+            </if>
+            <if test="inputTime != null">#{inputTime},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProInput" parameterType="ProInput">
+        update pro_input
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inputType != null">input_type =
+                #{inputType},
+            </if>
+            <if test="specs != null">specs =
+                #{specs},
+            </if>
+            <if test="brand != null">brand =
+                #{brand},
+            </if>
+            <if test="inputNum != null">input_num =
+                #{inputNum},
+            </if>
+            <if test="inoutUnit != null">inout_unit =
+                #{inoutUnit},
+            </if>
+            <if test="oprateMan != null">oprate_man =
+                #{oprateMan},
+            </if>
+            <if test="entityId != null">entity_id =
+                #{entityId},
+            </if>
+            <if test="inputTime != null">input_time =
+                #{inputTime},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where input_id = #{inputId}
+    </update>
+
+    <delete id="deleteProInputById" parameterType="Long">
+        delete
+        from pro_input
+        where input_id = #{inputId}
+    </delete>
+
+    <delete id="deleteProInputByIds" parameterType="String">
+        delete from pro_input where input_id in
+        <foreach item="inputId" collection="array" open="(" separator="," close=")">
+            #{inputId}
+        </foreach>
+    </delete>
+
+    <select id="selectInputRate" resultType="map" parameterType="com.sinonc.origins.vo.BigScreenVo">
+        SELECT
+        input_type as type,
+        sum( input_num ) as num
+        FROM
+        (
+        SELECT * FROM pro_input
+        <where>
+            <if test="startTime != null">
+                and Date_format(input_time,'%Y-%m-%d') >= Date_format(#{startTime},'%Y-%m-%d')
+            </if>
+            <if test="endTime != null">
+                and Date_format(#{endTime},'%Y-%m-%d') >= Date_format(input_time,'%Y-%m-%d')
+            </if>
+        </where>
+        ) t
+        GROUP BY
+        input_type
+    </select>
+
+</mapper>

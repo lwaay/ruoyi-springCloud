@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.system.mapper.BusinessCertMapper">
+
+    <resultMap type="BusinessCert" id="BusinessCertResult">
+        <result property="certId" column="cert_id"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="certName" column="cert_name"/>
+        <result property="certPicurl" column="cert_picurl"/>
+        <result property="uploadTime" column="upload_time"/>
+        <result property="uploadMemberid" column="upload_memberid"/>
+    </resultMap>
+
+    <sql id="selectBusinessCertVo">
+        select cert_id, entity_id, cert_name, cert_picurl, upload_time, upload_memberid        from business_cert
+    </sql>
+
+    <select id="selectBusinessCertList" parameterType="BusinessCert" resultMap="BusinessCertResult">
+        <include refid="selectBusinessCertVo"/>
+        <where>
+            <if test="entityId != null ">
+                and entity_id = #{entityId}
+            </if>
+            <if test="certName != null  and certName != ''">
+                and cert_name like concat('%', #{certName}, '%')
+            </if>
+            <if test="certPicurl != null  and certPicurl != ''">
+                and cert_picurl = #{certPicurl}
+            </if>
+            <if test="uploadTime != null ">
+                and upload_time = #{uploadTime}
+            </if>
+            <if test="uploadMemberid != null ">
+                and upload_memberid = #{uploadMemberid}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBusinessCertById" parameterType="Long" resultMap="BusinessCertResult">
+        <include refid="selectBusinessCertVo"/>
+        where cert_id = #{certId}
+    </select>
+
+    <insert id="insertBusinessCert" parameterType="BusinessCert" useGeneratedKeys="true"
+            keyProperty="certId">
+        insert into business_cert
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">entity_id,
+            </if>
+            <if test="certName != null">cert_name,
+            </if>
+            <if test="certPicurl != null">cert_picurl,
+            </if>
+            <if test="uploadTime != null">upload_time,
+            </if>
+            <if test="uploadMemberid != null">upload_memberid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entityId != null">#{entityId},
+            </if>
+            <if test="certName != null">#{certName},
+            </if>
+            <if test="certPicurl != null">#{certPicurl},
+            </if>
+            <if test="uploadTime != null">#{uploadTime},
+            </if>
+            <if test="uploadMemberid != null">#{uploadMemberid},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBusinessCert" parameterType="BusinessCert">
+        update business_cert
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entityId != null">entity_id =
+                #{entityId},
+            </if>
+            <if test="certName != null">cert_name =
+                #{certName},
+            </if>
+            <if test="certPicurl != null">cert_picurl =
+                #{certPicurl},
+            </if>
+            <if test="uploadTime != null">upload_time =
+                #{uploadTime},
+            </if>
+            <if test="uploadMemberid != null">upload_memberid =
+                #{uploadMemberid},
+            </if>
+        </trim>
+        where cert_id = #{certId}
+    </update>
+
+    <delete id="deleteBusinessCertById" parameterType="Long">
+        delete
+        from business_cert where cert_id = #{certId}
+    </delete>
+
+    <delete id="deleteBusinessCertByIds" parameterType="String">
+        delete from business_cert where cert_id in
+        <foreach item="certId" collection="array" open="(" separator="," close=")">
+            #{certId}
+        </foreach>
+    </delete>
+
+</mapper>

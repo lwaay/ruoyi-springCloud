@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.AgriQuestionDtoMapper">
+
+    <resultMap type="com.sinonc.agriculture.dto.AgriQuestionSimpleDto" id="AgriQuestionSimpleDtoResult">
+        <result property="questionId" column="question_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="cropId" column="crop_id"/>
+        <result property="sectionId" column="section_id"/>
+        <result property="ask" column="ask"/>
+        <result property="describe" column="describe"/>
+        <result property="img" column="img"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="areaName" column="area_name"/>
+        <result property="readCount" column="read_count"/>
+        <result property="answerCount" column="answer_count"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="lastAnswerTime" column="last_answer_time"/>
+        <association property="concerns" select="selectConcerns" column="question_id"/>
+        <association property="concernCount" select="selectConcernCount" column="question_id"/>
+        <association property="answerCount" select="selectAnswerCount" column="question_id"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.agriculture.dto.QuestionAnswerDto" id="QuestionAnswerDtoResult">
+        <result property="answerId" column="answer_id"/>
+        <result property="nikeName" column="nike_name"/>
+        <result property="memberId" column="member_id"/>
+        <result property="questionId" column="question_id"/>
+        <result property="content" column="content"/>
+        <result property="img" column="img"/>
+        <result property="favorCount" column="favor_count"/>
+        <result property="opposeCount" column="oppose_count"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="areaName" column="area_name"/>
+        <result property="bestFlag" column="best_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="sysName" column="sys_name"/>
+        <association property="opList" column="answer_id" select="selectOpList"/>
+    </resultMap>
+
+    <resultMap id="AgriQuestionDetailDtoMap" type="com.sinonc.agriculture.dto.AgriQuestionDetailDto"
+               extends="AgriQuestionSimpleDtoResult">
+        <association property="bestAnswer" select="selectBestAnswer" column="question_id"/>
+        <association property="otherAnswers" select="selectAnswerList"
+                     column="question_id"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.agriculture.dto.AgriQuestionSectionDto" id="AgriQuestionSectionResult">
+        <result property="sectionId" column="section_id"/>
+        <result property="sectionName" column="section_name"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.agriculture.dto.AgriQuestionDto" id="AgriQuestionResult">
+        <result property="questionId" column="question_id"/>
+        <result property="ask" column="ask"/>
+        <result property="img" column="img"/>
+    </resultMap>
+
+    <sql id="selectAgriQuestionVo">
+        select question_id,
+               member_id,
+               crop_id,
+               section_id,
+               ask,
+               `describe`,
+               img,
+               area_code,
+               area_name,
+               read_count,
+               answer_count,
+               `status`,
+               create_time,
+               update_time,
+               last_answer_time,
+               del_flag,
+               sys_name
+        from agri_question
+    </sql>
+
+    <sql id="selectAnswerSql">
+        select answer_id,
+               nike_name,
+               member_id,
+               question_id,
+               content,
+               img,
+               favor_count,
+               oppose_count,
+               area_code,
+               area_name,
+               best_flag,
+               create_time,
+               update_time,
+               sys_name
+        from question_answer
+    </sql>
+
+    <select id="selectAgriQuestionSimpleDtoList" resultMap="AgriQuestionSimpleDtoResult">
+        select agri_question.question_id,
+        agri_question.member_id,
+        agri_question.crop_id,
+        agri_question.section_id,
+        agri_question.`describe`,
+        agri_question.ask,
+        agri_question.img,
+        agri_question.area_code,
+        agri_question.area_name,
+        agri_question.answer_count,
+        agri_question.`status`,
+        agri_question.create_time
+        from agri_question
+        <where>
+            del_flag = 0
+            <if test="ask !=null and ask !=''">
+                and ask like concat('%', #{ask}, '%')
+            </if>
+            <if test="cropId !=null">
+                and agri_question.crop_id = #{cropId}
+            </if>
+            <if test="sectionId !=null">
+                and agri_question.section_id = #{sectionId}
+            </if>
+            <if test="parentId !=null and parentId.length != 0">
+                and agri_question.crop_id in
+                <foreach item="item" collection="parentId" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+    <select id="selectConcernCount" resultType="integer">
+        select count(1) `value`
+        from concern_info
+        where target_type = 5
+          and target_id = #{value}
+    </select>
+
+    <select id="selectAnswerCount" resultType="integer">
+        SELECT count(1) `value`
+        FROM question_answer
+        WHERE question_id = #{value}
+    </select>
+
+    <select id="selectAgriQuestionDetailDto" resultMap="AgriQuestionDetailDtoMap">
+        select question_id,
+               member_id,
+               crop_id,
+               section_id,
+               `describe`,
+               ask,
+               img,
+               area_code,
+               area_name,
+               read_count,
+               answer_count,
+               `status`,
+               create_time
+        from agri_question
+        where question_id = #{value}
+    </select>
+
+    <select id="selectBestAnswer" resultMap="QuestionAnswerDtoResult">
+        <include refid="selectAnswerSql"/>
+        where question_id = #{value}
+        and best_flag = 1
+    </select>
+
+    <select id="selectAnswerList" resultMap="QuestionAnswerDtoResult">
+        <include refid="selectAnswerSql"/>
+        where question_id = #{value}
+        and best_flag = 0
+        order by favor_count desc, create_time desc limit 0,10
+    </select>
+
+    <select id="selectConcerns" resultType="map">
+        select member_id memberId
+        from  concern_info
+        where target_type = 5
+          and target_id = #{value}
+        order by create_time desc
+            limit 10
+    </select>
+
+    <select id="selectOpList" resultType="map">
+        select ao.member_id memberId, ao.op_type opType
+        from answer_option ao
+        where ao.answer_id = #{value}
+        order by ao.create_time
+            limit 5
+    </select>
+
+    <select id="selectOwmAgriQuestionList" parameterType="com.sinonc.agriculture.domain.AgriQuestion"
+            resultMap="AgriQuestionSimpleDtoResult">
+        select question_id,
+               member_id,
+               crop_id,
+               section_id,
+               `describe`,
+               ask,
+               img,
+               area_code,
+               area_name,
+               answer_count,
+               read_count,
+               `status`,
+               create_time
+        from agri_question
+        where member_id = #{memberId}
+    </select>
+
+    <select id="selectAgriQuestionListByAnswer" parameterType="com.sinonc.agriculture.domain.AgriQuestion"
+            resultMap="AgriQuestionSimpleDtoResult">
+        SELECT agri_question.question_id,
+               agri_question.member_id,
+               crop_id,
+               section_id,
+               `describe`,
+               ask,
+               agri_question.img,
+               agri_question.area_code,
+               agri_question.area_name,
+               answer_count,
+               agri_question.read_count,
+               `status`,
+               question_answer.create_time
+        FROM agri_question
+                 LEFT JOIN question_answer ON agri_question.question_id = question_answer.question_id
+        WHERE question_answer.member_id = #{memberId}
+    </select>
+
+    <select id="selectAgriQuestionListByConcernInfo" parameterType="com.sinonc.agriculture.domain.AgriQuestion"
+            resultMap="AgriQuestionSimpleDtoResult">
+        SELECT agri_question.question_id,
+               agri_question.member_id,
+               crop_id,
+               section_id,
+               `describe`,
+               ask,
+               agri_question.img,
+               agri_question.area_code,
+               agri_question.area_name,
+               answer_count,
+               agri_question.read_count,
+               `status`,
+               concern_info.create_time
+        FROM agri_question
+                 LEFT JOIN concern_info ON agri_question.question_id = concern_info.target_id
+        WHERE concern_info.member_id = #{memberId}
+          AND concern_info.target_type = 5
+    </select>
+
+    <select id="selectAgriQuestionSectionList" parameterType="Long" resultMap = "AgriQuestionSectionResult">
+        select aq.section_id, sd.section_name
+        from agri_question aq
+        join section_dict sd on aq.section_id = sd.section_id
+        where member_id = #{memberId}
+        group by aq.section_id
+        order by aq.section_id
+    </select>
+
+
+    <select id="selectAgriQuestionBySection" resultMap = "AgriQuestionResult">
+        select aq.question_id, aq.ask, aq.img
+        from agri_question aq
+        where aq.section_id in
+        <foreach collection="sectionIds" item="sectionId" index="index" open="(" separator="," close=")">
+            #{sectionId}
+        </foreach>
+        order by read_count desc
+        limit #{limiter}
+    </select>
+
+</mapper>

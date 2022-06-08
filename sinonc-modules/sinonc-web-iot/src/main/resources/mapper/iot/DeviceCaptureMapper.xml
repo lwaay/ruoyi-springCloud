@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.DeviceCaptureMapper">
+
+    <resultMap type="DeviceCapture" id="DeviceCaptureResult">
+        <result property="id" column="id"/>
+        <result property="url" column="url"/>
+        <result property="name" column="name"/>
+        <result property="monitorId" column="monitor_id"/>
+        <result property="monitorName" column="monitor_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+    </resultMap>
+
+    <sql id="selectDeviceCaptureVo">
+        select id, url, name, monitor_id, monitor_name, create_time, create_by
+        from device_capture
+    </sql>
+
+    <select id="selectDeviceCaptureList" parameterType="DeviceCapture" resultMap="DeviceCaptureResult">
+        <include refid="selectDeviceCaptureVo"/>
+        <where>
+            <if test="url != null  and url != ''">
+                and url = #{url}
+            </if>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="monitorId != null ">
+                and monitor_id = #{monitorId}
+            </if>
+            <if test="monitorName != null  and monitorName != ''">
+                and monitor_name like concat('%', #{monitorName}, '%')
+            </if>
+            <if test="beginTime != null and beginTime != '' and endTime != null and endTime != ''">
+                and create_time between #{beginTime} and #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDeviceCaptureById" parameterType="Long" resultMap="DeviceCaptureResult">
+        <include refid="selectDeviceCaptureVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDeviceCapture" parameterType="DeviceCapture" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into device_capture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="url != null">url,
+            </if>
+            <if test="name != null">name,
+            </if>
+            <if test="monitorId != null">monitor_id,
+            </if>
+            <if test="monitorName != null">monitor_name,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="url != null">#{url},
+            </if>
+            <if test="name != null">#{name},
+            </if>
+            <if test="monitorId != null">#{monitorId},
+            </if>
+            <if test="monitorName != null">#{monitorName},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateDeviceCapture" parameterType="DeviceCapture">
+        update device_capture
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="url != null">url =
+                #{url},
+            </if>
+            <if test="name != null">name =
+                #{name},
+            </if>
+            <if test="monitorId != null">monitor_id =
+                #{monitorId},
+            </if>
+            <if test="monitorName != null">monitor_name =
+                #{monitorName},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDeviceCaptureById" parameterType="Long">
+        delete
+        from device_capture
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDeviceCaptureByIds" parameterType="String">
+        delete from device_capture where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

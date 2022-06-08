@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.ProBrandMapper">
+
+    <resultMap type="com.sinonc.origins.domain.ProBrand" id="ProBrandResult">
+        <result property="brandId" column="brand_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="remark" column="remark"/>
+        <result property="image" column="image"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectProBrandVo">
+        select brand_id, brand_name, remark, image, create_by, create_time, update_time
+        from pro_brand
+    </sql>
+
+    <select id="selectProBrandList" parameterType="ProBrand" resultMap="ProBrandResult">
+        <include refid="selectProBrandVo"/>
+        <where>
+            <if test="brandName != null  and brandName != ''">
+                and brand_name like concat('%', #{brandName}, '%')
+            </if>
+            <if test="image != null  and image != ''">
+                and image = #{image}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProBrandById" parameterType="Long" resultMap="ProBrandResult">
+        <include refid="selectProBrandVo"/>
+        where brand_id = #{brandId}
+    </select>
+
+    <insert id="insertProBrand" parameterType="ProBrand" useGeneratedKeys="true"
+            keyProperty="brandId">
+        insert into pro_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandName != null">brand_name,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="image != null">image,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandName != null">#{brandName},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="image != null">#{image},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProBrand" parameterType="ProBrand">
+        update pro_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandName != null">brand_name =
+                #{brandName},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="image != null">image =
+                #{image},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where brand_id = #{brandId}
+    </update>
+
+    <delete id="deleteProBrandById" parameterType="Long">
+        delete
+        from pro_brand
+        where brand_id = #{brandId}
+    </delete>
+
+    <delete id="deleteProBrandByIds" parameterType="String">
+        delete from pro_brand where brand_id in
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AdoptItemMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AdoptItem" id="AdoptItemResult">
+        <result property="adoptItemId" column="adopt_item_id"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="orderIdP" column="order_id_p"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="remark" column="order_item_p"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="specsName" column="specs_name"/>
+        <result property="itemName" column="item_name"/>
+        <result property="itemStatus" column="item_status"/>
+        <result property="itemType" column="item_type"/>
+        <result property="number" column="number"/>
+        <result property="useNumber" column="use_number"/>
+        <result property="unit" column="unit"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="useTime" column="use_time"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.vo.AdoptItemVo" id="AdoptItemVoResult">
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="memberName" column="name"/>
+        <result property="adoptItemId" column="adopt_item_id"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="orderIdP" column="order_id_p"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="remark" column="order_item_p"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="specsName" column="specs_name"/>
+        <result property="itemName" column="item_name"/>
+        <result property="itemStatus" column="item_status"/>
+        <result property="itemType" column="item_type"/>
+        <result property="number" column="number"/>
+        <result property="useNumber" column="use_number"/>
+        <result property="unit" column="unit"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="useTime" column="use_time"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectAdoptItemVo">
+        select adopt_item_id,
+               member_id_p,
+               order_id_p,
+               order_no,
+               goods_name,
+               specs_name,
+               item_name,
+               item_status,
+               item_type,
+               `number`,
+               use_number,
+               unit,
+               create_time,
+               update_time,
+               use_time,
+               start_time,
+               end_time,
+               update_by,
+               del_flag
+        from od_adopt_item
+    </sql>
+
+    <select id="selectAdoptItemList" parameterType="com.sinonc.orders.domain.AdoptItem" resultMap="AdoptItemResult">
+        <include refid="selectAdoptItemVo"/>
+        <where>
+            <if test="adoptItemId != null ">and adopt_item_id = #{adoptItemId}</if>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="orderIdP != null ">and order_id_p = #{orderIdP}</if>
+            <if test="orderNo != null  and orderNo != '' ">and order_no = #{orderNo}</if>
+            <if test="remark != null  and remark != '' ">and remark = #{remark}</if>
+            <if test="goodsName != null  and goodsName != '' ">and goods_name = #{goodsName}</if>
+            <if test="specsName != null  and specsName != '' ">and specs_name = #{specsName}</if>
+            <if test="itemName != null  and itemName != '' ">and item_name = #{itemName}</if>
+            <if test="itemStatus != null ">and item_status = #{itemStatus}</if>
+            <if test="itemType != null ">and item_type = #{itemType}</if>
+            <if test="number != null">and `number`= #{number}</if>
+            <if test="useNumber != null">and use_number= #{useNumber}</if>
+            <if test="unit != null and unit != '' ">and unit= #{unit}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="useTime != null ">and use_time = #{useTime}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="endTime != null ">and end_time = #{endTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+            <if test="delFlag != null ">and del_flag = #{delFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectAdoptItemById" parameterType="Long" resultMap="AdoptItemResult">
+        <include refid="selectAdoptItemVo"/>
+        where adopt_item_id = #{adoptItemId}
+    </select>
+
+    <select id="selectAdoptItemVoList" parameterType="com.sinonc.orders.vo.AdoptItemVo" resultMap="AdoptItemVoResult">
+        select od_member.member_id,
+        od_member.name,
+        od_adopt_item.adopt_item_id,
+        od_adopt_item.member_id_p,
+        od_adopt_item.order_id_p,
+        od_adopt_item.order_no,
+        od_adopt_item.goods_name,
+        od_adopt_item.specs_name,
+        od_adopt_item.item_name,
+        od_adopt_item.item_status,
+        od_adopt_item.item_type,
+        od_adopt_item.`number`,
+        od_adopt_item.use_number,
+        od_adopt_item.unit,
+        od_adopt_item.create_time,
+        od_adopt_item.update_time,
+        od_adopt_item.use_time,
+        od_adopt_item.start_time,
+        od_adopt_item.end_time,
+        od_adopt_item.update_by,
+        od_adopt_item.del_flag
+        from od_adopt_item
+        inner join od_member on od_adopt_item.member_id_p = od_member.member_id
+        left join od_order on od_adopt_item.order_id_p=od_order.order_id
+        <where>
+            <if test="memberId != null">and od_member.member_id= #{membrId}</if>
+            <if test="memberName != null and memberName != ''">and od_member.name like concat('%', #{memberName}, '%')</if>
+            <if test="adoptItemId != null ">and od_adopt_item.adopt_item_id = #{adoptItemId}</if>
+            <if test="memberIdP != null ">and od_adopt_item.member_id_p = #{memberIdP}</if>
+            <if test="orderIdP != null ">and od_adopt_item.order_id_p = #{orderIdP}</if>
+            <if test="orderNo != null  and orderNo != '' ">and od_adopt_item.order_no = #{orderNo}</if>
+            <if test="remark != null  and remark != '' ">and od_adopt_item.remark = #{remark}</if>
+            <if test="goodsName != null  and goodsName != '' ">and od_adopt_item.goods_name = #{goodsName}</if>
+            <if test="specsName != null  and specsName != '' ">and od_adopt_item.specs_name = #{specsName}</if>
+            <if test="itemName != null  and itemName != '' ">and od_adopt_item.item_name = #{itemName}</if>
+            <if test="itemStatus != null ">and od_adopt_item.item_status = #{itemStatus}</if>
+            <if test="itemType != null ">and od_adopt_item.item_type = #{itemType}</if>
+            <if test="number != null">and `number`= #{number}</if>
+            <if test="useNumber != null">and use_number= #{useNumber}</if>
+            <if test="unit != null and unit != '' ">and unit= #{unit}</if>
+            <if test="createTime != null ">and od_adopt_item.create_time = #{createTime}</if>
+            <if test="updateTime != null ">and od_adopt_item.update_time = #{updateTime}</if>
+            <if test="useTime != null ">and od_adopt_item.use_time = #{useTime}</if>
+            <if test="startTime != null ">and od_adopt_item.start_time = #{startTime}</if>
+            <if test="endTime != null ">and od_adopt_item.end_time = #{endTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and od_adopt_item.update_by = #{updateBy}</if>
+            <if test="delFlag != null ">and od_adopt_item.del_flag = #{delFlag}</if>
+            ${params.dataScope}
+        </where>
+
+    </select>
+
+    <insert id="insertAdoptItem" parameterType="com.sinonc.orders.domain.AdoptItem" useGeneratedKeys="true"
+            keyProperty="adoptItemId">
+        insert into od_adopt_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null  ">member_id_p,</if>
+            <if test="orderIdP != null  ">order_id_p,</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+            <if test="goodsName != null  and goodsName != ''  ">goods_name,</if>
+            <if test="specsName != null  and specsName != ''  ">specs_name,</if>
+            <if test="itemName != null  and itemName != ''  ">item_name,</if>
+            <if test="remark != null  and remark != ''  ">remark,</if>
+            <if test="itemStatus != null  ">item_status,</if>
+            <if test="itemType != null  ">item_type,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="useTime != null  ">use_time,</if>
+            <if test="number != null  ">`number`,</if>
+            <if test="useNumber != null  ">use_number,</if>
+            <if test="unit != null  and unit != ''  ">unit,</if>
+            <if test="startTime != null  ">start_time,</if>
+            <if test="endTime != null  ">end_time,</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="delFlag != null  ">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null  ">#{memberIdP},</if>
+            <if test="orderIdP != null  ">#{orderIdP},</if>
+            <if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+            <if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
+            <if test="specsName != null  and specsName != ''  ">#{specsName},</if>
+            <if test="itemName != null  and itemName != ''  ">#{itemName},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            <if test="itemStatus != null  ">#{itemStatus},</if>
+            <if test="itemType != null  ">#{itemType},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="useTime != null  ">#{useTime},</if>
+            <if test="number != null  ">#{number},</if>
+            <if test="useNumber != null  ">#{useNumber},</if>
+            <if test="unit != null  and unit != ''  ">#{unit},</if>
+            <if test="startTime != null  ">#{startTime},</if>
+            <if test="endTime != null  ">#{endTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="delFlag != null  ">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAdoptItem" parameterType="com.sinonc.orders.domain.AdoptItem">
+        update od_adopt_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="orderIdP != null  ">order_id_p = #{orderIdP},</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="goodsName != null  and goodsName != ''  ">goods_name = #{goodsName},</if>
+            <if test="itemName != null  and itemName != ''  ">item_name = #{itemName},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="itemStatus != null  ">item_status = #{itemStatus},</if>
+            <if test="itemType != null  ">item_type = #{itemType},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="useTime != null  ">use_time = #{useTime},</if>
+            <if test="number != null  ">`number` = #{number},</if>
+            <if test="useNumber != null  ">use_number = #{useNumber},</if>
+            <if test="unit != null  and unit != ''  ">unit = #{unit},</if>
+            <if test="startTime != null  ">start_time = #{startTime},</if>
+            <if test="endTime != null  ">end_time = #{endTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="delFlag != null  ">del_flag = #{delFlag},</if>
+        </trim>
+        where adopt_item_id = #{adoptItemId}
+    </update>
+
+    <delete id="deleteAdoptItemById" parameterType="Integer">
+        delete
+        from od_adopt_item
+        where adopt_item_id = #{adoptItemId}
+    </delete>
+
+    <delete id="deleteAdoptItemByIds" parameterType="String">
+        delete from od_adopt_item where adopt_item_id in
+        <foreach item="adoptItemId" collection="array" open="(" separator="," close=")">
+            #{adoptItemId}
+        </foreach>
+    </delete>
+
+</mapper>

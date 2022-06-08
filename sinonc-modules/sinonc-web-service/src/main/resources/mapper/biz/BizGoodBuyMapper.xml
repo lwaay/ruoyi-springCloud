@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.ser.mapper.BizGoodBuyMapper">
+
+    <resultMap type="com.sinonc.service.domain.BizGoodBuy" id="BizGoodBuyResult">
+        <result property="buyId" column="buy_id"/>
+        <result property="infoIdP" column="info_id_p"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="preference" column="preference"/>
+        <result property="shipAddress" column="ship_address"/>
+        <result property="receiveAddress" column="receive_address"/>
+        <result property="shipDetail" column="ship_detail"/>
+        <result property="receiveDetail" column="receive_detail"/>
+        <result property="buySpecinfo" column="buy_specinfo"/>
+        <result property="buyWeight" column="buy_weight"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="deliveryTime" column="delivery_time"/>
+        <result property="qualityDescribe" column="quality_describe"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.ser.dto.BizGoodBuyBackDto" id="BizGoodBuyBackDtoResult">
+        <result property="buyId" column="buy_id"/>
+        <result property="infoIdP" column="info_id_p"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="preference" column="preference"/>
+        <result property="shipAddress" column="ship_address"/>
+        <result property="receiveAddress" column="receive_address"/>
+        <result property="shipDetail" column="ship_detail"/>
+        <result property="receiveDetail" column="receive_detail"/>
+        <result property="buyWeight" column="buy_weight"/>
+        <result property="buySpecinfo" column="buy_specinfo"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="deliveryTime" column="delivery_time"/>
+        <result property="qualityDescribe" column="quality_describe"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="infoName" column="info_name"/>
+    </resultMap>
+
+
+    <resultMap type="com.sinonc.ser.dto.BizGoodBuyDto" id="BizGoodBuyDtoResult">
+        <result property="infoName" column="info_name"/>
+        <result property="breed" column="breed"/>
+        <result property="saleAble" column="sale_able"/>
+        <result property="phone" column="phone"/>
+        <result property="memberId" column="member_id"/>
+        <result property="infoId" column="info_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="topFlag" column="top_flag"/>
+        <result property="shipDetail" column="ship_detail"/>
+        <result property="receiveDetail" column="receive_detail"/>
+        <result property="buySpecinfo" column="buy_specinfo"/>
+        <result property="buyId" column="buy_id"/>
+        <result property="preference" column="preference"/>
+        <result property="shipAddress" column="ship_address"/>
+        <result property="receiveAddress" column="receive_address"/>
+        <result property="buyWeight" column="buy_weight"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="deliveryTime" column="delivery_time"/>
+        <result property="qualityDescribe" column="quality_describe"/>
+        <result property="realName" column="real_name"/>
+        <result property="avatar" column="avatar"/>
+    </resultMap>
+
+
+    <sql id="selectBizGoodBuyVo">
+        select buy_id, info_id_p, member_id_p, preference, ship_address, receive_address, ship_detail,receive_detail,buy_specinfo,buy_weight, phone, issue_time, delivery_time, quality_describe, del_flag, create_time, update_time from biz_good_buy
+    </sql>
+
+    <select id="selectBizGoodBuyList" resultMap="BizGoodBuyBackDtoResult">
+        SELECT
+        biz_good_buy.buy_id,
+        biz_good_buy.info_id_p,
+        biz_good_buy.member_id_p,
+        biz_good_buy.preference,
+        biz_good_buy.ship_address,
+        biz_good_buy.receive_address,
+        biz_good_buy.ship_detail,
+        biz_good_buy.receive_detail,
+        biz_good_buy.buy_specinfo,
+        biz_good_buy.buy_weight,
+        biz_good_buy.issue_time,
+        biz_good_buy.delivery_time,
+        biz_good_buy.quality_describe,
+        biz_good_buy.phone,
+        biz_good_buy.del_flag,
+        biz_good_buy.create_time,
+        biz_good_buy.update_time,
+        biz_good_info.info_name
+        FROM
+        biz_good_buy
+        LEFT JOIN biz_good_info ON biz_good_buy.info_id_p=biz_good_info.info_id
+        <where>
+            <if test="infoIdP != null ">and info_id_p = #{infoIdP}</if>
+            <if test="memberIdP != null ">and member_id_p = #{memberIdP}</if>
+            <if test="preference != null  and preference != ''">and preference = #{preference}</if>
+            <if test="shipAddress != null  and shipAddress != ''">and ship_address = #{shipAddress}</if>
+            <if test="receiveAddress != null  and receiveAddress != ''">and receive_address = #{receiveAddress}</if>
+            <if test="buySpecinfo != null  and buySpecinfo != ''">and buy_specinfo = #{buySpecinfo}</if>
+            <if test="buyWeight != null ">and buy_weight = #{buyWeight}</if>
+            <if test="issueTime != null ">and issue_time = #{issueTime}</if>
+            <if test="deliveryTime != null ">and delivery_time = #{deliveryTime}</if>
+            <if test="qualityDescribe != null  and qualityDescribe != ''">and quality_describe = #{qualityDescribe}</if>
+            <if test="infoName !=null and infoName != ''">and biz_good_info.info_name like concat('%',#{infoName},'%')</if>
+        </where>
+    </select>
+
+    <select id="selectBizGoodBuyById" resultMap="BizGoodBuyResult">
+        <include refid="selectBizGoodBuyVo"/>
+        where buy_id = #{buyId}
+    </select>
+
+    <insert id="insertBizGoodBuy" useGeneratedKeys="true" keyProperty="buyId">
+        insert into biz_good_buy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="infoIdP != null">info_id_p,</if>
+            <if test="memberIdP != null">member_id_p,</if>
+            <if test="preference != null and preference != ''">preference,</if>
+            <if test="shipAddress != null">ship_address,</if>
+            <if test="shipDetail != null">ship_detail,</if>
+            <if test="receiveAddress != null">receive_address,</if>
+            <if test="receiveDetail != null">receive_detail,</if>
+            <if test="buySpecinfo != null">buy_specinfo,</if>
+            <if test="phone != null">phone,</if>
+            <if test="buyWeight != null">buy_weight,</if>
+            <if test="issueTime != null">issue_time,</if>
+            <if test="deliveryTime != null">delivery_time,</if>
+            <if test="qualityDescribe != null">quality_describe,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="infoIdP != null">#{infoIdP},</if>
+            <if test="memberIdP != null">#{memberIdP},</if>
+            <if test="preference != null and preference != ''">#{preference},</if>
+            <if test="shipAddress != null">#{shipAddress},</if>
+            <if test="shipDetail != null">#{shipDetail},</if>
+            <if test="receiveAddress != null">#{receiveAddress},</if>
+            <if test="receiveDetail != null">#{receiveDetail},</if>
+            <if test="buySpecinfo != null">#{buySpecinfo},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="buyWeight != null">#{buyWeight},</if>
+            <if test="issueTime != null">#{issueTime},</if>
+            <if test="deliveryTime != null">#{deliveryTime},</if>
+            <if test="qualityDescribe != null">#{qualityDescribe},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBizGoodBuy">
+        update biz_good_buy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="infoIdP != null">info_id_p = #{infoIdP},</if>
+            <if test="memberIdP != null">member_id_p = #{memberIdP},</if>
+            <if test="preference != null and preference != ''">preference = #{preference},</if>
+            <if test="shipAddress != null">ship_address = #{shipAddress},</if>
+            <if test="shipDetail != null">ship_detail = #{shipDetail},</if>
+            <if test="receiveAddress != null">receive_address = #{receiveAddress},</if>
+            <if test="receiveDetail != null">receive_detail = #{receiveDetail},</if>
+            <if test="buySpecinfo != null">buy_specinfo = #{buySpecinfo},</if>
+            <if test="buyWeight != null">buy_weight = #{buyWeight},</if>
+            <if test="issueTime != null">issue_time = #{issueTime},</if>
+            <if test="deliveryTime != null">delivery_time = #{deliveryTime},</if>
+            <if test="qualityDescribe != null">quality_describe = #{qualityDescribe},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where buy_id = #{buyId}
+    </update>
+
+    <delete id="deleteBizGoodBuyById">
+        delete from biz_good_buy where buy_id = #{buyId}
+    </delete>
+
+    <delete id="deleteBizGoodBuyByIds">
+        delete from biz_good_buy where buy_id in
+        <foreach item="buyId" collection="array" open="(" separator="," close=")">
+            #{buyId}
+        </foreach>
+    </delete>
+
+    <select id="selectBizGoodBuyForPage" resultMap="BizGoodBuyDtoResult">
+        SELECT
+        biz_good_info.info_name,
+        biz_good_info.breed,
+        biz_good_info.info_id,
+        biz_good_info.top_flag,
+        biz_good_info.member_id_p as member_id,
+        preference,
+        ship_address,
+        receive_address,
+        biz_good_buy.ship_detail,
+        biz_good_buy.receive_detail,
+        biz_good_buy.buy_specinfo,
+        biz_good_buy.phone,
+        buy_weight,
+        issue_time,
+        delivery_time,
+        quality_describe
+        FROM
+        biz_good_buy
+        LEFT JOIN biz_good_info ON biz_good_buy.info_id_p = biz_good_info.info_id
+        <where>
+            <if test="maxBuyWeight != null and maxBuyWeight > 0 ">and buy_weight <![CDATA[<= ]]> #{maxBuyWeight}</if>
+            <if test="minBuyWeight != null and minBuyWeight > 0 ">and buy_weight <![CDATA[>= ]]> #{minBuyWeight}</if>
+            <if test="memberIdP != null ">and biz_good_info.member_id_p = #{memberIdP}</if>
+            <if test="saleAble != null and saleAble != ''">and biz_good_info.sale_able = #{saleAble}</if>
+            <if test="preference != null and preference != ''">and biz_good_buy.preference = #{preference}</if>
+
+            <if test="infoName != null and infoName != ''">
+                and biz_good_info.info_name like concat('%', #{infoName}, '%')
+            </if>
+
+            <if test="breedsArray != null and breedsArray.length != 0">
+                and biz_good_info.breed in
+                <foreach collection="breedsArray" item="breed" index="index" open="(" close=")" separator=",">
+                    #{breed}
+                </foreach>
+            </if>
+
+            <if test="shipAddressArray != null and shipAddressArray.length != 0">
+                and biz_good_buy.ship_address in
+                <foreach collection="shipAddressArray" item="shipAddress" index="index" open="(" close=")" separator=",">
+                    #{shipAddress}
+                </foreach>
+            </if>
+
+        </where>
+        order by biz_good_buy.issue_time desc
+    </select>
+
+    <select id="selectBizGoodBuyByInfoId"  resultMap="BizGoodBuyDtoResult">
+        SELECT
+        biz_good_info.info_name,
+        biz_good_info.breed,
+        biz_good_info.info_id,
+        biz_good_info.sale_able,
+        biz_good_buy.preference,
+        biz_good_buy.ship_address,
+        biz_good_buy.receive_address,
+        biz_good_buy.ship_detail,
+        biz_good_buy.receive_detail,
+        biz_good_buy.buy_specinfo,
+        biz_good_buy.buy_weight,
+        biz_good_buy.issue_time,
+        biz_good_buy.delivery_time,
+        biz_good_buy.quality_describe,
+        biz_good_buy.buy_id,
+        biz_good_buy.phone,
+        biz_good_buy.member_id_p member_id
+        FROM
+        biz_good_buy
+        LEFT JOIN biz_good_info ON biz_good_buy.info_id_p = biz_good_info.info_id
+        <where>
+            biz_good_info.info_id= #{infoId}
+        </where>
+    </select>
+
+</mapper>

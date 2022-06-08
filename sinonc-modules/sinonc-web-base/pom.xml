@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.sinonc.cloud</groupId>
+        <artifactId>sinonc-modules</artifactId>
+        <version>2.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>sinonc-web-base</artifactId>
+
+    <description>
+        sinonc-web-base系统模块
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-api-base</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-api-iot</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+    </dependencies>
+
+
+    <repositories><!-- 代码库 -->
+        <repository>
+            <id>baymax-releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://maven.youzanyun.com/repository/maven-releases/</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.sinonc.base.BaseApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>1.8.0</version>
+                <configuration>
+                    <from>
+                        <image>registry.cn-shenzhen.aliyuncs.com/oracle_jdk8/oracle_jdk8</image>
+                    </from>
+                    <to>
+                        <image>registry.cn-hangzhou.aliyuncs.com/sinonc/baise-test</image>
+                        <auth>
+                            <username>1592318850@qq.com</username>
+                            <password>zxyn8888</password>
+                        </auth>
+                        <tags>
+                            <tag>base</tag>
+                        </tags>
+                    </to>
+                    <container>
+                        <ports>
+                            <port>6204</port>
+                        </ports>
+                        <useCurrentTimestamp>true</useCurrentTimestamp>
+                        <args>
+                            <arg>--spring.profiles.active=test</arg>
+                        </args>
+                    </container>
+                    <allowInsecureRegistries>true</allowInsecureRegistries>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

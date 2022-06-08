@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.ser.mapper.SerServiceMapper">
+
+    <resultMap type="SerService" id="SerServiceResult">
+        <result property="serviceId" column="service_id"/>
+        <result property="type" column="type"/>
+        <result property="title" column="title"/>
+        <result property="busiId" column="busi_id"/>
+        <result property="busiName" column="busi_name"/>
+        <result property="detail" column="detail"/>
+        <result property="describe" column="describe"/>
+        <result property="lowerPrice" column="lower_price"/>
+        <result property="highPrice" column="high_price"/>
+        <result property="images" column="images"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="areaName" column="area_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createName" column="create_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="phone" column="phone"/>
+        <result property="workerNum" column="worker_num"/>
+        <result property="publisher" column="publisher"/>
+    </resultMap>
+
+    <sql id="selectSerServiceVo">
+        select service_id,
+               type,
+               title,
+               busi_id,
+               busi_name,
+               detail, `describe`, lower_price, high_price, images, phone, worker_num, publisher, start_date, end_date, area_code, area_name, create_by, create_name, create_time
+        from ser_service
+    </sql>
+
+    <select id="selectSerServiceList" parameterType="SerService" resultMap="SerServiceResult">
+        <include refid="selectSerServiceVo"/>
+        <where>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="title != null  and title != ''">
+                and title like concat('%',#{title},'%')
+            </if>
+            <if test="busiId != null ">
+                and busi_id = #{busiId}
+            </if>
+            <if test="busiName != null  and busiName != ''">
+                and busi_name like concat('%', #{busiName}, '%')
+            </if>
+            <if test="detail != null  and detail != ''">
+                and detail = #{detail}
+            </if>
+            <if test="describe != null  and describe != ''">
+                and `describe` = #{describe}
+            </if>
+            <if test="lowerPrice != null ">
+                and lower_price = #{lowerPrice}
+            </if>
+            <if test="highPrice != null ">
+                and high_price = #{highPrice}
+            </if>
+            <if test="images != null  and images != ''">
+                and images = #{images}
+            </if>
+            <if test="startDate != null ">
+                and start_date = #{startDate}
+            </if>
+            <if test="endDate != null ">
+                and end_date = #{endDate}
+            </if>
+            <if test="areaCode != null  and areaCode != ''">
+                and area_code = #{areaCode}
+            </if>
+            <if test="areaName != null  and areaName != ''">
+                and area_name like concat('%', #{areaName}, '%')
+            </if>
+            <if test="createName != null  and createName != ''">
+                and create_name like concat('%', #{createName}, '%')
+            </if>
+            <if test="phone != null  and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="workerNum != null">
+                and worker_num = #{workerNum}
+            </if>
+            <if test="publisher != null">
+                and publisher = #{publisher}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectSerServiceById" parameterType="Long" resultMap="SerServiceResult">
+        <include refid="selectSerServiceVo"/>
+        where service_id = #{serviceId}
+    </select>
+
+    <insert id="insertSerService" parameterType="SerService" useGeneratedKeys="true"
+            keyProperty="serviceId">
+        insert into ser_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,
+            </if>
+            <if test="title != null">title,
+            </if>
+            <if test="busiId != null">busi_id,
+            </if>
+            <if test="busiName != null">busi_name,
+            </if>
+            <if test="detail != null">detail,
+            </if>
+            <if test="describe != null">`describe`,
+            </if>
+            <if test="lowerPrice != null">lower_price,
+            </if>
+            <if test="highPrice != null">high_price,
+            </if>
+            <if test="images != null">images,
+            </if>
+            <if test="startDate != null">start_date,
+            </if>
+            <if test="endDate != null">end_date,
+            </if>
+            <if test="areaCode != null">area_code,
+            </if>
+            <if test="areaName != null">area_name,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createName != null">create_name,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="phone != null">phone,
+            </if>
+            <if test="workerNum != null">worker_num,
+            </if>
+            <if test="publisher != null">publisher,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},
+            </if>
+            <if test="title != null">#{title},
+            </if>
+            <if test="busiId != null">#{busiId},
+            </if>
+            <if test="busiName != null">#{busiName},
+            </if>
+            <if test="detail != null">#{detail},
+            </if>
+            <if test="describe != null">#{describe},
+            </if>
+            <if test="lowerPrice != null">#{lowerPrice},
+            </if>
+            <if test="highPrice != null">#{highPrice},
+            </if>
+            <if test="images != null">#{images},
+            </if>
+            <if test="startDate != null">#{startDate},
+            </if>
+            <if test="endDate != null">#{endDate},
+            </if>
+            <if test="areaCode != null">#{areaCode},
+            </if>
+            <if test="areaName != null">#{areaName},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createName != null">#{createName},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="phone != null">#{phone},
+            </if>
+            <if test="workerNum != null">#{workerNum},
+            </if>
+            <if test="publisher != null">#{publisher},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSerService" parameterType="SerService">
+        update ser_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="title != null">title =
+                #{title},
+            </if>
+            <if test="busiId != null">busi_id =
+                #{busiId},
+            </if>
+            <if test="busiName != null">busi_name =
+                #{busiName},
+            </if>
+            <if test="detail != null">detail =
+                #{detail},
+            </if>
+            <if test="describe != null">`describe` =
+                #{describe},
+            </if>
+            <if test="lowerPrice != null">lower_price =
+                #{lowerPrice},
+            </if>
+            <if test="highPrice != null">high_price =
+                #{highPrice},
+            </if>
+            <if test="images != null">images =
+                #{images},
+            </if>
+            <if test="startDate != null">start_date =
+                #{startDate},
+            </if>
+            <if test="endDate != null">end_date =
+                #{endDate},
+            </if>
+            <if test="areaCode != null">area_code =
+                #{areaCode},
+            </if>
+            <if test="areaName != null">area_name =
+                #{areaName},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createName != null">create_name =
+                #{createName},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="phone != null">phone =
+                #{phone},
+            </if>
+            <if test="workerNum != null">worker_num =
+                #{workerNum},
+            </if>
+            <if test="publisher != null">publisher =
+                #{publisher},
+            </if>
+        </trim>
+        where service_id = #{serviceId}
+    </update>
+
+    <delete id="deleteSerServiceById" parameterType="Long">
+        delete
+        from ser_service
+        where service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteSerServiceByIds" parameterType="String">
+        delete from ser_service where service_id in
+        <foreach item="serviceId" collection="array" open="(" separator="," close=")">
+            #{serviceId}
+        </foreach>
+    </delete>
+
+</mapper>

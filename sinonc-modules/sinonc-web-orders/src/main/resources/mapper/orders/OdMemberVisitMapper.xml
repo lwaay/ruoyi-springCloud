@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdMemberVisitMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdMemberVisit" id="OdMemberVisitResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="targetId" column="target_id"/>
+        <result property="visitTime" column="visit_time"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.domain.OdMemberVisitDescription" id="OdMemberVisitDescriptionResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="targetId" column="target_id"/>
+        <result property="visitTime" column="visit_time"/>
+    </resultMap>
+
+    <sql id="selectOdMemberVisitVo">
+        select id, user_id, target_id, visit_time        from od_member_visit
+    </sql>
+
+    <select id="selectOdMemberVisitList" parameterType="com.sinonc.orders.domain.OdMemberVisit" resultMap="OdMemberVisitResult">
+        <include refid="selectOdMemberVisitVo"/>
+        <where>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="targetId != null ">
+                and target_id = #{targetId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOdMemberVisitById" parameterType="Long" resultMap="OdMemberVisitResult">
+        <include refid="selectOdMemberVisitVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectOdMemberVisitDescriptionList"
+            parameterType="com.sinonc.orders.domain.OdMemberVisit" resultMap="OdMemberVisitDescriptionResult">
+        <include refid="selectOdMemberVisitVo"/>
+        <where>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="targetId != null ">
+                and target_id = #{targetId}
+            </if>
+        </where>
+    </select>
+    <select id="countOdMemberVisitById" resultType="java.lang.Integer">
+        select count(0) from od_member_visit where user_id = #{userId}
+    </select>
+
+    <insert id="insertOdMemberVisit" parameterType="com.sinonc.orders.domain.OdMemberVisit" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into od_member_visit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,
+            </if>
+            <if test="targetId != null">target_id,
+            </if>
+            <if test="visitTime != null">visit_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="targetId != null">#{targetId},
+            </if>
+            <if test="visitTime != null">#{visitTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOdMemberVisit" parameterType="com.sinonc.orders.domain.OdMemberVisit">
+        update od_member_visit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="targetId != null">target_id =
+                #{targetId},
+            </if>
+            <if test="visitTime != null">visit_time =
+                #{visitTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOdMemberVisitById" parameterType="Long">
+        delete
+        from od_member_visit where id = #{id}
+    </delete>
+
+    <delete id="deleteOdMemberVisitByIds" parameterType="String">
+        delete from od_member_visit where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

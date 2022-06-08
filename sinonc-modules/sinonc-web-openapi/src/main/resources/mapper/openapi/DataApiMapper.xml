@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.openapi.mapper.DataApiMapper">
+
+    <resultMap type="com.sinonc.openapi.domain.DataApi" id="DataApiResult">
+        <result property="id" column="id"/>
+        <result property="systemName" column="system_name"/>
+        <result property="privateKey" column="private_key"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="status" column="status"/>
+        <result property="interfaceNum" column="interface_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="systemLabel" column="system_label"/>
+        <result property="whiteList" column="white_list"/>
+        <result property="blackList" column="black_list"/>
+
+    </resultMap>
+
+    <sql id="selectDataApiVo">
+        select id, system_name, private_key, start_time, end_time, status,
+        interface_num, create_time ,system_label ,white_list, black_list from data_api
+    </sql>
+
+    <select id="selectDataApiList" parameterType="com.sinonc.openapi.domain.DataApi" resultMap="DataApiResult">
+        <include refid="selectDataApiVo"/>
+        <where>
+            <if test="systemName != null  and systemName != ''">
+                and system_name like concat('%', #{systemName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectDataApiById" parameterType="Long" resultMap="DataApiResult">
+        <include refid="selectDataApiVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectDataApiByAppLabel" resultMap="DataApiResult">
+        <include refid="selectDataApiVo"/>
+        where system_label = #{appLabel}
+    </select>
+
+    <insert id="insertDataApi" parameterType="com.sinonc.openapi.domain.DataApi" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into data_api
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="systemName != null and systemName != ''">system_name,
+            </if>
+            <if test="privateKey != null and privateKey != ''">private_key,
+            </if>
+            <if test="startTime != null">start_time,
+            </if>
+            <if test="endTime != null">end_time,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="interfaceNum != null">interface_num,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="systemLabel != null">system_label,
+            </if>
+            <if test="whiteList != null">white_list,
+            </if>
+            <if test="blackList != null">black_list,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="systemName != null and systemName != ''">#{systemName},
+            </if>
+            <if test="privateKey != null and privateKey != ''">#{privateKey},
+            </if>
+            <if test="startTime != null">#{startTime},
+            </if>
+            <if test="endTime != null">#{endTime},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="interfaceNum != null">#{interfaceNum},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="systemLabel != null">#{systemLabel},
+            </if>
+            <if test="whiteList != null">
+                #{whiteList},
+            </if>
+            <if test="blackList != null">
+                #{blackList},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateDataApi" parameterType="com.sinonc.openapi.domain.DataApi">
+        update data_api
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="systemName != null and systemName != ''">system_name =
+                #{systemName},
+            </if>
+            <if test="privateKey != null and privateKey != ''">private_key =
+                #{privateKey},
+            </if>
+            <if test="startTime != null">start_time =
+                #{startTime},
+            </if>
+            <if test="endTime != null">end_time =
+                #{endTime},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="interfaceNum != null">interface_num =
+                #{interfaceNum},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="systemLabel != null">system_label =#{systemLabel},
+            </if>
+            <if test="whiteList != null">
+                white_list= #{whiteList},
+            </if>
+            <if test="blackList != null">
+                black_list = #{blackList},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDataApiById" parameterType="Long">
+        delete
+        from data_api where id = #{id}
+    </delete>
+
+    <delete id="deleteDataApiByIds" parameterType="String">
+        delete from data_api where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

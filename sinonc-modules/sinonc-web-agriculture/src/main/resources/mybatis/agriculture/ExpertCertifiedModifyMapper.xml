@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.ExpertCertifiedModifyMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.ExpertCertifiedModify" id="ExpertCertifiedModifyResult">
+        <result property="certifiedmodId" column="certifiedmod_id"/>
+        <result property="expertId" column="expert_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="certifiedName" column="certified_name"/>
+        <result property="certifiedImg" column="certified_img"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectExpertCertifiedModifyVo">
+        select certifiedmod_id, expert_id, member_id, certified_name, certified_img, create_time, update_time from expert_certified_modify
+    </sql>
+
+    <select id="selectExpertCertifiedModifyList" parameterType="com.sinonc.agriculture.domain.ExpertCertifiedModify"
+            resultMap="ExpertCertifiedModifyResult">
+        <include refid="selectExpertCertifiedModifyVo"/>
+        <where>
+            <if test="expertId != null ">and expert_id = #{expertId}</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="certifiedName != null  and certifiedName != ''">and certified_name like concat('%',
+                #{certifiedName}, '%')
+            </if>
+            <if test="certifiedImg != null  and certifiedImg != ''">and certified_img = #{certifiedImg}</if>
+        </where>
+    </select>
+
+    <select id="selectExpertCertifiedModifyById" parameterType="Long" resultMap="ExpertCertifiedModifyResult">
+        <include refid="selectExpertCertifiedModifyVo"/>
+        where certifiedmod_id = #{certifiedmodId}
+    </select>
+
+    <insert id="insertExpertCertifiedModify" parameterType="com.sinonc.agriculture.domain.ExpertCertifiedModify"
+            useGeneratedKeys="true" keyProperty="certifiedmodId">
+        insert into expert_certified_modify
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="expertId != null ">expert_id,</if>
+            <if test="memberId != null ">member_id,</if>
+            <if test="certifiedName != null  and certifiedName != ''">certified_name,</if>
+            <if test="certifiedImg != null  and certifiedImg != ''">certified_img,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="expertId != null ">#{expertId},</if>
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="certifiedName != null  and certifiedName != ''">#{certifiedName},</if>
+            <if test="certifiedImg != null  and certifiedImg != ''">#{certifiedImg},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateExpertCertifiedModify" parameterType="com.sinonc.agriculture.domain.ExpertCertifiedModify">
+        update expert_certified_modify
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="expertId != null ">expert_id = #{expertId},</if>
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="certifiedName != null  and certifiedName != ''">certified_name = #{certifiedName},</if>
+            <if test="certifiedImg != null  and certifiedImg != ''">certified_img = #{certifiedImg},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+        </trim>
+        where certifiedmod_id = #{certifiedmodId}
+    </update>
+
+    <delete id="deleteExpertCertifiedModifyById" parameterType="Long">
+        delete from expert_certified_modify where certifiedmod_id = #{certifiedmodId}
+    </delete>
+
+    <delete id="deleteExpertCertifiedModifyByIds" parameterType="String">
+        delete from expert_certified_modify where certifiedmod_id in
+        <foreach item="certifiedmodId" collection="array" open="(" separator="," close=")">
+            #{certifiedmodId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteExpertCertifiedModifyByExpertCertifiedId" parameterType="Long">
+        delete from expert_certified_modify where expert_id = #{expertmodId}
+    </delete>
+
+</mapper>

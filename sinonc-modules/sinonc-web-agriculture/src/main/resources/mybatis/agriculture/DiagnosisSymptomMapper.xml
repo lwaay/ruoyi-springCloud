@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.DiagnosisSymptomMapper">
+    
+    <resultMap type="com.sinonc.agriculture.domain.DiagnosisSymptom" id="DiagnosisSymptomResult">
+        <result property="id"    column="id"    />
+        <result property="info"    column="info"    />
+        <result property="diaIdP"    column="dia_id_p"    />
+    </resultMap>
+
+    <sql id="selectDiagnosisSymptomVo">
+        select id, info, dia_id_p from diagnosis_symptom
+    </sql>
+
+    <select id="selectDiagnosisSymptomList" parameterType="com.sinonc.agriculture.domain.DiagnosisSymptom" resultMap="DiagnosisSymptomResult">
+        <include refid="selectDiagnosisSymptomVo"/>
+        <where>  
+            <if test="info != null  and info != ''"> and info = #{info}</if>
+            <if test="diaIdP != null "> and dia_id_p = #{diaIdP}</if>
+        </where>
+    </select>
+    
+    <select id="selectDiagnosisSymptomById" parameterType="Long" resultMap="DiagnosisSymptomResult">
+        <include refid="selectDiagnosisSymptomVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDiagnosisSymptom" parameterType="com.sinonc.agriculture.domain.DiagnosisSymptom" useGeneratedKeys="true" keyProperty="id">
+        insert into diagnosis_symptom
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="info != null  and info != ''">info,</if>
+            <if test="diaIdP != null ">dia_id_p,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="info != null  and info != ''">#{info},</if>
+            <if test="diaIdP != null ">#{diaIdP},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDiagnosisSymptom" parameterType="com.sinonc.agriculture.domain.DiagnosisSymptom">
+        update diagnosis_symptom
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="info != null  and info != ''">info = #{info},</if>
+            <if test="diaIdP != null ">dia_id_p = #{diaIdP},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDiagnosisSymptomById" parameterType="Long">
+        delete from diagnosis_symptom where id = #{id}
+    </delete>
+
+    <delete id="deleteDiagnosisSymptomByIds" parameterType="String">
+        delete from diagnosis_symptom where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OrderItemMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OrderItem" id="OrderItemResult">
+        <result property="orderItemId"    column="order_item_id"    />
+        <result property="orderIdP"    column="order_id_p"    />
+        <result property="goodsIdP"    column="goods_id_p"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsImg"    column="goods_img"    />
+        <result property="goodsType"    column="goods_type"    />
+        <result property="goodsSpecsIdP"    column="goods_specs_id_p"    />
+        <result property="goodsSpecsName"    column="goods_specs_name"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="goodsCount"    column="goods_count"    />
+        <result property="goodsShopDiscountPrice"    column="goods_shop_discount_price"    />
+        <result property="goodsPlatformDiscountPrice"    column="goods_platform_discount_price"    />
+        <result property="goodsTotalPrice"    column="goods_total_price"    />
+        <result property="goodsRefundIdP"    column="goods_refund_id_p"    />
+        <result property="goodsOrderStatus"    column="goods_order_status"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="shopIdP"    column="shop_id_p"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="perWeight"    column="per_weight"    />
+    </resultMap>
+
+	<sql id="selectOrderItemVo">
+        select order_item_id, order_id_p, goods_id_p, goods_name, goods_img, goods_type, goods_specs_id_p, goods_specs_name, goods_price, goods_count, goods_shop_discount_price, goods_platform_discount_price, goods_total_price, goods_refund_id_p, goods_order_status, member_id_p, shop_id_p, create_time, update_time from od_order_item
+    </sql>
+
+    <select id="selectOrderItemList" parameterType="com.sinonc.orders.domain.OrderItem" resultMap="OrderItemResult">
+        <include refid="selectOrderItemVo"/>
+        <where>
+            <if test="orderItemId != null "> and order_item_id = #{orderItemId}</if>
+             <if test="orderIdP != null "> and order_id_p = #{orderIdP}</if>
+             <if test="goodsIdP != null "> and goods_id_p = #{goodsIdP}</if>
+             <if test="goodsName != null  and goodsName != '' "> and goods_name = #{goodsName}</if>
+             <if test="goodsImg != null  and goodsImg != '' "> and goods_img = #{goodsImg}</if>
+             <if test="goodsType != null "> and goods_type = #{goodsType}</if>
+             <if test="goodsSpecsIdP != null  and goodsSpecsIdP != '' "> and goods_specs_id_p = #{goodsSpecsIdP}</if>
+             <if test="goodsSpecsName != null  and goodsSpecsName != '' "> and goods_specs_name = #{goodsSpecsName}</if>
+             <if test="goodsPrice != null "> and goods_price = #{goodsPrice}</if>
+             <if test="goodsCount != null "> and goods_count = #{goodsCount}</if>
+             <if test="goodsShopDiscountPrice != null "> and goods_shop_discount_price = #{goodsShopDiscountPrice}</if>
+             <if test="goodsPlatformDiscountPrice != null "> and goods_platform_discount_price = #{goodsPlatformDiscountPrice}</if>
+             <if test="goodsTotalPrice != null "> and goods_total_price = #{goodsTotalPrice}</if>
+             <if test="goodsRefundIdP != null "> and goods_refund_id_p = #{goodsRefundIdP}</if>
+             <if test="goodsOrderStatus != null "> and goods_order_status = #{goodsOrderStatus}</if>
+             <if test="memberIdP != null "> and member_id_p = #{memberIdP}</if>
+             <if test="shopIdP != null "> and shop_id_p = #{shopIdP}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+    </select>
+
+    <select id="selectOrderItemById" parameterType="Long" resultMap="OrderItemResult">
+        <include refid="selectOrderItemVo"/>
+        where order_item_id = #{orderItemId}
+    </select>
+
+    <insert id="insertOrderItem" parameterType="com.sinonc.orders.domain.OrderItem">
+        insert into od_order_item
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="orderItemId != null  ">order_item_id,</if>
+			<if test="orderIdP != null  ">order_id_p,</if>
+			<if test="goodsIdP != null  ">goods_id_p,</if>
+			<if test="goodsName != null  and goodsName != ''  ">goods_name,</if>
+			<if test="goodsImg != null  and goodsImg != ''  ">goods_img,</if>
+			<if test="goodsType != null  ">goods_type,</if>
+			<if test="goodsSpecsIdP != null  and goodsSpecsIdP != ''  ">goods_specs_id_p,</if>
+			<if test="goodsSpecsName != null  and goodsSpecsName != ''  ">goods_specs_name,</if>
+			<if test="goodsPrice != null  ">goods_price,</if>
+			<if test="goodsCount != null  ">goods_count,</if>
+			<if test="goodsShopDiscountPrice != null  ">goods_shop_discount_price,</if>
+			<if test="goodsPlatformDiscountPrice != null  ">goods_platform_discount_price,</if>
+			<if test="goodsTotalPrice != null  ">goods_total_price,</if>
+			<if test="goodsRefundIdP != null  ">goods_refund_id_p,</if>
+			<if test="goodsOrderStatus != null  ">goods_order_status,</if>
+			<if test="memberIdP != null  ">member_id_p,</if>
+			<if test="shopIdP != null  ">shop_id_p,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="orderItemId != null  ">#{orderItemId},</if>
+			<if test="orderIdP != null  ">#{orderIdP},</if>
+			<if test="goodsIdP != null  ">#{goodsIdP},</if>
+			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
+			<if test="goodsImg != null  and goodsImg != ''  ">#{goodsImg},</if>
+			<if test="goodsType != null  ">#{goodsType},</if>
+			<if test="goodsSpecsIdP != null  and goodsSpecsIdP != ''  ">#{goodsSpecsIdP},</if>
+			<if test="goodsSpecsName != null  and goodsSpecsName != ''  ">#{goodsSpecsName},</if>
+			<if test="goodsPrice != null  ">#{goodsPrice},</if>
+			<if test="goodsCount != null  ">#{goodsCount},</if>
+			<if test="goodsShopDiscountPrice != null  ">#{goodsShopDiscountPrice},</if>
+			<if test="goodsPlatformDiscountPrice != null  ">#{goodsPlatformDiscountPrice},</if>
+			<if test="goodsTotalPrice != null  ">#{goodsTotalPrice},</if>
+			<if test="goodsRefundIdP != null  ">#{goodsRefundIdP},</if>
+			<if test="goodsOrderStatus != null  ">#{goodsOrderStatus},</if>
+			<if test="memberIdP != null  ">#{memberIdP},</if>
+			<if test="shopIdP != null  ">#{shopIdP},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+
+    <update id="updateOrderItem" parameterType="com.sinonc.orders.domain.OrderItem">
+        update od_order_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderIdP != null  ">order_id_p = #{orderIdP},</if>
+            <if test="goodsIdP != null  ">goods_id_p = #{goodsIdP},</if>
+            <if test="goodsName != null  and goodsName != ''  ">goods_name = #{goodsName},</if>
+            <if test="goodsImg != null  and goodsImg != ''  ">goods_img = #{goodsImg},</if>
+            <if test="goodsType != null  ">goods_type = #{goodsType},</if>
+            <if test="goodsSpecsIdP != null  and goodsSpecsIdP != ''  ">goods_specs_id_p = #{goodsSpecsIdP},</if>
+            <if test="goodsSpecsName != null  and goodsSpecsName != ''  ">goods_specs_name = #{goodsSpecsName},</if>
+            <if test="goodsPrice != null  ">goods_price = #{goodsPrice},</if>
+            <if test="goodsCount != null  ">goods_count = #{goodsCount},</if>
+            <if test="goodsShopDiscountPrice != null  ">goods_shop_discount_price = #{goodsShopDiscountPrice},</if>
+            <if test="goodsPlatformDiscountPrice != null  ">goods_platform_discount_price = #{goodsPlatformDiscountPrice},</if>
+            <if test="goodsTotalPrice != null  ">goods_total_price = #{goodsTotalPrice},</if>
+            <if test="goodsRefundIdP != null  ">goods_refund_id_p = #{goodsRefundIdP},</if>
+            <if test="goodsOrderStatus != null  ">goods_order_status = #{goodsOrderStatus},</if>
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where order_item_id = #{orderItemId}
+    </update>
+
+	<delete id="deleteOrderItemById" parameterType="Long">
+        delete from od_order_item where order_item_id = #{orderItemId}
+    </delete>
+
+    <delete id="deleteOrderItemByIds" parameterType="String">
+        delete from od_order_item where order_item_id in
+        <foreach item="orderItemId" collection="array" open="(" separator="," close=")">
+            #{orderItemId}
+        </foreach>
+    </delete>
+
+    <select id="selectOrderItemGoodsIdAndSpecsId" resultMap="OrderItemResult">
+        <include refid="selectOrderItemVo"/>
+        where goods_id_p = #{goodsIdP} AND goods_specs_id_p = #{specsIdP}
+        limit 0,1
+    </select>
+
+
+    <select id="queryShopOrderItem" parameterType="Long" resultMap="OrderItemResult">
+        SELECT
+            od_order_item.goods_count,
+            od_order.order_status,
+            od_specs.per_weight,
+            od_order_item.shop_id_p
+        FROM
+            od_order_item
+        LEFT JOIN od_order ON od_order.order_id = od_order_item.order_id_p
+        LEFT JOIN od_specs ON od_specs.specs_id = od_order_item.goods_specs_id_p
+
+        WHERE
+            od_order_item.shop_id_p = #{shopId}
+        AND (
+                od_order.order_status != 5
+            AND od_order.order_status != 6
+        )    AND  Year(od_order.create_time) = Year(NOW())
+    </select>
+    <select id="selectOrderItemByOrderId" parameterType="Long" resultMap="OrderItemResult">
+
+        <include refid="selectOrderItemVo"/>
+        where order_id_p = #{orderId}
+    </select>
+
+    <select id="selectOrderItemByGoodsId" parameterType="long" resultMap="OrderItemResult">
+           SELECT * FROM od_order_item WHERE goods_id_p = #{goodsId} and member_id_p = #{memberId}
+    </select>
+
+    <select id="countGoodsSale" parameterType="Long" resultType="Long">
+        SELECT COUNT(IFNULL(goods_count,0)) FROM `od_order_item` WHERE goods_id_p = #{goodsId}
+    </select>
+
+    <select id="getOrderItemByOrderId"  parameterType="Long" resultMap="OrderItemResult">
+        <include refid="selectOrderItemVo"/>
+        where order_id_p = #{orderId}
+    </select>
+</mapper>

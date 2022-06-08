@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AuctionmemberMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Auctionmember" id="AuctionmemberResult">
+        <result property="auctionmemberId"    column="auctionmember_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="goodsId"    column="goods_id"    />
+        <result property="auctionPrice"    column="auctionPrice"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="nowPrice"    column="now_price"    />
+        <result property="isEnd"    column="is_end"    />
+    </resultMap>
+
+	<sql id="selectAuctionmemberVo">
+        select auctionmember_id, member_id, goods_id, auctionPrice, create_time, now_price, is_end from od_auctionmember
+    </sql>
+
+    <select id="selectAuctionmemberList" parameterType="com.sinonc.orders.domain.Auctionmember" resultMap="AuctionmemberResult">
+        <include refid="selectAuctionmemberVo"/>
+        <where>
+            <if test="auctionmemberId != null "> and auctionmember_id = #{auctionmemberId}</if>
+             <if test="memberId != null "> and member_id = #{memberId}</if>
+             <if test="goodsId != null "> and goods_id = #{goodsId}</if>
+             <if test="auctionPrice != null "> and auctionPrice = #{auctionPrice}</if>
+             <if test="searchDate != null and searchDate !='' "> and create_time LIKE CONCAT('%',CONCAT(#{searchDate},'%'))</if>
+            <if test="nowPrice != null "> and now_price = #{nowPrice}</if>
+            <if test="isEnd != null "> and is_end = #{isEnd}</if>
+         </where>
+         order by auctionmember_id desc
+    </select>
+
+    <select id="selectAuctionmemberById" parameterType="Long" resultMap="AuctionmemberResult">
+        <include refid="selectAuctionmemberVo"/>
+        where auctionmember_id = #{auctionmemberId}
+    </select>
+
+    <insert id="insertAuctionmember" parameterType="com.sinonc.orders.domain.Auctionmember" useGeneratedKeys="true" keyProperty="auctionmemberId">
+        insert into od_auctionmember
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memberId != null  ">member_id,</if>
+			<if test="goodsId != null  ">goods_id,</if>
+			<if test="auctionPrice != null  ">auctionPrice,</if>
+			<if test="createTime != null  ">create_time,</if>
+            <if test="nowPrice != null  ">now_price,</if>
+            <if test="isEnd != null  ">is_end,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="memberId != null  ">#{memberId},</if>
+			<if test="goodsId != null  ">#{goodsId},</if>
+			<if test="auctionPrice != null  ">#{auctionPrice},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+            <if test="nowPrice != null  ">#{nowPrice},</if>
+            <if test="isEnd != null  ">#{isEnd},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAuctionmember" parameterType="com.sinonc.orders.domain.Auctionmember">
+        update od_auctionmember
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null  ">member_id = #{memberId},</if>
+            <if test="goodsId != null  ">goods_id = #{goodsId},</if>
+            <if test="auctionPrice != null  ">auctionPrice = #{auctionPrice},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="nowPrice != null  ">now_price = #{nowPrice},</if>
+            <if test="isEnd != null  ">is_end = #{isEnd},</if>
+        </trim>
+        where auctionmember_id = #{auctionmemberId}
+    </update>
+
+	<delete id="deleteAuctionmemberById" parameterType="Long">
+        delete from od_auctionmember where auctionmember_id = #{auctionmemberId}
+    </delete>
+
+    <delete id="deleteAuctionmemberByIds" parameterType="String">
+        delete from od_auctionmember where auctionmember_id in
+        <foreach item="auctionmemberId" collection="array" open="(" separator="," close=")">
+            #{auctionmemberId}
+        </foreach>
+    </delete>
+
+    <select id="selectMaxAuctionmember" resultType="string">
+        SELECT MAX(now_price) FROM od_auctionmember where goods_id = #{goodsId}
+    </select>
+
+    <select id="selecthdAuction" resultMap="AuctionmemberResult">
+        SELECT * FROM od_auctionmember WHERE now_price = (SELECT MAX(now_price) FROM od_auctionmember)
+    </select>
+
+    <select id="listAuctionMerberMax" parameterType="long" resultMap="AuctionmemberResult">
+        SELECT * FROM od_auctionmember WHERE now_price = (SELECT MAX(now_price) FROM od_auctionmember WHERE goods_id = #{goodsId}) AND goods_id = #{goodsId}
+    </select>
+
+
+    <select id="selectApiAuctionListdesc" parameterType="long" resultMap="AuctionmemberResult">
+        <include refid="selectAuctionmemberVo"/>
+        where goods_id  = #{goodsId} ORDER BY create_time DESC
+    </select>
+
+</mapper>

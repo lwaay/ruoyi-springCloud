@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdSpecsValueMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdSpecsValue" id="OdSpecsValueResult">
+        <result property="specsValueId" column="specs_value_id"/>
+        <result property="specsId" column="specs_id"/>
+        <result property="specsValue" column="specs_value"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="numbers" column="numbers"/>
+        <result property="unit" column="unit"/>
+        <result property="type" column="type"/>
+        <result property="shopId" column="shop_id"/>
+    </resultMap>
+
+    <sql id="selectOdSpecsValueVo">
+        select specs_value_id,
+               specs_id,
+               specs_value,
+               create_by,
+               create_time,
+               update_time,
+               numbers,
+               unit,
+               type,
+               shop_id
+        from od_specs_value
+    </sql>
+
+    <select id="selectOdSpecsValueList" parameterType="com.sinonc.orders.domain.OdSpecsValue" resultMap="OdSpecsValueResult">
+        <include refid="selectOdSpecsValueVo"/>
+        <where>
+            <if test="specsId != null ">
+                and specs_id = #{specsId}
+            </if>
+            <if test="specsValue != null  and specsValue != ''">
+                and specs_value = #{specsValue}
+            </if>
+            <if test="numbers != null ">
+                and numbers = #{numbers}
+            </if>
+            <if test="unit != null  and unit != ''">
+                and unit = #{unit}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="shopId != null ">
+                and shop_id = #{shopId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOdSpecsValueById" parameterType="Long" resultMap="OdSpecsValueResult">
+        <include refid="selectOdSpecsValueVo"/>
+        where specs_value_id = #{specsValueId}
+    </select>
+
+    <insert id="insertOdSpecsValue" parameterType="com.sinonc.orders.domain.OdSpecsValue" useGeneratedKeys="true"
+            keyProperty="specsValueId">
+        insert into od_specs_value
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="specsId != null">specs_id,
+            </if>
+            <if test="specsValue != null">specs_value,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="numbers != null">numbers,
+            </if>
+            <if test="unit != null">unit,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="shopId != null">shop_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="specsId != null">#{specsId},
+            </if>
+            <if test="specsValue != null">#{specsValue},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="numbers != null">#{numbers},
+            </if>
+            <if test="unit != null">#{unit},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="shopId != null">#{shopId},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOdSpecsValue" parameterType="com.sinonc.orders.domain.OdSpecsValue">
+        update od_specs_value
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="specsId != null">specs_id =
+                #{specsId},
+            </if>
+            <if test="specsValue != null">specs_value =
+                #{specsValue},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="numbers != null">numbers =
+                #{numbers},
+            </if>
+            <if test="unit != null">unit =
+                #{unit},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="shopId != null">shop_id =
+                #{shopId},
+            </if>
+        </trim>
+        where specs_value_id = #{specsValueId}
+    </update>
+
+    <delete id="deleteOdSpecsValueById" parameterType="Long">
+        delete
+        from od_specs_value
+        where specs_value_id = #{specsValueId}
+    </delete>
+
+    <delete id="deleteOdSpecsValueByIds" parameterType="String">
+        delete from od_specs_value where specs_value_id in
+        <foreach item="specsValueId" collection="array" open="(" separator="," close=")">
+            #{specsValueId}
+        </foreach>
+    </delete>
+
+</mapper>

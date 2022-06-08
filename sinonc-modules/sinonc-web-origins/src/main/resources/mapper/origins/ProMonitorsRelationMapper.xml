@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.ProMonitorsRelationMapper">
+
+    <resultMap type="com.sinonc.origins.domain.ProMonitorsRelation" id="ProMonitorsRelationResult">
+        <result property="proMonitorsId" column="pro_monitors_id"/>
+        <result property="productIdP" column="product_id_p"/>
+        <result property="monitorsIdP" column="monitors_id_p"/>
+    </resultMap>
+
+    <sql id="selectProMonitorsRelationVo">
+        select pro_monitors_id, product_id_p, monitors_id_p        from pro_monitors_relation
+    </sql>
+
+    <select id="selectProMonitorsRelationList" parameterType="com.sinonc.origins.domain.ProMonitorsRelation"
+            resultMap="ProMonitorsRelationResult">
+        <include refid="selectProMonitorsRelationVo"/>
+        <where>
+            <if test="productIdP != null ">
+                and product_id_p = #{productIdP}
+            </if>
+            <if test="monitorsIdP != null ">
+                and monitors_id_p = #{monitorsIdP}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProMonitorsRelationById" parameterType="Long" resultMap="ProMonitorsRelationResult">
+        <include refid="selectProMonitorsRelationVo"/>
+        where pro_monitors_id = #{proMonitorsId}
+    </select>
+
+    <insert id="insertProMonitorsRelation" parameterType="com.sinonc.origins.domain.ProMonitorsRelation"
+            useGeneratedKeys="true"
+            keyProperty="proMonitorsId">
+        insert into pro_monitors_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productIdP != null">product_id_p,
+            </if>
+            <if test="monitorsIdP != null">monitors_id_p,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productIdP != null">#{productIdP},
+            </if>
+            <if test="monitorsIdP != null">#{monitorsIdP},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProMonitorsRelation" parameterType="com.sinonc.origins.domain.ProMonitorsRelation">
+        update pro_monitors_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productIdP != null">product_id_p =
+                #{productIdP},
+            </if>
+            <if test="monitorsIdP != null">monitors_id_p =
+                #{monitorsIdP},
+            </if>
+        </trim>
+        where pro_monitors_id = #{proMonitorsId}
+    </update>
+
+    <delete id="deleteProMonitorsRelationById" parameterType="Long">
+        delete
+        from pro_monitors_relation where pro_monitors_id = #{proMonitorsId}
+    </delete>
+
+    <delete id="deleteProMonitorsRelationByProductId" parameterType="Long">
+        delete
+        from pro_monitors_relation where product_id_p = #{productId}
+    </delete>
+
+    <delete id="deleteProMonitorsRelationByIds" parameterType="String">
+        delete from pro_monitors_relation where pro_monitors_id in
+        <foreach item="proMonitorsId" collection="array" open="(" separator="," close=")">
+            #{proMonitorsId}
+        </foreach>
+    </delete>
+
+</mapper>

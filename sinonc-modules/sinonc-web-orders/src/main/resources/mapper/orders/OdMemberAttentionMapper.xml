@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdMemberAttentionMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdMemberAttention" id="OdMemberAttentionResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="attentionType" column="attention_type"/>
+        <result property="targetId" column="target_id"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.domain.MemberFollowDescription" id="MemberFollowDescriptionResult">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="attentionType" column="attention_type"/>
+        <result property="targetId" column="target_id"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectOdMemberAttentionVo">
+        select id,
+               user_id,
+               attention_type,
+               target_id,
+               status,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from od_member_attention
+    </sql>
+
+    <select id="selectOdMemberAttentionList" parameterType="com.sinonc.orders.domain.OdMemberAttention" resultMap="OdMemberAttentionResult">
+        <include refid="selectOdMemberAttentionVo"/>
+        <where>
+            <if test="id != null ">
+                and id = #{id}
+            </if>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="attentionType != null ">
+                and attention_type = #{attentionType}
+            </if>
+            <if test="targetId != null ">
+                and target_id = #{targetId}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOdMemberAttentionById" parameterType="Long" resultMap="OdMemberAttentionResult">
+        <include refid="selectOdMemberAttentionVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectOdMemberAttentionDescriptionList"
+            resultMap="MemberFollowDescriptionResult">
+        <include refid="selectOdMemberAttentionVo"/>
+        <where>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="attentionType != null and attentionType != 9">
+                and attention_type = #{attentionType}
+            </if>
+            <if test="targetId != null ">
+                and target_id = #{targetId}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+    <select id="getCountByUserId" resultType="java.lang.Integer">
+        select count(0) from od_member_attention where status = 0 and user_id = #{userId}
+    </select>
+
+    <insert id="insertOdMemberAttention" parameterType="com.sinonc.orders.domain.OdMemberAttention" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into od_member_attention
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,
+            </if>
+            <if test="attentionType != null">attention_type,
+            </if>
+            <if test="targetId != null">target_id,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="attentionType != null">#{attentionType},
+            </if>
+            <if test="targetId != null">#{targetId},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOdMemberAttention" parameterType="com.sinonc.orders.domain.OdMemberAttention">
+        update od_member_attention
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="attentionType != null">attention_type =
+                #{attentionType},
+            </if>
+            <if test="targetId != null">target_id =
+                #{targetId},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOdMemberAttentionById" parameterType="Long">
+        delete
+        from od_member_attention
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteOdMemberAttentionByIds" parameterType="String">
+        delete from od_member_attention where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

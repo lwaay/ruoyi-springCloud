@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AppFeedbackMapper">
+    
+
+
+    <insert id="addFeedback" parameterType="com.sinonc.orders.domain.AppFeedback">
+        INSERT INTO od_app_feedback (
+                  member_id,
+                  suggest_type,
+                  suggest_cotent,
+                  image_url,
+                  suggest_status,
+                  deal_with,
+                  create_time,
+                  deal_time
+                )
+                VALUES
+                  (
+                    #{memberId},
+                    #{suggestType},
+                    #{suggestCotent},
+                    #{imageUrl},
+                    #{suggestStatus},
+                    #{dealWith},
+                    #{createTime},
+                    #{dealTime}
+                  )
+
+    </insert>
+
+    <select id="selectFeedbackList" resultType="java.util.Map" parameterType="java.lang.Long">
+          SELECT
+              feedback_id feedbackId,
+              member_id memberId,
+              suggest_type suggestType,
+              suggest_cotent suggestCotent,
+              image_url imageUrl,
+              suggest_status suggestStatus,
+              deal_with dealWith,
+              create_time createTime,
+              deal_time dealTime
+            FROM
+              od_app_feedback
+            WHERE member_id = #{memberId} order by create_time desc
+    </select>
+
+
+    <select id="selectFeedbackById" parameterType="long" resultType="java.util.Map">
+        SELECT
+          feedback_id feedbackId,
+          member_id memberId,
+          suggest_type suggestType,
+          suggest_cotent suggestCotent,
+          image_url imageUrl,
+          suggest_status suggestStatus,
+          deal_with dealWith,
+          create_time createTime,
+          deal_time dealTime
+        FROM
+          od_app_feedback WHERE feedback_id = #{feedbackId}
+    </select>
+
+
+
+</mapper>

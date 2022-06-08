@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.openapi.mapper.DataUserMapper">
+
+    <resultMap type="DataUser" id="DataUserResult">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="privateKey" column="private_key"/>
+        <result property="createTime" column="create_time"/>
+        <result property="dataApiIds" column="data_api_ids"/>
+    </resultMap>
+
+    <sql id="selectDataUserVo">
+        select id, name, private_key, create_time, data_api_ids from data_user
+    </sql>
+
+    <select id="selectDataUserList" parameterType="DataUser" resultMap="DataUserResult">
+        <include refid="selectDataUserVo"/>
+        <where>
+        </where>
+    </select>
+
+    <select id="selectDataUserById" parameterType="Long" resultMap="DataUserResult">
+        <include refid="selectDataUserVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDataUser" parameterType="DataUser" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into data_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,
+            </if>
+            <if test="privateKey != null and privateKey != ''">private_key,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="dataApiIds != null and dataApiIds != ''">data_api_ids,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},
+            </if>
+            <if test="privateKey != null and privateKey != ''">#{privateKey},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="dataApiIds != null and dataApiIds != ''">#{dataApiIds},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateDataUser" parameterType="DataUser">
+        update data_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name =
+                #{name},
+            </if>
+            <if test="privateKey != null and privateKey != ''">private_key =
+                #{privateKey},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="dataApiIds != null and dataApiIds != ''">data_api_ids =
+                #{dataApiIds},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDataUserById" parameterType="Long">
+        delete
+        from data_user where id = #{id}
+    </delete>
+
+    <delete id="deleteDataUserByIds" parameterType="String">
+        delete from data_user where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

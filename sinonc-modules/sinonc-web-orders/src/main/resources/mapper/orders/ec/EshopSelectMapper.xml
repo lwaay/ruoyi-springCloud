@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.EshopSelectMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.EshopSelect" id="EshopSelectResult">
+        <result property="id" column="id"/>
+        <result property="brand" column="brand"/>
+        <result property="show" column="show"/>
+    </resultMap>
+
+    <sql id="selectEshopSelectVo">
+        select id, brand, `show` from eshop_select
+    </sql>
+
+    <select id="selectEshopSelectList" parameterType="com.sinonc.orders.ec.domain.EshopSelect" resultMap="EshopSelectResult">
+        <include refid="selectEshopSelectVo"/>
+        <where>
+            <if test="brand != null  and brand != ''">
+                and brand like concat('%',#{brand},"%")
+            </if>
+            <if test="show != null ">
+                and `show` = #{show}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEshopSelectById" parameterType="Long" resultMap="EshopSelectResult">
+        <include refid="selectEshopSelectVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertEshopSelect" parameterType="com.sinonc.orders.ec.domain.EshopSelect" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into eshop_select
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brand != null">brand,
+            </if>
+            <if test="show != null">`show`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brand != null">#{brand},
+            </if>
+            <if test="show != null">#{show},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateEshopSelect" parameterType="com.sinonc.orders.ec.domain.EshopSelect">
+        update eshop_select
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brand != null">
+                brand =#{brand},
+            </if>
+            <if test="show != null">
+                `show` =#{show},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteEshopSelectById" parameterType="Long">
+        delete
+        from eshop_select where id = #{id}
+    </delete>
+
+    <delete id="deleteEshopSelectByIds" parameterType="String">
+        delete from eshop_select where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

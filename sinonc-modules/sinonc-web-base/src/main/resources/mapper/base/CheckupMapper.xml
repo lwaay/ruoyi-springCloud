@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.CheckupMapper">
+
+    <resultMap type="com.sinonc.base.domain.Checkup" id="CheckupResult">
+        <result property="checkId"    column="check_id"    />
+        <result property="checkType"    column="check_type"    />
+        <result property="checkCode"    column="check_code"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="company"    column="company"    />
+        <result property="sampNum"    column="samp_num"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="dueDate"    column="due_date"    />
+        <result property="sumUp"    column="sum_up"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="farmName"    column="farm_name"    />
+        <result property="farmId"    column="farm_id"    />
+    </resultMap>
+
+	<sql id="selectCheckupVo">
+        select check_id, check_code,check_type, area_code, company, samp_num, check_date, due_date, sum_up, create_time, create_by, update_time, update_by, farm_id from base_checkup
+    </sql>
+
+    <select id="selectCheckupList" parameterType="com.sinonc.base.domain.Checkup" resultMap="CheckupResult">
+        SELECT
+            base_checkup.check_id,
+            base_checkup.check_code,
+            base_checkup.check_type,
+            base_checkup.area_code,
+            base_checkup.company,
+            base_checkup.samp_num,
+            base_checkup.check_date,
+            base_checkup.due_date,
+            base_checkup.sum_up,
+            base_checkup.create_time,
+            base_checkup.create_by,
+            base_checkup.update_time,
+            base_checkup.update_by,
+            base_farm.farm_name,
+            base_farm.farm_id
+        FROM
+            base_checkup
+        LEFT JOIN base_farm ON base_checkup.area_code=base_farm.area_code
+        <where>
+            <if test="checkId != null "> and base_checkup.check_id = #{checkId}</if>
+             <if test="checkType != null  and checkType != '' "> and base_checkup.check_type = #{checkType}</if>
+            <if test="checkCode != null  and checkCode != '' "> and base_checkup.check_code = #{checkCode}</if>
+             <if test="areaCode != null  and areaCode != '' "> and base_checkup.area_code = #{areaCode}</if>
+             <if test="company != null  and company != '' "> and company = #{company}</if>
+             <if test="sampNum != null "> and samp_num = #{sampNum}</if>
+             <if test="checkDate != null "> and check_date = #{checkDate}</if>
+             <if test="dueDate != null "> and due_date = #{dueDate}</if>
+             <if test="sumUp != null  and sumUp != '' "> and sum_up = #{sumUp}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+         </where>
+    </select>
+
+
+    <select id="selectCheckupListByYear" parameterType="com.sinonc.base.domain.Checkup" resultMap="CheckupResult">
+        <include refid="selectCheckupVo"/>
+        <where>
+            <if test="areaCode != null  and areaCode != '' "> and area_code = #{areaCode}</if>
+            <if test="checkDate != null "> and date_format(check_date, '%Y') = #{checkDate}</if>
+            <if test="checkType != null  and checkType != '' "> and check_type = #{checkType}</if>
+            <if test="farmId != null  and farmId != '' "> and farm_id = #{farmId}</if>
+        </where>
+        ORDER BY
+            check_date DESC
+        LIMIT 1
+    </select>
+
+
+    <select id="selectCheckupById" parameterType="Long" resultMap="CheckupResult">
+        <include refid="selectCheckupVo"/>
+        where check_id = #{checkId}
+    </select>
+
+    <insert id="insertCheckup" parameterType="com.sinonc.base.domain.Checkup" useGeneratedKeys="true" keyProperty="checkId">
+        insert into base_checkup
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="checkType != null  and checkType != ''  ">check_type,</if>
+            <if test="checkCode != null  and checkCode != ''  ">check_code,</if>
+			<if test="areaCode != null  and areaCode != ''  ">area_code,</if>
+			<if test="company != null  and company != ''  ">company,</if>
+			<if test="sampNum != null  ">samp_num,</if>
+			<if test="checkDate != null  ">check_date,</if>
+			<if test="dueDate != null  ">due_date,</if>
+			<if test="sumUp != null  and sumUp != ''  ">sum_up,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="farmId != null  and farmId != ''  ">farm_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="checkType != null  and checkType != ''  ">#{checkType},</if>
+            <if test="checkCode != null  and checkCode != ''  ">#{checkCode},</if>
+			<if test="areaCode != null  and areaCode != ''  ">#{areaCode},</if>
+			<if test="company != null  and company != ''  ">#{company},</if>
+			<if test="sampNum != null  ">#{sampNum},</if>
+			<if test="checkDate != null  ">#{checkDate},</if>
+			<if test="dueDate != null  ">#{dueDate},</if>
+			<if test="sumUp != null  and sumUp != ''  ">#{sumUp},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="farmId != null  and farmId != ''  ">#{farmId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCheckup" parameterType="com.sinonc.base.domain.Checkup">
+        update base_checkup
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkType != null  and checkType != ''  ">check_type = #{checkType},</if>
+            <if test="checkCode != null  and checkCode != ''  ">check_code = #{checkCode},</if>
+            <if test="areaCode != null  and areaCode != ''  ">area_code = #{areaCode},</if>
+            <if test="company != null  and company != ''  ">company = #{company},</if>
+            <if test="sampNum != null  ">samp_num = #{sampNum},</if>
+            <if test="checkDate != null  ">check_date = #{checkDate},</if>
+            <if test="dueDate != null  ">due_date = #{dueDate},</if>
+            <if test="sumUp != null  and sumUp != ''  ">sum_up = #{sumUp},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="farmId != null  and farmId != ''  ">farm_id = #{farmId},</if>
+        </trim>
+        where check_id = #{checkId}
+    </update>
+
+	<delete id="deleteCheckupById" parameterType="Long">
+        delete from base_checkup where check_id = #{checkId}
+    </delete>
+
+    <delete id="deleteCheckupByIds" parameterType="String">
+        delete from base_checkup where check_id in
+        <foreach item="checkId" collection="array" open="(" separator="," close=")">
+            #{checkId}
+        </foreach>
+    </delete>
+
+    <select id="selectLatelyYear" parameterType="Long" resultType="java.lang.String">
+        SELECT
+            date_format(check_date, '%Y')
+        FROM
+            base_checkup
+        WHERE
+            farm_id = #{farmId}
+        GROUP BY
+            date_format(check_date, '%Y')
+        ORDER BY
+            date_format(check_date, '%Y') DESC
+        LIMIT 1
+    </select>
+
+
+    <select id="selectAreaCodeByShopId" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+            area_code
+        FROM
+            user_relation_view
+        WHERE
+            shop_id = #{shopId}
+    </select>
+
+</mapper>

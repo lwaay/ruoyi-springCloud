@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.ExpertDynamicDtoMapper">
+
+    <resultMap type="com.sinonc.agriculture.dto.ExpertDynamicDto" id="ExpertDynamicResult">
+        <result property="dynamicId" column="dynamic_id"/>
+        <result property="cropId" column="crop_id"/>
+        <result property="sectionId" column="section_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="readCount" column="read_count"/>
+        <result property="img" column="img"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="sysName" column="sys_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="memberInfo" column="member_id" select="selectMemberInfoById"/>
+        <association property="likeList" column="dynamic_id" select="selectLikeList"/>
+        <association property="cropName" column="crop_id" select="selectCropName"/>
+        <association property="sectionName" column="section_id" select="selectSectionName"/>
+    </resultMap>
+
+    <resultMap id="memberInfoResult" type="com.sinonc.agriculture.domain.MemberInfo"
+               extends="com.sinonc.agriculture.mapper.MemberInfoMapper.MemberInfoResult"/>
+
+    <resultMap id="ExpertDynamicDetailResult" type="com.sinonc.agriculture.dto.ExpertDynamicDetailDto"
+               extends="ExpertDynamicResult">
+        <association property="commentList" column="dynamic_id" select="selectCommentList"/>
+    </resultMap>
+
+    <resultMap id="commentDtoResult" type="com.sinonc.agriculture.dto.ExpertDynamicCommentDto"
+               extends="com.sinonc.agriculture.mapper.ExpertDynamicCommentMapper.ExpertDynamicCommentResult">
+        <result property="toMemberId" column="to_member_id"/>
+        <result property="toNikeName" column="to_nike_name"/>
+    </resultMap>
+
+    <sql id="selectExpertDynamicVo">
+        select dynamic_id,
+               crop_id,
+               section_id,
+               member_id,
+               title,
+               content,
+               read_count,
+               img,
+               like_count,
+               comment_count,
+               sys_name,
+               create_time,
+               update_time
+        from expert_dynamic
+    </sql>
+
+    <select id="selectExpertDynamicDtoList" parameterType="com.sinonc.agriculture.domain.ExpertDynamic"
+            resultMap="ExpertDynamicResult">
+        <include refid="selectExpertDynamicVo"/>
+        <where>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="cropId != null ">and crop_id = #{cropId}</if>
+            <if test="sectionId != null ">and section_id = #{sectionId}</if>
+            <if test="title != null  and title != ''">and title like concat('%',#{title},'%')</if>
+            <if test="sysName != null  and sysName != ''">and sys_name = #{sysName}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectMemberInfoById" resultMap="memberInfoResult">
+        select nike_name, member_id, head_img, `rank`, `role`, city
+        from member_info
+        where member_id = #{value}
+    </select>
+
+    <select id="selectLikeList" resultType="map">
+        select member_info.nike_name nikeName, member_info.member_id memberId
+        from expert_dynamic_like
+                 inner join member_info on expert_dynamic_like.member_id = member_info.member_id
+        where expert_dynamic_like.dynamic_id = #{value}
+        order by expert_dynamic_like.create_time desc
+        limit 0,5
+    </select>
+
+    <select id="selectCropName" resultType="string">
+        select crop_name
+        from crop_dict
+        where crop_id = #{value}
+    </select>
+
+    <select id="selectSectionName" resultType="string">
+        select section_name
+        from section_dict
+        where section_id = #{value}
+    </select>
+
+    <select id="selectExpertDynamicDtoListByCropIds" resultMap="ExpertDynamicResult">
+        <include refid="selectExpertDynamicVo"/>
+        <foreach collection="list" item="item" open=" where crop_id in (" separator="," close=")">
+            #{item}
+        </foreach>
+        order by create_time desc
+    </select>
+
+
+    <select id="selectExpertDynamicDetailDtoByDynamicId" resultMap="ExpertDynamicDetailResult">
+        <include refid="selectExpertDynamicVo"/>
+        where dynamic_id = #{value}
+    </select>
+
+    <select id="selectCommentList"
+            resultMap="commentDtoResult">
+        select a.comment_id,
+               a.content,
+               a.nike_name,
+               a.member_id,
+               a.reply_to,
+               a.dynamic_id,
+               b.comment_id to_comment_id,
+               b.member_id  to_member_id,
+               b.nike_name  to_nike_name
+        from expert_dynamic_comment a
+                 left join expert_dynamic_comment b on a.reply_to = b.comment_id
+        where a.dynamic_id = #{value}
+    </select>
+
+</mapper>

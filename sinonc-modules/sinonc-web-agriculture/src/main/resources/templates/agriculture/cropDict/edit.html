@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="include :: header('修改作物字典')"/>
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-cropDict-edit" th:object="${cropDict}">
+        <input name="cropId" th:field="*{cropId}" type="hidden">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">作物名称：</label>
+            <div class="col-sm-8">
+                <input name="cropName" th:field="*{cropName}" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">父级ID：</label>
+            <div class="col-sm-8">
+                <div class="input-group">
+                    <input id="treeId" name="parentId" type="hidden" th:field="*{parentId}"/>
+                    <input class="form-control" type="text" onclick="selectCropDictTree()" id="treeName" readonly="true"
+                           th:field="*{parentName}">
+                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">图标：</label>
+            <div class="col-sm-8">
+                <input id="upload" name="file" type="file">
+                <p style="line-height: 30px;color: red">图片必须小于128kb</p>
+            </div>
+        </div>
+        <input name="iconImg" id="iconImg" th:field="*{iconImg}" class="form-control" style="display: none">
+    </form>
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: bootstrap-fileinput-js"/>
+<script type="text/javascript" th:inline="javascript">
+    var prefix = ctx + "agriculture/cropDict";
+    $("#form-cropDict-edit").validate({
+        focusCleanup: true
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $('#iconImg').show();
+            $.operate.save(prefix + "/edit", $('#form-cropDict-edit').serialize());
+            $('#iconImg').hide();
+        }
+    }
+
+    /*作物字典-新增-选择父部门树*/
+    function selectCropDictTree() {
+        var options = {
+            title: '作物字典选择',
+            width: "380",
+            url: prefix + "/selectCropDictTree/" + $("#treeId").val(),
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+
+    $(document).ready(function () {
+
+        let images = [];
+        let image = [[${cropDict.iconImg}]];
+
+        if (image !== '-') {
+            images.push(image);
+        }
+
+        $("#upload").fileinput({
+            theme: 'explorer-fas',
+            uploadUrl: ctx + "oss/upload",
+            enctype: 'multipart/form-data',
+            overwriteInitial: true,
+            initialPreviewAsData: true,
+            //图片最大128kb
+            maxFileSize: 128,
+            allowedFileTypes: ['image'],    // allow only images
+            initialPreview: images
+        }).on('fileuploaded', function (event, data) {
+            data = data.response;
+            if (data.code !== 0) {
+                console.error(data.msg);
+            } else {
+                $("#iconImg").val(data.data);
+            }
+        }).on('fileuploaderror', function (event, data, msg) {
+            console.log('File Upload Error', 'ID: ' + data.fileId + ', Thumb ID: ' + data.previewId);
+        }).on('filebatchuploadcomplete', function (event, preview, config, tags, extraData) {
+            console.log('File Batch Uploaded', preview, config, tags, extraData);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.DeviceTypeMapper">
+
+    <resultMap type="DeviceType" id="DeviceTypeResult">
+        <result property="id" column="id"/>
+        <result property="type" column="type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <sql id="selectDeviceTypeVo">
+        select id, type, create_time, update_time, remark, name
+        from device_type
+    </sql>
+
+    <select id="selectDeviceTypeList" parameterType="DeviceType" resultMap="DeviceTypeResult">
+        <include refid="selectDeviceTypeVo"/>
+        <where>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDeviceTypeById" parameterType="Long" resultMap="DeviceTypeResult">
+        <include refid="selectDeviceTypeVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDeviceType" parameterType="DeviceType" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into device_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="name != null">name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="name != null">#{name},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateDeviceType" parameterType="DeviceType">
+        update device_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="name != null">name =
+                #{name},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDeviceTypeById" parameterType="Long">
+        delete
+        from device_type
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteDeviceTypeByIds" parameterType="String">
+        delete from device_type where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getAllType" resultMap="DeviceTypeResult">
+        select id,type,name from device_type
+    </select>
+    <select id="getDeviceType" resultMap="DeviceTypeResult" parameterType="string">
+        <include refid="selectDeviceTypeVo"/> where type=#{type}
+    </select>
+</mapper>

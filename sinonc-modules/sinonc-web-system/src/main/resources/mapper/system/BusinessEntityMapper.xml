@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.system.mapper.BusinessEntityMapper">
+
+    <resultMap type="com.sinonc.system.api.domain.BusinessEntity" id="BusinessEntityResult">
+        <result property="entityId" column="entity_id"/>
+        <result property="entityName" column="entity_name"/>
+        <result property="businessMaintype" column="business_maintype"/>
+        <result property="businessType" column="business_type"/>
+        <result property="contactAddress" column="contact_address"/>
+        <result property="principalMan" column="principal_man"/>
+        <result property="principalPhone" column="principal_phone"/>
+        <result property="businessScope" column="business_scope"/>
+        <result property="busiCertids" column="busi_certids"/>
+        <result property="registerTime" column="register_time"/>
+        <result property="modTime" column="mod_time"/>
+        <result property="modMemberid" column="mod_memberid"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectBusinessEntityVo">
+        select entity_id, entity_name, business_maintype, business_type, contact_address, principal_man, principal_phone, business_scope, busi_certids, register_time, mod_time, mod_memberid, status,remark        from business_entity
+    </sql>
+
+    <select id="selectBusinessEntityList" parameterType="com.sinonc.system.api.domain.BusinessEntity" resultMap="BusinessEntityResult">
+        <include refid="selectBusinessEntityVo"/>
+        <where>
+            <if test="entityName != null  and entityName != ''">
+                and entity_name like concat('%', #{entityName}, '%')
+            </if>
+            <if test="businessMaintype != null  and businessMaintype != ''">
+                and FIND_IN_SET (#{businessMaintype}, business_maintype)
+            </if>
+            <if test="businessType != null  and businessType != ''">
+                and business_type = #{businessType}
+            </if>
+            <if test="contactAddress != null  and contactAddress != ''">
+                and contact_address = #{contactAddress}
+            </if>
+            <if test="principalMan != null  and principalMan != ''">
+                and principal_man = #{principalMan}
+            </if>
+            <if test="principalPhone != null  and principalPhone != ''">
+                and principal_phone = #{principalPhone}
+            </if>
+            <if test="businessScope != null  and businessScope != ''">
+                and business_scope = #{businessScope}
+            </if>
+            <if test="busiCertids != null  and busiCertids != ''">
+                and busi_certids = #{busiCertids}
+            </if>
+            <if test="registerTime != null ">
+                and register_time = #{registerTime}
+            </if>
+            <if test="modTime != null ">
+                and mod_time = #{modTime}
+            </if>
+            <if test="modMemberid != null ">
+                and mod_memberid = #{modMemberid}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBusinessEntityById" parameterType="Long" resultMap="BusinessEntityResult">
+        <include refid="selectBusinessEntityVo"/>
+        where entity_id = #{entityId}
+    </select>
+
+    <insert id="insertBusinessEntity" parameterType="com.sinonc.system.api.domain.BusinessEntity" useGeneratedKeys="true"
+            keyProperty="entityId">
+        insert into business_entity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="entityName != null">entity_name,
+            </if>
+            <if test="businessMaintype != null">business_maintype,
+            </if>
+            <if test="businessType != null">business_type,
+            </if>
+            <if test="contactAddress != null">contact_address,
+            </if>
+            <if test="principalMan != null">principal_man,
+            </if>
+            <if test="principalPhone != null">principal_phone,
+            </if>
+            <if test="businessScope != null">business_scope,
+            </if>
+            <if test="busiCertids != null">busi_certids,
+            </if>
+            <if test="registerTime != null">register_time,
+            </if>
+            <if test="modTime != null">mod_time,
+            </if>
+            <if test="modMemberid != null">mod_memberid,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="entityName != null">#{entityName},
+            </if>
+            <if test="businessMaintype != null">#{businessMaintype},
+            </if>
+            <if test="businessType != null">#{businessType},
+            </if>
+            <if test="contactAddress != null">#{contactAddress},
+            </if>
+            <if test="principalMan != null">#{principalMan},
+            </if>
+            <if test="principalPhone != null">#{principalPhone},
+            </if>
+            <if test="businessScope != null">#{businessScope},
+            </if>
+            <if test="busiCertids != null">#{busiCertids},
+            </if>
+            <if test="registerTime != null">#{registerTime},
+            </if>
+            <if test="modTime != null">#{modTime},
+            </if>
+            <if test="modMemberid != null">#{modMemberid},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBusinessEntity" parameterType="com.sinonc.system.api.domain.BusinessEntity">
+        update business_entity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="entityName != null">entity_name =
+                #{entityName},
+            </if>
+            <if test="businessMaintype != null">business_maintype =
+                #{businessMaintype},
+            </if>
+            <if test="businessType != null">business_type =
+                #{businessType},
+            </if>
+            <if test="contactAddress != null">contact_address =
+                #{contactAddress},
+            </if>
+            <if test="principalMan != null">principal_man =
+                #{principalMan},
+            </if>
+            <if test="principalPhone != null">principal_phone =
+                #{principalPhone},
+            </if>
+            <if test="businessScope != null">business_scope =
+                #{businessScope},
+            </if>
+            <if test="busiCertids != null">busi_certids =
+                #{busiCertids},
+            </if>
+            <if test="registerTime != null">register_time =
+                #{registerTime},
+            </if>
+            <if test="modTime != null">mod_time =
+                #{modTime},
+            </if>
+            <if test="modMemberid != null">mod_memberid =
+                #{modMemberid},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+        </trim>
+        where entity_id = #{entityId}
+    </update>
+
+    <delete id="deleteBusinessEntityById" parameterType="Long">
+        delete
+        from business_entity where entity_id = #{entityId}
+    </delete>
+
+    <delete id="deleteBusinessEntityByIds" parameterType="String">
+        delete from business_entity where entity_id in
+        <foreach item="entityId" collection="array" open="(" separator="," close=")">
+            #{entityId}
+        </foreach>
+    </delete>
+
+</mapper>

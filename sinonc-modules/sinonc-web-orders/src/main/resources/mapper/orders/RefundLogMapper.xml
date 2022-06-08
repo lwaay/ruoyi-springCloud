@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.RefundLogMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.RefundLog" id="RefundLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="rfId"    column="rf_id"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+	
+	<sql id="selectRefundLogVo">
+        select log_id, rf_id, content, create_time from od_refund_log
+    </sql>
+	
+    <select id="selectRefundLogList" parameterType="com.sinonc.orders.domain.RefundLog" resultMap="RefundLogResult">
+        <include refid="selectRefundLogVo"/>
+        <where>  
+            <if test="logId != null "> and log_id = #{logId}</if>
+             <if test="rfId != null "> and rf_id = #{rfId}</if>
+             <if test="content != null  and content != '' "> and content = #{content}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectRefundLogById" parameterType="Long" resultMap="RefundLogResult">
+        <include refid="selectRefundLogVo"/>
+        where log_id = #{logId}
+    </select>
+        
+    <insert id="insertRefundLog" parameterType="com.sinonc.orders.domain.RefundLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into od_refund_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="rfId != null  ">rf_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="createTime != null  ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="rfId != null  ">#{rfId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRefundLog" parameterType="com.sinonc.orders.domain.RefundLog">
+        update od_refund_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rfId != null  ">rf_id = #{rfId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+	<delete id="deleteRefundLogById" parameterType="Long">
+        delete from od_refund_log where log_id = #{logId}
+    </delete>
+	
+    <delete id="deleteRefundLogByIds" parameterType="String">
+        delete from od_refund_log where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+    
+</mapper>

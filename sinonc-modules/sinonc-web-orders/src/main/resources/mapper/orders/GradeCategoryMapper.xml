@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.GradeCategoryMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.GradeCategory" id="GradeCategoryResult">
+        <result property="categoryId"    column="category_id"    />
+        <result property="gradeIdP"    column="grade_id_p"    />
+        <result property="categoryName"    column="category_name"    />
+        <result property="categoryValue"    column="category_value"    />
+        <result property="categoryResult"    column="category_result"    />
+        <result property="categoryPercent"    column="category_percent"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+	
+	<sql id="selectGradeCategoryVo">
+        select category_id, grade_id_p, category_name, category_value, category_result, category_percent, remark, create_by, create_time, update_by, update_time from od_grade_category
+    </sql>
+	
+    <select id="selectGradeCategoryList" parameterType="com.sinonc.orders.domain.GradeCategory" resultMap="GradeCategoryResult">
+        <include refid="selectGradeCategoryVo"/>
+        <where>  
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+             <if test="gradeIdP != null "> and grade_id_p = #{gradeIdP}</if>
+             <if test="categoryName != null  and categoryName != '' "> and category_name = #{categoryName}</if>
+             <if test="categoryValue != null "> and category_value = #{categoryValue}</if>
+             <if test="categoryResult != null  and categoryResult != '' "> and category_result = #{categoryResult}</if>
+             <if test="categoryPercent != null "> and category_percent = #{categoryPercent}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectGradeCategoryById" parameterType="Long" resultMap="GradeCategoryResult">
+        <include refid="selectGradeCategoryVo"/>
+        where category_id = #{categoryId}
+    </select>
+        
+    <insert id="insertGradeCategory" parameterType="com.sinonc.orders.domain.GradeCategory" useGeneratedKeys="true" keyProperty="categoryId">
+        insert into od_grade_category
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="gradeIdP != null  ">grade_id_p,</if>
+			<if test="categoryName != null  and categoryName != ''  ">category_name,</if>
+			<if test="categoryValue != null  ">category_value,</if>
+			<if test="categoryResult != null  and categoryResult != ''  ">category_result,</if>
+			<if test="categoryPercent != null  ">category_percent,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="gradeIdP != null  ">#{gradeIdP},</if>
+			<if test="categoryName != null  and categoryName != ''  ">#{categoryName},</if>
+			<if test="categoryValue != null  ">#{categoryValue},</if>
+			<if test="categoryResult != null  and categoryResult != ''  ">#{categoryResult},</if>
+			<if test="categoryPercent != null  ">#{categoryPercent},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGradeCategory" parameterType="com.sinonc.orders.domain.GradeCategory">
+        update od_grade_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gradeIdP != null  ">grade_id_p = #{gradeIdP},</if>
+            <if test="categoryName != null  and categoryName != ''  ">category_name = #{categoryName},</if>
+            <if test="categoryValue != null  ">category_value = #{categoryValue},</if>
+            <if test="categoryResult != null  and categoryResult != ''  ">category_result = #{categoryResult},</if>
+            <if test="categoryPercent != null  ">category_percent = #{categoryPercent},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where category_id = #{categoryId}
+    </update>
+
+	<delete id="deleteGradeCategoryById" parameterType="Long">
+        delete from od_grade_category where category_id = #{categoryId}
+    </delete>
+	
+    <delete id="deleteGradeCategoryByIds" parameterType="String">
+        delete from od_grade_category where category_id in 
+        <foreach item="categoryId" collection="array" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+    </delete>
+    
+</mapper>

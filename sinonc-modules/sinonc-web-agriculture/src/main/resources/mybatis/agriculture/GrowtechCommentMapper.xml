@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.GrowtechCommentMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.GrowtechComment" id="GrowtechCommentResult">
+        <result property="commentId"    column="comment_id"    />
+        <result property="growtechIdP"    column="growtech_id_p"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="replyId"    column="reply_id"    />
+        <result property="content"    column="content"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectGrowtechCommentVo">
+        select comment_id, growtech_id_p, member_id_p, reply_id, content, create_time from growtech_comment
+    </sql>
+
+    <select id="selectGrowtechCommentList" parameterType="com.sinonc.agriculture.domain.GrowtechComment" resultMap="GrowtechCommentResult">
+        <include refid="selectGrowtechCommentVo"/>
+        <where>
+            <if test="growtechIdP != null "> and growtech_id_p = #{growtechIdP}</if>
+            <if test="memberIdP != null "> and member_id_p = #{memberIdP}</if>
+            <if test="replyId != null "> and reply_id = #{replyId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+
+    <select id="selectGrowtechCommentById" parameterType="Long" resultMap="GrowtechCommentResult">
+        <include refid="selectGrowtechCommentVo"/>
+        where comment_id = #{commentId}
+    </select>
+
+    <insert id="insertGrowtechComment" parameterType="com.sinonc.agriculture.domain.GrowtechComment" useGeneratedKeys="true" keyProperty="commentId">
+        insert into growtech_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="growtechIdP != null ">growtech_id_p,</if>
+            <if test="memberIdP != null ">member_id_p,</if>
+            <if test="replyId != null ">reply_id,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="createTime != null ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="growtechIdP != null ">#{growtechIdP},</if>
+            <if test="memberIdP != null ">#{memberIdP},</if>
+            <if test="replyId != null ">#{replyId},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="createTime != null ">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGrowtechComment" parameterType="com.sinonc.agriculture.domain.GrowtechComment">
+        update growtech_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="growtechIdP != null ">growtech_id_p = #{growtechIdP},</if>
+            <if test="memberIdP != null ">member_id_p = #{memberIdP},</if>
+            <if test="replyId != null ">reply_id = #{replyId},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteGrowtechCommentById" parameterType="Long">
+        delete from growtech_comment where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteGrowtechCommentByIds" parameterType="String">
+        delete from growtech_comment where comment_id in
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+
+    <select id="selectGrowtechCommentListByGrowTechIdForMap" parameterType="Long" resultType="java.util.Map">
+        SELECT
+            comment_reply.reply_id,
+            comment_reply.growtech_id_p,
+            comment_reply.member_id_p,
+            comment_reply.reply_content,
+            comment_reply.reply_member_id_p,
+            comment_reply.create_time
+        FROM
+            comment_reply
+        WHERE
+            growtech_id_p = #{growTechId}
+            AND comment_reply.reply_member_id_p=0
+
+        ORDER BY
+            comment_reply.create_time DESC
+    </select>
+
+</mapper>

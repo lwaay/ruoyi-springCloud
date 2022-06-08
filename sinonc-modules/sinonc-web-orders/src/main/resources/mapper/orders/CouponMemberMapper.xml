@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.CouponMemberMapper">
+
+    <resultMap type="com.sinonc.orders.domain.CouponMember" id="CouponMemberResult">
+        <result property="couponMemberId"    column="coupon_member_id"    />
+        <result property="memberIdP"    column="member_id_p"    />
+        <result property="couponIdP"    column="coupon_id_p"    />
+        <result property="useTime"    column="use_time"    />
+        <result property="orderIdP"    column="order_id_p"    />
+        <result property="couponStatus"    column="coupon_status"    />
+        <result property="getType"    column="get_type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+	<sql id="selectCouponMemberVo">
+        select coupon_member_id, member_id_p, coupon_id_p, use_time, order_id_p, coupon_status, get_type, create_time, update_time, del_flag from od_coupon_member
+    </sql>
+
+    <select id="selectCouponMemberList" parameterType="com.sinonc.orders.domain.CouponMember" resultMap="CouponMemberResult">
+        <include refid="selectCouponMemberVo"/>
+        <where>
+            <if test="couponMemberId != null "> and coupon_member_id = #{couponMemberId}</if>
+             <if test="memberIdP != null "> and member_id_p = #{memberIdP}</if>
+             <if test="couponIdP != null "> and coupon_id_p = #{couponIdP}</if>
+             <if test="useTime != null "> and use_time = #{useTime}</if>
+             <if test="orderIdP != null "> and order_id_p = #{orderIdP}</if>
+             <if test="couponStatus != null "> and coupon_status = #{couponStatus}</if>
+             <if test="getType != null "> and get_type = #{getType}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="delFlag != null "> and del_flag = #{delFlag}</if>
+         </where>
+    </select>
+
+    <select id="selectCouponMemberById" parameterType="Long" resultMap="CouponMemberResult">
+        <include refid="selectCouponMemberVo"/>
+        where coupon_member_id = #{couponMemberId}
+    </select>
+
+    <insert id="insertCouponMember" parameterType="com.sinonc.orders.domain.CouponMember" useGeneratedKeys="true" keyProperty="couponMemberId">
+        insert into od_coupon_member
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="memberIdP != null  ">member_id_p,</if>
+			<if test="couponIdP != null  ">coupon_id_p,</if>
+			<if test="useTime != null  ">use_time,</if>
+			<if test="orderIdP != null  ">order_id_p,</if>
+			<if test="couponStatus != null  ">coupon_status,</if>
+			<if test="getType != null  ">get_type,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="delFlag != null  ">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="memberIdP != null  ">#{memberIdP},</if>
+			<if test="couponIdP != null  ">#{couponIdP},</if>
+			<if test="useTime != null  ">#{useTime},</if>
+			<if test="orderIdP != null  ">#{orderIdP},</if>
+			<if test="couponStatus != null  ">#{couponStatus},</if>
+			<if test="getType != null  ">#{getType},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="delFlag != null  ">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCouponMember" parameterType="com.sinonc.orders.domain.CouponMember">
+        update od_coupon_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberIdP != null  ">member_id_p = #{memberIdP},</if>
+            <if test="couponIdP != null  ">coupon_id_p = #{couponIdP},</if>
+            <if test="useTime != null  ">use_time = #{useTime},</if>
+            <if test="orderIdP != null  ">order_id_p = #{orderIdP},</if>
+            <if test="couponStatus != null  ">coupon_status = #{couponStatus},</if>
+            <if test="getType != null  ">get_type = #{getType},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="delFlag != null  ">del_flag = #{delFlag},</if>
+        </trim>
+        where coupon_member_id = #{couponMemberId}
+    </update>
+
+	<delete id="deleteCouponMemberById" parameterType="Long">
+        delete from od_coupon_member where coupon_member_id = #{couponMemberId}
+    </delete>
+
+    <delete id="deleteCouponMemberByIds" parameterType="String">
+        delete from od_coupon_member where coupon_member_id in
+        <foreach item="couponMemberId" collection="array" open="(" separator="," close=")">
+            #{couponMemberId}
+        </foreach>
+    </delete>
+
+    <select id="repeatCoupon" resultType="Long">
+        select count(coupon_member_id) from od_coupon_member where
+        coupon_id_p =#{couponId} and member_id_p= #{memberId}
+    </select>
+</mapper>

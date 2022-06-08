@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AccountMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Account" id="AccountResult">
+        <result property="acctId" column="acct_id"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="acctAmount" column="acct_amount"/>
+        <result property="acctUsable" column="acct_usable"/>
+        <result property="acctLock" column="acct_lock"/>
+        <result property="incomeAmount" column="income_amount"/>
+        <result property="outAmount" column="out_amount"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="bankCardId" column="bank_card_id"/>
+        <result property="bankName" column="bank_name"/>
+        <result property="bankUser" column="bank_user"/>
+    </resultMap>
+
+    <sql id="selectAccountVo">
+        select acct_id,
+               shop_id_p,
+               shop_name,
+               acct_amount,
+               acct_usable,
+               acct_lock,
+               income_amount,
+               out_amount,
+               update_time,
+               bank_card_id,
+               bank_name,
+               bank_user
+        from od_account
+    </sql>
+
+    <select id="selectAccountList" parameterType="com.sinonc.orders.domain.Account" resultMap="AccountResult">
+        <include refid="selectAccountVo"/>
+        <where>
+            <if test="acctId != null ">and acct_id = #{acctId}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            <if test="shopName != null  and shopName != '' ">and shop_name = #{shopName}</if>
+            <if test="acctAmount != null ">and acct_amount = #{acctAmount}</if>
+            <if test="acctUsable != null ">and acct_usable = #{acctUsable}</if>
+            <if test="acctLock != null ">and acct_lock = #{acctLock}</if>
+            <if test="incomeAmount != null ">and income_amount = #{incomeAmount}</if>
+            <if test="outAmount != null ">and out_amount = #{outAmount}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="bankCardId != null ">and bank_card_id = #{bankCardId}</if>
+            <if test="bankName != null ">and bank_name = #{bankName}</if>
+            <if test="bankUser != null ">and bank_user = #{bankUser}</if>
+            ${params.dataScope}
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectAccountById" parameterType="Long" resultMap="AccountResult">
+        <include refid="selectAccountVo"/>
+        where acct_id = #{acctId}
+    </select>
+
+    <select id="selectAccountByShopId" resultMap="AccountResult">
+        <include refid="selectAccountVo"/>
+        where shop_id_p = #{value}
+    </select>
+    <select id="selectAccountByShopIdForUpdate" resultMap="AccountResult">
+        <include refid="selectAccountVo"/>
+        where shop_id_p = #{value} for update
+    </select>
+
+    <select id="countAccount" resultType="double">
+        SELECT
+            t.plate_value AS plateValue
+        FROM
+            v_rep_plate_count t,
+            sys_dict_data b
+        WHERE
+            1 = 1
+        AND b.dict_type = 'plate_count'
+        AND t.dict_value = b.dict_value
+        AND b.dict_label = '平台交易额'
+    </select>
+    <insert id="insertAccount" parameterType="com.sinonc.orders.domain.Account" useGeneratedKeys="true"
+            keyProperty="acctId">
+        insert into od_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="shopIdP != null  ">shop_id_p,</if>
+            <if test="shopName != null  and shopName != ''  ">shop_name,</if>
+            <if test="acctAmount != null  ">acct_amount,</if>
+            <if test="acctUsable != null  ">acct_usable,</if>
+            <if test="acctLock != null  ">acct_lock,</if>
+            <if test="incomeAmount != null  ">income_amount,</if>
+            <if test="outAmount != null  ">out_amount,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="bankCardId != null ">bank_card_id,</if>
+            <if test="bankName != null ">bank_name,</if>
+            <if test="bankUser != null ">bank_user,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="shopIdP != null  ">#{shopIdP},</if>
+            <if test="shopName != null  and shopName != ''  ">#{shopName},</if>
+            <if test="acctAmount != null  ">#{acctAmount},</if>
+            <if test="acctUsable != null  ">#{acctUsable},</if>
+            <if test="acctLock != null  ">#{acctLock},</if>
+            <if test="incomeAmount != null  ">#{incomeAmount},</if>
+            <if test="outAmount != null  ">#{outAmount},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="bankCardId != null ">#{bankCardId},</if>
+            <if test="bankName != null ">#{bankName},</if>
+            <if test="bankUser != null ">#{bankUser},</if>
+        </trim>
+    </insert>
+
+    <update id="updateAccount" parameterType="com.sinonc.orders.domain.Account">
+        update od_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="shopName != null  and shopName != ''  ">shop_name = #{shopName},</if>
+            <if test="acctAmount != null  ">acct_amount = #{acctAmount},</if>
+            <if test="acctUsable != null  ">acct_usable = #{acctUsable},</if>
+            <if test="acctLock != null  ">acct_lock = #{acctLock},</if>
+            <if test="incomeAmount != null  ">income_amount = #{incomeAmount},</if>
+            <if test="outAmount != null  ">out_amount = #{outAmount},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="bankCardId != null  ">bank_card_id = #{bankCardId},</if>
+            <if test="bankName != null  ">bank_name = #{bankName},</if>
+            <if test="bankUser != null  ">bank_user = #{bankUser},</if>
+        </trim>
+        where acct_id = #{acctId}
+    </update>
+
+    <delete id="deleteAccountById" parameterType="Long">
+        delete
+        from od_account
+        where acct_id = #{acctId}
+    </delete>
+
+    <delete id="deleteAccountByIds" parameterType="String">
+        delete from od_account where acct_id in
+        <foreach item="acctId" collection="array" open="(" separator="," close=")">
+            #{acctId}
+        </foreach>
+    </delete>
+
+</mapper>

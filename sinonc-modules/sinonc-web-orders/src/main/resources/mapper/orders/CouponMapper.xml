@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.CouponMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Coupon" id="CouponResult">
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponName" column="coupon_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="startTime" column="start_time"/>
+        <result property="invalidTime" column="invalid_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="couponAmount" column="coupon_amount"/>
+        <result property="minimumPrice" column="minimum_price"/>
+        <result property="couponType" column="coupon_type"/>
+        <result property="explain" column="explain"/>
+        <result property="goodsList" column="goods_list"/>
+        <result property="number" column="number"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="surplus" column="surplus"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.vo.CouponVo" id="CouponVoResult">
+        <result property="couponId" column="coupon_id"/>
+        <result property="couponName" column="coupon_name"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="startTime" column="start_time"/>
+        <result property="invalidTime" column="invalid_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="couponAmount" column="coupon_amount"/>
+        <result property="minimumPrice" column="minimum_price"/>
+        <result property="couponType" column="coupon_type"/>
+        <result property="explain" column="explain"/>
+        <result property="goodsList" column="goods_list"/>
+        <result property="number" column="number"/>
+        <result property="surplus" column="surplus"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="delFlag" column="del_flag"/>
+        <association property="award" javaType="com.sinonc.orders.domain.CouponMember">
+            <result property="couponMemberId"    column="coupon_member_id"    />
+            <result property="memberIdP"    column="member_id_p"    />
+            <result property="couponIdP"    column="coupon_id_p"    />
+            <result property="useTime"    column="use_time"    />
+            <result property="orderIdP"    column="order_id_p"    />
+            <result property="couponStatus"    column="coupon_status"    />
+            <result property="getType"    column="get_type"    />
+            <result property="createTime"    column="create_time"    />
+            <result property="updateTime"    column="update_time"    />
+            <result property="delFlag"    column="del_flag"    />
+        </association>
+    </resultMap>
+
+    <sql id="selectCouponVo">
+        select coupon_id,
+               coupon_name,
+               create_by,
+               create_time,
+               start_time,
+               invalid_time,
+               update_by,
+               update_time,
+               coupon_amount,
+               minimum_price,
+               coupon_type, `explain`, goods_list, `number`,surplus, shop_id_p, del_flag
+        from od_coupon
+    </sql>
+
+    <select id="selectCouponList" parameterType="com.sinonc.orders.domain.Coupon" resultMap="CouponResult">
+        <include refid="selectCouponVo"/>
+        <where>
+            <if test="couponId != null ">and coupon_id = #{couponId}</if>
+            <if test="couponName != null  and couponName != '' ">and coupon_name = #{couponName}</if>
+            <if test="createBy != null  and createBy != '' ">and create_by = #{createBy}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+            <if test="startTime != null ">and start_time = #{startTime}</if>
+            <if test="invalidTime != null ">and invalid_time = #{invalidTime}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+            <if test="couponAmount != null ">and coupon_amount = #{couponAmount}</if>
+            <if test="minimumPrice != null ">and minimum_price = #{minimumPrice}</if>
+            <if test="couponType != null ">and coupon_type = #{couponType}</if>
+            <if test="explain != null  and explain != '' ">and explain = #{explain}</if>
+            <if test="goodsList != null  and goodsList != '' ">and goods_list = #{goodsList}</if>
+            <if test="number != null ">and number = #{number}</if>
+            <if test="shopIdP != null ">and shop_id_p = #{shopIdP}</if>
+            and del_flag = 0
+        </where>
+    </select>
+
+    <select id="listUnReceiveCoupon" parameterType="com.sinonc.orders.dto.CouponDto" resultMap="CouponResult">
+        select t1.coupon_id,
+        t1.coupon_name,
+        t1.create_by,
+        t1.create_time,
+        t1.start_time,
+        t1.invalid_time,
+        t1.update_by,
+        t1.update_time,
+        t1.coupon_amount,
+        t1.minimum_price,
+        t1.coupon_type, t1.`explain`, t1.goods_list, t1.`number`,
+        t1.surplus,t1.shop_id_p, t1.del_flag
+        from od_coupon t1
+        <where>
+            and t1.del_flag = 0
+            and t1.invalid_time &gt; now()
+            and t1.coupon_id not in (SELECT DISTINCT coupon_id_p AS ids FROM `od_coupon_member` WHERE member_id_p = #{memberId})
+            <if test="shopIdP != null ">and t1.shop_id_p = #{shopIdP}</if>
+            <if test="couponType != null ">and t1.coupon_type = #{couponType}</if>
+        </where>
+    </select>
+
+    <select id="listReceiveCoupon" parameterType="com.sinonc.orders.dto.CouponDto" resultMap="CouponVoResult">
+        select t1.coupon_id,
+        t1.coupon_name,
+        t1.create_by,
+        t1.start_time,
+        t1.invalid_time,
+        t1.update_by,
+        t1.update_time,
+        t1.coupon_amount,
+        t1.minimum_price,
+        t1.coupon_type, t1.`explain`, t1.goods_list, t1.`number`,
+        t1.surplus,t1.shop_id_p, t1.del_flag,
+        t2.coupon_member_id, t2.member_id_p, t2.coupon_id_p, t2.use_time, t2.order_id_p,
+        t2.coupon_status, t2.get_type, t2.create_time
+        from od_coupon t1 inner join od_coupon_member t2 on t1.coupon_id = t2.coupon_id_p
+        <where>
+            <if test="shopIdP != null ">and t1.shop_id_p = #{shopIdP}</if>
+            <if test="couponType != null ">and t1.coupon_type = #{couponType}</if>
+            and t2.member_id_p = #{memberId}
+        </where>
+    </select>
+
+    <select id="selectCouponById" parameterType="Long" resultMap="CouponResult">
+        <include refid="selectCouponVo"/>
+        where coupon_id = #{couponId} and del_flag = 0
+    </select>
+
+    <insert id="insertCoupon" parameterType="com.sinonc.orders.domain.Coupon" useGeneratedKeys="true" keyProperty="couponId">
+        insert into od_coupon
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="couponName != null  and couponName != ''  ">coupon_name,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="createTime != null  ">create_time,</if>
+            <if test="startTime != null  ">start_time,</if>
+            <if test="invalidTime != null  ">invalid_time,</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+            <if test="updateTime != null  ">update_time,</if>
+            <if test="couponAmount != null  ">coupon_amount,</if>
+            <if test="minimumPrice != null  ">minimum_price,</if>
+            <if test="couponType != null  ">coupon_type,</if>
+            <if test="explain != null  and explain != ''  ">`explain`,</if>
+            <if test="goodsList != null  and goodsList != ''  ">goods_list,</if>
+            <if test="number != null  ">`number`,</if>
+            <if test="surplus !=null ">surplus,</if>
+            <if test="shopIdP != null  ">shop_id_p,</if>
+            <if test="delFlag != null  ">del_flag,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="couponName != null  and couponName != ''  ">#{couponName},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+            <if test="startTime != null  ">#{startTime},</if>
+            <if test="invalidTime != null  ">#{invalidTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+            <if test="updateTime != null  ">#{updateTime},</if>
+            <if test="couponAmount != null  ">#{couponAmount},</if>
+            <if test="minimumPrice != null  ">#{minimumPrice},</if>
+            <if test="couponType != null  ">#{couponType},</if>
+            <if test="explain != null  and explain != ''  ">#{explain},</if>
+            <if test="goodsList != null  and goodsList != ''  ">#{goodsList},</if>
+            <if test="number != null  ">#{number},</if>
+            <if test="surplus !=null ">#{surplus},</if>
+            <if test="shopIdP != null  ">#{shopIdP},</if>
+            <if test="delFlag != null  ">#{delFlag},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCoupon" parameterType="com.sinonc.orders.domain.Coupon">
+        update od_coupon
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="couponName != null  and couponName != ''  ">coupon_name = #{couponName},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="startTime != null  ">start_time = #{startTime},</if>
+            <if test="invalidTime != null  ">invalid_time = #{invalidTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="couponAmount != null  ">coupon_amount = #{couponAmount},</if>
+            <if test="minimumPrice != null  ">minimum_price = #{minimumPrice},</if>
+            <if test="couponType != null  ">coupon_type = #{couponType},</if>
+            <if test="explain != null  and explain != ''  ">`explain` = #{explain},</if>
+            <if test="goodsList != null  and goodsList != ''  ">goods_list = #{goodsList},</if>
+            <if test="number != null  ">`number` = #{number},</if>
+            <if test="shopIdP != null  ">shop_id_p = #{shopIdP},</if>
+            <if test="delFlag != null  ">del_flag = #{delFlag},</if>
+        </trim>
+        where coupon_id = #{couponId}
+    </update>
+
+    <delete id="deleteCouponById" parameterType="Long">
+        delete
+        from od_coupon
+        where coupon_id = #{couponId}
+    </delete>
+
+    <delete id="deleteCouponByIds" parameterType="String">
+        delete from od_coupon where coupon_id in
+        <foreach item="couponId" collection="array" open="(" separator="," close=")">
+            #{couponId}
+        </foreach>
+    </delete>
+
+    <update id="optimisticUpdateSurplus">
+        update od_coupon set surplus = #{surplus} where coupon_id =#{couponId} and surplus = #{version}
+    </update>
+
+    <select id="usableCoupon" resultMap="CouponResult">
+        SELECT t1.* FROM `od_coupon` t1 LEFT JOIN `od_coupon_member` t2 ON t1.`coupon_id` = t2.`coupon_id_p`
+        WHERE t2.`member_id_p` = #{memberId} and t2.coupon_status = 0
+          AND ( t1.`coupon_type` = 2
+          OR (t1.`coupon_type` = 0 AND t1.`shop_id_p` = #{shopId})
+          OR (t1.`coupon_type` = 1 AND
+          <foreach collection="goodsIds" item="id" separator="OR" open="(" close=")">
+              find_in_set(#{id},t1.`goods_list`)
+          </foreach>
+          ))
+    </select>
+</mapper>

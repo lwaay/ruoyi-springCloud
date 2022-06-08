@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改板块字典')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sectionDict-edit" th:object="${sectionDict}">
+            <input name="sectionId" th:field="*{sectionId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">版块名称：</label>
+                <div class="col-sm-8">
+                    <input name="sectionName" th:field="*{sectionName}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">上级ID：</label>
+                <div class="col-sm-8">
+                    <div class="input-group">
+                        <input id="treeId" name="parentId" type="hidden" th:field="*{parentId}" />
+                        <input class="form-control" type="text" onclick="selectSectionDictTree()" id="treeName" readonly="true" th:field="*{parentName}">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "agriculture/sectionDict";
+        $("#form-sectionDict-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-sectionDict-edit').serialize());
+            }
+        }
+
+        /*板块字典-新增-选择父部门树*/
+        function selectSectionDictTree() {
+            var options = {
+                title: '板块字典选择',
+                width: "380",
+                url: prefix + "/selectSectionDictTree/" + $("#treeId").val(),
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var body = layer.getChildFrame('body', index);
+               $("#treeId").val(body.find('#treeId').val());
+               $("#treeName").val(body.find('#treeName').val());
+               layer.close(index);
+        }
+    </script>
+</body>
+</html>

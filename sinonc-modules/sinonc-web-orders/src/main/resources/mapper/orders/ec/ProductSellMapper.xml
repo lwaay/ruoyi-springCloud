@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.ProductSellMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.EshopProduct" id="EshopProductResult">
+        <result property="eshopId" column="eshop_id"/>
+        <result property="platform" column="platform"/>
+        <result property="name" column="name"/>
+        <result property="title" column="title"/>
+        <result property="saleCount" column="sale_count"/>
+        <result property="salePrice" column="sale_price"/>
+        <result property="price" column="price"/>
+        <result property="images" column="images"/>
+        <result property="weight" column="weight"/>
+        <result property="factoryAddr" column="factory_addr"/>
+        <result property="factoryName"    column="factory_name"    />
+        <result property="saleTime"    column="sale_time"    />
+        <result property="url"    column="url"    />
+        <result property="productType"    column="product_type"    />
+        <result property="brand"    column="brand"    />
+    </resultMap>
+
+
+    <sql id="selectEshopProductVo">
+        select eshop_id, platform, name, title, sale_count, sale_price, price, images, weight, factory_addr, factory_name, sale_time, url, product_type, brand from eshop_product
+    </sql>
+
+    <!-- 查询电商平台销售数据的最后日期 -->
+    <select id="selectDateForParam"  resultType="String">
+        SELECT sale_time FROM eshop_product
+        ORDER BY sale_time DESC  LIMIT 1
+    </select>
+
+    <select id="selectSellProportion" resultType="com.sinonc.orders.ec.vo.ProductSellVo" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+        sum(sale_count) AS sellCount
+        FROM
+        eshop_product
+        WHERE 1=1
+        <if test="isFilter == 1">
+        and (factory_addr like '%百色%' or
+        factory_name like '%百色%' or
+        shop_addr like '%百色%')
+        </if>
+        <if test="typeNames != null and typeNames.size()>0">
+            AND
+            <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                title like concat("%",#{typeName},"%")
+                or brand like concat("%",#{typeName},"%")
+                or product_type like concat("%",#{typeName},"%")
+            </foreach>
+        </if>
+        <if test="startTime != '' and startTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+
+    </select>
+
+    <select id="selectDuckList" resultType="com.sinonc.orders.ec.vo.ProductSellVo" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+        Round(sum(sale_price) / 10000, 2) AS sellCount
+        FROM
+        eshop_product
+        WHERE 1=1
+        <if test="isFilter == 1">
+            and (factory_addr like '%百色%' or
+            factory_name like '%百色%' or
+            shop_addr like '%百色%')
+        </if>
+        <if test="typeNames != null and typeNames.size()>0">
+            AND
+            <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                title like concat("%",#{typeName},"%")
+                or brand like concat("%",#{typeName},"%")
+                or product_type like concat("%",#{typeName},"%")
+            </foreach>
+        </if>
+        <if test="startTime != '' and startTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="selectGoodsList" resultType="com.sinonc.orders.ec.vo.ProductSellVo" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+        count(DISTINCT `goods_id`) AS sellCount
+        FROM
+        eshop_product
+        WHERE 1=1
+        <if test="isFilter == 1">
+            and (factory_addr like '%百色%' or
+            factory_name like '%百色%' or
+            shop_addr like '%百色%')
+        </if>
+        <if test="typeNames != null and typeNames.size()>0">
+            AND
+            <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                title like concat("%",#{typeName},"%")
+                or brand like concat("%",#{typeName},"%")
+                or product_type like concat("%",#{typeName},"%")
+            </foreach>
+        </if>
+        <if test="startTime != '' and startTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="selectListByMonth" resultType="com.sinonc.orders.ec.vo.EshopMonthVo" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+            platform AS NAME,
+            Round(sum(sale_price)/10000,2) AS sellPrice,
+            Round(sum(sale_count)/10000,2) AS sellCount,
+            count(DISTINCT `name`) AS shopCount,
+            date_format(sale_time,'%Y-%m') as `month`
+        FROM
+            eshop_product
+        <if test="date != '' and date != null ">
+            where #{date} like concat(date_format(sale_time,'%Y-%m'),'%')
+        </if>
+        <if test="date == '' or date == null">
+            where date_format(sale_time,'%Y-%m') = (select Max(date_format(sale_time,'%Y-%m')) from eshop_product)
+        </if>
+        <if test="startTime != '' and startTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &gt;= #{startTime}
+        </if>
+        <if test="endTime != '' and endTime !=null ">
+            AND DATE_FORMAT(sale_time,'%Y-%m-%d') &lt;= #{endTime}
+        </if>
+#         AND Locate("百色",concat(shop_addr,factory_addr,factory_name,title))
+        GROUP BY
+            platform,
+            date_format(sale_time,'%Y-%m')
+        ORDER BY
+             `month` DESC
+    </select>
+
+    <select id="selectBrandPriceList" resultType="com.sinonc.orders.ec.vo.ProductSellVo" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+            Round(sum(sale_price)/10000,2) AS sellCount
+        FROM
+            eshop_product
+        where 1=1
+            <if test="isFilter == 1">
+                and (factory_addr like '%百色%' or
+                factory_name like '%百色%' or
+                shop_addr like '%百色%')
+            </if>
+            <if test="typeNames != null and typeNames.size()>0">
+                AND
+                <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                    title like concat("%",#{typeName},"%")
+                    or brand like concat("%",#{typeName},"%")
+                    or product_type like concat("%",#{typeName},"%")
+                </foreach>
+            </if>
+            <if test="startTime != '' and startTime !=null ">
+                and date_format(sale_time,'%Y-%m-%d') >= #{startTime}
+            </if>
+            <if test="endTime != '' and endTime !=null ">
+                and #{endTime} >= date_format(sale_time,'%Y-%m-%d')
+            </if>
+    </select>
+
+    <select id="selectShopList" resultType="com.sinonc.orders.ec.vo.ProductSellVo" parameterType="com.sinonc.orders.ec.vo.ProductSortVo">
+        SELECT
+            `name` as name,
+            Round(sum(sale_price)/10000,2) AS sellCount
+        FROM
+            eshop_product
+        where 1=1
+            <if test="isFilter == 1">
+                and (factory_addr like '%百色%' or
+                factory_name like '%百色%' or
+                shop_addr like '%百色%')
+            </if>
+            <if test="typeNames != null and typeNames.size()>0">
+                AND
+                <foreach item="typeName" collection="typeNames" separator="or" open="(" close=")">
+                    title like concat("%",#{typeName},"%")
+                    or brand like concat("%",#{typeName},"%")
+                    or product_type like concat("%",#{typeName},"%")
+                </foreach>
+            </if>
+            <if test="startTime != '' and startTime !=null ">
+                and date_format(sale_time,'%Y-%m-%d') >= #{startTime}
+            </if>
+            <if test="endTime != '' and endTime !=null ">
+                and #{endTime} >= date_format(sale_time,'%Y-%m-%d')
+            </if>
+        GROUP BY
+            `name`
+        ORDER BY sellCount DESC
+        limit 0,10
+    </select>
+
+</mapper>

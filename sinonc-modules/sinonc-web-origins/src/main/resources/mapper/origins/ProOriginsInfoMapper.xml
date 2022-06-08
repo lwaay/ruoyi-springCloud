@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.origins.mapper.ProOriginsInfoMapper">
+
+    <resultMap type="com.sinonc.origins.api.domain.ProOriginsInfo" id="ProOriginsInfoResult">
+        <result property="originsId" column="origins_id"/>
+        <result property="productIdP" column="product_id_p"/>
+        <result property="originsDate" column="origins_date"/>
+        <result property="originsType" column="origins_type"/>
+        <result property="originsProType" column="origins_pro_type"/>
+        <result property="jobWay" column="job_way"/>
+        <result property="isOpen" column="is_open"/>
+        <result property="operaMan" column="opera_man"/>
+        <result property="useNum" column="use_num"/>
+        <result property="originsDescribe" column="origins_describe"/>
+        <result property="orImages" column="or_images"/>
+        <result property="orVideo" column="or_video"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.origins.dto.ProOriginsInfoDto" id="ProOriginsInfoDtoResult">
+        <result property="originsId" column="origins_id"/>
+        <result property="productIdP" column="product_id_p"/>
+        <result property="originsDate" column="origins_date"/>
+        <result property="originsType" column="origins_type"/>
+        <result property="originsProType" column="origins_pro_type"/>
+        <result property="jobWay" column="job_way"/>
+        <result property="isOpen" column="is_open"/>
+        <result property="operaMan" column="opera_man"/>
+        <result property="useNum" column="use_num"/>
+        <result property="introduce" column="introduce"/>
+        <result property="originsDescribe" column="origins_describe"/>
+        <result property="orImages" column="or_images"/>
+        <result property="orVideo" column="or_video"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <association property="proProductInfo" javaType="com.sinonc.origins.api.domain.ProProductInfo" column="product_id_p">
+            <result property="productId" column="product_id"/>
+            <result property="tillmainIdP" column="tillmain_id_p"/>
+            <result property="manuIdP" column="manu_id_p"/>
+            <result property="productName" column="product_name"/>
+            <result property="brandId" column="brand_id"/>
+            <result property="tillArea" column="till_area"/>
+            <result property="productCode" column="product_code"/>
+            <result property="productSpec" column="product_spec"/>
+            <result property="shelfLife" column="shelf_life"/>
+            <result property="shelfLifeUnit" column="shelf_life_unit"/>
+            <result property="proStore" column="pro_store"/>
+            <result property="proBatch" column="pro_batch"/>
+            <result property="buyUrl" column="buy_url"/>
+            <result property="productionDate" column="production_date"/>
+            <result property="mainImages" column="main_images"/>
+            <result property="remark" column="remark"/>
+            <result property="createBy" column="create_by"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateBy" column="update_by"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="baseArea" column="base_area"/>
+            <result property="manuIdP"    column="manu_id_p"    />
+            <result property="brandName"    column="brand_name"    />
+            <result property="businessName"    column="busi_entityName"    />
+        </association>
+    </resultMap>
+
+    <sql id="selectProOriginsInfoVo">
+        select origins_id, product_id_p, origins_date, origins_type,origins_pro_type, job_way, is_open, opera_man, use_num, introduce, origins_describe, or_images, or_video, create_by, create_time, update_by, update_time        from pro_origins_info
+    </sql>
+
+    <select id="selectProOriginsInfoList" parameterType="ProOriginsInfo" resultMap="ProOriginsInfoResult">
+        <include refid="selectProOriginsInfoVo"/>
+        <where>
+            <if test="productIdP != null ">
+                and product_id_p = #{productIdP}
+            </if>
+            <if test="originsDate != null ">
+                and origins_date = #{originsDate}
+            </if>
+            <if test="originsType != null  and originsType != ''">
+                and origins_type = #{originsType}
+            </if>
+            <if test="originsProType !=null and originsProType !=''">
+                and origins_pro_type = #{originsProType}
+            </if>
+            <if test="isOpen != null  and isOpen != ''">
+                and is_open = #{isOpen}
+            </if>
+            <if test="operaMan != null  and operaMan != ''">
+                and opera_man = #{operaMan}
+            </if>
+            <if test="originsDescribe != null  and originsDescribe != ''">
+                and origins_describe = #{originsDescribe}
+            </if>
+            <if test="orImages != null  and orImages != ''">
+                and or_images = #{orImages}
+            </if>
+            <if test="orVideo != null  and orVideo != ''">
+                and or_video = #{orVideo}
+            </if>
+            <if test="beginTime != null">
+                and Date_format(origins_date,'yyyy-MM-dd') >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and #{endTime} >= Date_format(origins_date,'yyyy-MM-dd')
+            </if>
+        </where>
+        order by origins_date desc
+    </select>
+
+    <select id="selectProOriginsInfoDtoList" parameterType="com.sinonc.origins.dto.ProOriginsInfoDto" resultMap="ProOriginsInfoDtoResult">
+        SELECT t1.*,t2.product_id,t2.product_name
+        FROM `pro_origins_info` t1
+        LEFT JOIN `pro_product_info` t2 ON t1.`product_id_p` = t2.product_id
+        <where>
+            <if test="originsDate != null ">
+                and t1.origins_date = #{originsDate}
+            </if>
+            <if test="originsType != null  and originsType != ''">
+                and t1.origins_type = #{originsType}
+            </if>
+            <if test="isOpen != null  and isOpen != ''">
+                and t1.is_open = #{isOpen}
+            </if>
+            <if test="operaMan != null  and operaMan != ''">
+                and t1.opera_man = #{operaMan}
+            </if>
+            <if test="originsDescribe != null  and originsDescribe != ''">
+                and t1.origins_describe = #{originsDescribe}
+            </if>
+            <if test="orImages != null  and orImages != ''">
+                and t1.or_images = #{orImages}
+            </if>
+            <if test="orVideo != null  and orVideo != ''">
+                and t1.or_video = #{orVideo}
+            </if>
+            <if test="productInfoName !=null and productInfoName !=''">
+                and t2.product_name like concat("%",#{productInfoName},"%")
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProOriginsInfoById" parameterType="Long" resultMap="ProOriginsInfoResult">
+        <include refid="selectProOriginsInfoVo"/>
+        where origins_id = #{originsId}
+    </select>
+
+    <select id="selectProOriginsInfoDtoById" parameterType="Long" resultMap="ProOriginsInfoDtoResult">
+        SELECT t1.*,t2.product_id,t2.product_name
+        FROM `pro_origins_info` t1 LEFT JOIN `pro_product_info` t2 ON t1.`product_id_p` = t2.`product_id`
+        where t1.origins_id = #{originsId}
+    </select>
+
+    <insert id="insertProOriginsInfo" parameterType="ProOriginsInfo" useGeneratedKeys="true"
+            keyProperty="originsId">
+        insert into pro_origins_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productIdP != null">product_id_p,
+            </if>
+            <if test="originsDate != null">origins_date,
+            </if>
+            <if test="originsType != null">origins_type,
+            </if>
+            <if test="originsProType !=null" >origins_pro_type,
+            </if>
+            <if test="jobWay !=null" >job_way,
+            </if>
+            <if test="isOpen != null">is_open,
+            </if>
+            <if test="operaMan != null">opera_man,
+            </if>
+            <if test="useNum != null">use_num,
+            </if>
+            <if test="introduce != null">introduce,
+            </if>
+            <if test="originsDescribe != null">origins_describe,
+            </if>
+            <if test="orImages != null">or_images,
+            </if>
+            <if test="orVideo != null">or_video,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productIdP != null">#{productIdP},
+            </if>
+            <if test="originsDate != null">#{originsDate},
+            </if>
+            <if test="originsType != null">#{originsType},
+            </if>
+            <if test="originsProType !=null">#{originsProType},
+            </if>
+            <if test="jobWay !=null">#{jobWay},
+            </if>
+            <if test="isOpen != null">#{isOpen},
+            </if>
+            <if test="operaMan != null">#{operaMan},
+            </if>
+            <if test="useNum != null">#{useNum},
+            </if>
+            <if test="introduce != null">#{introduce},
+            </if>
+            <if test="originsDescribe != null">#{originsDescribe},
+            </if>
+            <if test="orImages != null">#{orImages},
+            </if>
+            <if test="orVideo != null">#{orVideo},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateProOriginsInfo" parameterType="ProOriginsInfo">
+        update pro_origins_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productIdP != null">product_id_p =
+                #{productIdP},
+            </if>
+            <if test="originsDate != null">origins_date =
+                #{originsDate},
+            </if>
+            <if test="originsType != null">origins_type =
+                #{originsType},
+            </if>
+            <if test="originsProType !=null">origins_pro_type =#{originsProType},
+            </if>
+            <if test="jobWay !=null">job_way =#{jobWay},
+            </if>
+            <if test="isOpen != null">is_open =
+                #{isOpen},
+            </if>
+            <if test="operaMan != null">opera_man =
+                #{operaMan},
+            </if>
+            <if test="useNum != null">use_num =
+                #{useNum},
+            </if>
+            <if test="introduce != null">introduce =
+                #{introduce},
+            </if>
+            <if test="originsDescribe != null">origins_describe =
+                #{originsDescribe},
+            </if>
+            <if test="orImages != null">or_images =
+                #{orImages},
+            </if>
+            <if test="orVideo != null">or_video =
+                #{orVideo},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where origins_id = #{originsId}
+    </update>
+
+    <delete id="deleteProOriginsInfoById" parameterType="Long">
+        delete
+        from pro_origins_info where origins_id = #{originsId}
+    </delete>
+
+    <delete id="deleteProOriginsInfoByIds" parameterType="String">
+        delete from pro_origins_info where origins_id in
+        <foreach item="originsId" collection="array" open="(" separator="," close=")">
+            #{originsId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectOriginsInfoByIdForTypeAndIsOpe" resultType="java.util.Map">
+        <include refid="selectProOriginsInfoVo"/>
+        WHERE product_id_p = #{productId} AND origins_type = #{type} AND is_open = 1
+        order by origins_date desc
+    </select>
+
+    <select id="countOriginsByProductId" resultType="Long" parameterType="Long">
+        select count(0) from pro_origins_info where product_id_p = #{productId}
+    </select>
+
+    <select id="countOriginsByProId" resultType="Long">
+        select count(0) from pro_origins_info where product_id_p = #{productId} and origins_type = 1
+    </select>
+
+    <select id="selectProAnalysis" resultType="map" parameterType="com.sinonc.origins.vo.BigScreenVo">
+        SELECT
+        DATE_FORMAT( origins_date, '%y-%m' ) AS time,
+        sum( use_num ) AS num
+        FROM
+        (
+            SELECT * FROM pro_origins_info
+            <where>
+                <if test="startTime != null">
+                    and Date_format(origins_date,'%Y-%m-%d') >= Date_format(#{startTime},'%Y-%m-%d')
+                </if>
+                <if test="endTime != null">
+                    and Date_format(#{endTime},'%Y-%m-%d') >= Date_format(origins_date,'%Y-%m-%d')
+                </if>
+            </where>
+        ) t
+        GROUP BY
+        DATE_FORMAT( origins_date, '%y-%m' )
+    </select>
+
+</mapper>

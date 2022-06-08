@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.ser.mapper.BizGoodInfoMapper">
+
+    <resultMap type="com.sinonc.service.domain.BizGoodInfo" id="BizGoodInfoResult">
+        <result property="infoId" column="info_id"/>
+        <result property="memberIdP" column="member_id_p"/>
+        <result property="infoName" column="info_name"/>
+
+        <result property="priorCargo" column="prior_cargo"/>
+
+        <result property="infoType" column="info_type"/>
+        <result property="topFlag" column="top_flag"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="content" column="content"/>
+        <result property="detailImages" column="detail_images"/>
+        <result property="minPrice" column="min_price"/>
+        <result property="maxPrice" column="max_price"/>
+        <result property="saleAble" column="sale_able"/>
+        <result property="breed" column="breed"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="subtitle" column="subtitle"/>
+    </resultMap>
+
+
+    <resultMap type="com.sinonc.ser.dto.GoodMemberDto" id="GoodMemberDtoResult">
+        <result property="memberId" column="member_id"/>
+        <result property="userName" column="user_name"/>
+    </resultMap>
+
+
+    <sql id="selectBizGoodInfoVo">
+        select info_id,member_id_p, info_name, prior_cargo,info_type,top_flag, image_url, subtitle, video_url, content, detail_images, min_price, max_price,sale_able, breed, del_flag, create_time, create_by, update_time, update_by from biz_good_info
+    </sql>
+
+    <select id="selectBizGoodInfoList" parameterType="com.sinonc.service.domain.BizGoodInfo" resultMap="BizGoodInfoResult">
+        <include refid="selectBizGoodInfoVo"/>
+        <where>
+            <if test="infoName != null  and infoName != ''">and info_name like concat('%', #{infoName}, '%')</if>
+            <if test="infoType != null  and infoType != ''">and info_type = #{infoType}</if>
+            <if test="imageUrl != null  and imageUrl != ''">and image_url = #{imageUrl}</if>
+            <if test="videoUrl != null  and videoUrl != ''">and video_url = #{videoUrl}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="saleAble != null  and saleAble != ''">and sale_able = #{saleAble}</if>
+            <if test="breed != null  and breed != ''">and breed = #{breed}</if>
+
+            <if test="topFlag != null  and topFlag != ''">and top_flag = #{topFlag}</if>
+        </where>
+    </select>
+
+    <select id="selectBizGoodInfoById" parameterType="Long" resultMap="BizGoodInfoResult">
+        <include refid="selectBizGoodInfoVo"/>
+        where info_id = #{infoId}
+    </select>
+
+    <insert id="insertBizGoodInfo" parameterType="com.sinonc.service.domain.BizGoodInfo" useGeneratedKeys="true" keyProperty="infoId">
+        insert into biz_good_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null">member_id_p,</if>
+            <if test="infoName != null and infoName != ''">info_name,</if>
+            <if test="priorCargo != null">prior_cargo,</if>
+            <if test="infoType != null and infoType != ''">info_type,</if>
+            <if test="topFlag != null and topFlag != ''">top_flag,</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url,</if>
+            <if test="videoUrl != null">video_url,</if>
+            <if test="content != null">content,</if>
+            <if test="detailImages != null">detail_images,</if>
+            <if test="minPrice != null">min_price,</if>
+            <if test="maxPrice != null">max_price,</if>
+            <if test="saleAble != null and saleAble != ''">sale_able,</if>
+            <if test="breed != null and breed != ''">breed,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="subtitle != null">subtitle,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberIdP != null">#{memberIdP},</if>
+            <if test="infoName != null and infoName != ''">#{infoName},</if>
+            <if test="priorCargo != null">#{priorCargo},</if>
+            <if test="infoType != null and infoType != ''">#{infoType},</if>
+            <if test="topFlag != null and topFlag != ''">#{topFlag},</if>
+            <if test="imageUrl != null and imageUrl != ''">#{imageUrl},</if>
+            <if test="videoUrl != null">#{videoUrl},</if>
+            <if test="content != null">#{content},</if>
+            <if test="detailImages != null">#{detailImages},</if>
+            <if test="minPrice != null">#{minPrice},</if>
+            <if test="maxPrice != null">#{maxPrice},</if>
+            <if test="saleAble != null and saleAble != ''">#{saleAble},</if>
+            <if test="breed != null and breed != ''">#{breed},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="subtitle != null">#{subtitle},</if>
+        </trim>
+    </insert>
+
+
+    <update id="updateBizGoodInfo" parameterType="com.sinonc.service.domain.BizGoodInfo">
+        update biz_good_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberIdP != null">member_id_p = #{memberIdP},</if>
+            <if test="infoName != null and infoName != ''">info_name = #{infoName},</if>
+            <if test="priorCargo != null">prior_cargo = #{priorCargo},</if>
+            <if test="infoType != null and infoType != ''">info_type = #{infoType},</if>
+            <if test="topFlag != null and topFlag != ''">top_flag = #{topFlag},</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url = #{imageUrl},</if>
+            <if test="videoUrl != null">video_url = #{videoUrl},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="detailImages != null">detail_images = #{detailImages},</if>
+            <if test="minPrice != null">min_price = #{minPrice},</if>
+            <if test="maxPrice != null">max_price = #{maxPrice},</if>
+            <if test="saleAble != null and saleAble != ''">sale_able = #{saleAble},</if>
+            <if test="breed != null and breed != ''">breed = #{breed},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="subtitle != null">subtitle = #{subtitle},</if>
+        </trim>
+        where info_id = #{infoId}
+    </update>
+
+
+    <delete id="deleteBizGoodInfoById" parameterType="Long">
+        delete from biz_good_info where info_id = #{infoId}
+    </delete>
+
+    <delete id="deleteBizGoodInfoByIds" parameterType="String">
+        delete from biz_good_info where info_id in
+        <foreach item="infoId" collection="array" open="(" separator="," close=")">
+            #{infoId}
+        </foreach>
+    </delete>
+
+    <select id="selectMemberList" resultMap="GoodMemberDtoResult">
+        SELECT
+            member_id,
+            user_name
+        FROM
+            member
+        WHERE
+            member.member_id IN (
+                SELECT
+                    member_id_p
+                FROM
+                    member_consumer
+            )
+        OR member.member_id IN (
+            SELECT
+                member_id_p
+            FROM
+                member_produce
+        )
+    </select>
+
+</mapper>

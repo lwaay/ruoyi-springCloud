@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AdoptionCircleLikeMapper">
+
+    <resultMap type="com.sinonc.orders.domain.AdoptionCircleLike" id="AdoptionCircleLikeResult">
+        <result property="id" column="id"/>
+        <result property="adoptionId" column="adoption_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="memberId" column="member_id"/>
+        <result property="delFlg" column="del_flg"/>
+    </resultMap>
+
+    <sql id="selectAdoptionCircleLikeVo">
+        select id, adoption_id, create_by, create_time, member_id, del_flg
+        from adoption_circle_like
+    </sql>
+
+    <select id="selectAdoptionCircleLikeList" resultMap="AdoptionCircleLikeResult">
+        <include refid="selectAdoptionCircleLikeVo"/>
+        <where>
+            <if test="adoptionId != null ">
+                and adoption_id = #{adoptionId}
+            </if>
+            <if test="delFlg != null ">
+                and del_flg = #{delFlg}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAdoptionCircleLikeById" parameterType="Long" resultMap="AdoptionCircleLikeResult">
+        <include refid="selectAdoptionCircleLikeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAdoptionCircleLikeCount" resultType="java.lang.Integer">
+        select count(*) from adoption_circle_like
+        <where>
+            <if test="adoptionId != null ">
+                and adoption_id = #{adoptionId}
+            </if>
+            <if test="delFlg != null ">
+                and del_flg = #{delFlg}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertAdoptionCircleLike">
+        insert into adoption_circle_like
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="adoptionId != null">adoption_id,
+            </if>
+            <if test="memberId != null">member_id,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="delFlg != null">del_flg,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="adoptionId != null">#{adoptionId},
+            </if>
+            <if test="memberId != null">#{memberId},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="delFlg != null">#{delFlg},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateAdoptionCircleLike">
+        update adoption_circle_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="adoptionId != null">adoption_id =
+                #{adoptionId},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="memberId != null">member_id =
+                #{memberId},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="delFlg != null">del_flg =
+                #{delFlg},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAdoptionCircleLikeById" parameterType="Long">
+        delete
+        from adoption_circle_like
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteAdoptionCircleLikeByIds" parameterType="String">
+        delete from adoption_circle_like where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

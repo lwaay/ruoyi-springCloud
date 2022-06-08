@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.GrowTechMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.GrowTech" id="GrowTechResult">
+        <result property="growId" column="grow_id"/>
+        <result property="title" column="title"/>
+        <result property="introduction" column="introduction"/>
+        <result property="shapeType" column="shape_type"/>
+        <result property="techType" column="tech_type"/>
+        <result property="userId" column="user_id"/>
+        <result property="mainImg" column="main_img"/>
+        <result property="readCount" column="read_count"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="content" column="content"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="cropsDictvalue" column="crops_dictvalue"/>
+        <result property="columnDictvalue" column="column_dictvalue"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+
+        <result property="userName" column="user_name"/>
+        <result property="sysName" column="sys_name"/>
+
+        <result property="shareCount" column="share_count"/>
+    </resultMap>
+
+    <sql id="selectGrowTechVo">
+        select grow_id,
+               title,
+               introduction,
+               shape_type,
+               tech_type,
+               user_id,
+               user_name,
+               main_img,
+               read_count,
+               video_url,
+               content,
+               issue_time,
+               crops_dictvalue,
+               column_dictvalue,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               sys_name,
+               share_count
+        from grow_tech
+    </sql>
+
+    <select id="selectGrowTechList" parameterType="com.sinonc.agriculture.domain.GrowTech" resultMap="GrowTechResult">
+        <include refid="selectGrowTechVo"/>
+        <where>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="shapeType != null  and shapeType != ''">and shape_type = #{shapeType}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="readCount != null ">and read_count = #{readCount}</if>
+
+            <if test="params.beginIssueTime != null and params.beginIssueTime != '' ">
+                and issue_time &gt;= #{params.beginIssueTime}
+            </if>
+
+            <if test="params.endIssueTime != null and params.endIssueTime != ''">
+                and issue_time &lt;= #{params.endIssueTime}
+            </if>
+            <if test="sysName != null  and sysName != ''">and sys_name = #{sysName}</if>
+        </where>
+    </select>
+
+    <select id="selectGrowTechListForMap" parameterType="com.sinonc.agriculture.domain.GrowTech"
+            resultType="java.util.Map">
+        SELECT
+            grow_tech.grow_id,
+            grow_tech.title,
+            grow_tech.introduction,
+            grow_tech.shape_type,
+            grow_tech.tech_type,
+            grow_tech.user_id,
+            grow_tech.user_name,
+            grow_tech.main_img,
+            grow_tech.read_count,
+            grow_tech.video_url,
+            grow_tech.content,
+            grow_tech.issue_time,
+            grow_tech.crops_dictvalue,
+            grow_tech.column_dictvalue,
+            grow_tech.create_time,
+            grow_tech.create_by,
+            grow_tech.update_time,
+            grow_tech.update_by,
+            grow_tech.sys_name,
+            grow_tech.share_count
+        FROM
+            grow_tech
+        <where>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="shapeType != null  and shapeType != ''">and shape_type = #{shapeType}</if>
+            <if test="techType != null  and techType != ''">and tech_type = #{techType}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="readCount != null ">and read_count = #{readCount}</if>
+            <if test="params.beginIssueTime != null and params.beginIssueTime != '' ">
+                and issue_time &gt;= #{params.beginIssueTime}
+            </if>
+            <if test="params.endIssueTime != null and params.endIssueTime != ''">
+                and issue_time &lt;= #{params.endIssueTime}
+            </if>
+            <if test="parentCropId != null ">and crop_dict.parent_id =#{parentCropId}</if>
+            <if test="cropsDictvalue != null  and cropsDictvalue != ''">and crops_dictvalue =#{cropsDictvalue}</if>
+            <if test="columnDictvalue != null  and columnDictvalue != ''">and column_dictvalue =#{columnDictvalue}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectGrowTechById" parameterType="Long" resultMap="GrowTechResult">
+        <include refid="selectGrowTechVo"/>
+        where grow_id = #{growId}
+    </select>
+
+    <select id="selectGrowTechByIdForUpdate" parameterType="Long" resultMap="GrowTechResult">
+        <include refid="selectGrowTechVo"/>
+        where grow_id = #{growId} FOR UPDATE
+    </select>
+
+    <insert id="insertGrowTech" parameterType="com.sinonc.agriculture.domain.GrowTech" useGeneratedKeys="true"
+            keyProperty="growId">
+        insert into grow_tech
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">title,</if>
+            <if test="introduction != null  and introduction != ''">introduction,</if>
+            <if test="shapeType != null  and shapeType != ''">shape_type,</if>
+            <if test="techType != null  and techType != ''">tech_type,</if>
+            <if test="userId != null ">user_id,</if>
+            <if test="mainImg != null  and mainImg != ''">main_img,</if>
+            <if test="readCount != null ">read_count,</if>
+            <if test="videoUrl != null  and videoUrl != ''">video_url,</if>
+            <if test="content != null  and content != ''">content,</if>
+            <if test="issueTime != null ">issue_time,</if>
+            <if test="cropsDictvalue != null  and cropsDictvalue != ''">crops_dictvalue,</if>
+            <if test="columnDictvalue != null  and columnDictvalue != ''">column_dictvalue,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+
+            <if test="userName != null  and userName != ''">user_name,</if>
+            <if test="sysName != null  and sysName != ''">sys_name,</if>
+
+            <if test="shareCount != null ">share_count,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null  and title != ''">#{title},</if>
+            <if test="introduction != null  and introduction != ''">#{introduction},</if>
+            <if test="shapeType != null  and shapeType != ''">#{shapeType},</if>
+            <if test="techType != null  and techType != ''">#{techType},</if>
+            <if test="userId != null ">#{userId},</if>
+            <if test="mainImg != null  and mainImg != ''">#{mainImg},</if>
+            <if test="readCount != null ">#{readCount},</if>
+            <if test="videoUrl != null  and videoUrl != ''">#{videoUrl},</if>
+            <if test="content != null  and content != ''">#{content},</if>
+            <if test="issueTime != null ">#{issueTime},</if>
+            <if test="cropsDictvalue != null  and cropsDictvalue != ''">#{cropsDictvalue},</if>
+            <if test="columnDictvalue != null  and columnDictvalue != ''">#{columnDictvalue},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+
+            <if test="userName != null  and userName != ''">#{userName},</if>
+            <if test="sysName != null  and sysName != ''">#{sysName},</if>
+
+            <if test="shareCount != null ">#{shareCount},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGrowTech" parameterType="com.sinonc.agriculture.domain.GrowTech">
+        update grow_tech
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''">title = #{title},</if>
+            <if test="introduction != null  and introduction != ''">introduction = #{introduction},</if>
+            <if test="shapeType != null  and shapeType != ''">shape_type = #{shapeType},</if>
+            <if test="techType != null  and techType != ''">tech_type = #{techType},</if>
+            <if test="userId != null ">user_id = #{userId},</if>
+            <if test="mainImg != null  and mainImg != ''">main_img = #{mainImg},</if>
+            <if test="readCount != null ">read_count = #{readCount},</if>
+            <if test="videoUrl != null  and videoUrl != ''">video_url = #{videoUrl},</if>
+            <if test="content != null  and content != ''">content = #{content},</if>
+            <if test="issueTime != null ">issue_time = #{issueTime},</if>
+            <if test="cropsDictvalue != null  and cropsDictvalue != ''">crops_dictvalue = #{cropsDictvalue},</if>
+            <if test="columnDictvalue != null  and columnDictvalue != ''">column_dictvalue = #{columnDictvalue},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+
+            <if test="userName != null  and userName != ''">user_name = #{userName},</if>
+            <if test="sysName != null  and sysName != ''">sys_name = #{sysName},</if>
+
+            <if test="shareCount != null ">share_count = #{shareCount},</if>
+        </trim>
+        where grow_id = #{growId}
+    </update>
+
+    <delete id="deleteGrowTechById" parameterType="Long">
+        delete
+        from grow_tech
+        where grow_id = #{growId}
+    </delete>
+
+    <delete id="deleteGrowTechByIds" parameterType="String">
+        delete from grow_tech where grow_id in
+        <foreach item="growId" collection="array" open="(" separator="," close=")">
+            #{growId}
+        </foreach>
+    </delete>
+
+    <select id="selectOwnCommentGrowTechListForMap" parameterType="Long" resultType="java.util.Map">
+        SELECT DISTINCT grow_id,
+                        title,
+                        introduction,
+                        shape_type,
+                        user_id,
+                        user_name,
+                        main_img,
+                        read_count,
+                        video_url,
+                        content,
+                        issue_time,
+                        crops_dictvalue,
+                        column_dictvalue,
+                        comment_reply.create_time,
+                        create_by,
+                        update_time,
+                        update_by,
+                        share_count
+        FROM grow_tech
+                 LEFT JOIN comment_reply ON grow_tech.grow_id = comment_reply.growtech_id_p
+        WHERE comment_reply.member_id_p = #{memberId}
+    </select>
+
+
+    <select id="selectGrowtechListByGrowtechVo" parameterType="com.sinonc.agriculture.vo.GrowTechVo"
+            resultMap="GrowTechResult">
+        <include refid="selectGrowTechVo"/>
+        <where>
+
+            <if test="cropsDictvalue != null  and cropsDictvalue != ''">and crops_dictvalue =#{cropsDictvalue}</if>
+            <if test="title != null  and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="shapeType != null  and shapeType != ''">and shape_type = #{shapeType}</if>
+
+        </where>
+        order by grow_id desc
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(0) from grow_tech
+    </select>
+
+
+</mapper>

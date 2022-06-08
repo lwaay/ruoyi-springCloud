@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AttentionMapper">
+    <delete id="removeAttention" parameterType="java.util.Map">
+        delete from od_shop_attention where shop_id=#{shopId} and shop_attentions = #{attentions}
+    </delete>
+    <select id="queryAttention" resultType="int" parameterType="String">
+        select count(id) as attentions  from od_shop_attention where shop_id = #{shopId}
+    </select>
+    <select id="selectAttention" resultType="java.lang.String" parameterType="java.util.Map">
+        select id from od_shop_attention where shop_id=#{shopId} and shop_attentions = #{memberId}
+    </select>
+    <select id="selectLikeListByMemberId" resultType="java.lang.Long">
+        SELECT shop_id from od_shop_attention where shop_attentions = #{memberId}
+    </select>
+    <insert id="insertAttention" parameterType="java.util.Map">
+        insert  into od_shop_attention (shop_id,shop_attentions)
+        values (#{shopId},#{attentions})
+    </insert>
+    <update id="updateAttention" parameterType="java.util.Map">
+        update od_shop_attention set shop_attentions=#{fansIds} where shop_id=#{shopId}
+    </update>
+</mapper>

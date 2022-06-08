@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdAdvertisementMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdAdvertisement" id="OdAdvertisementResult">
+        <result property="adverId" column="adver_id"/>
+        <result property="type" column="type"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="webUrl" column="web_url"/>
+        <result property="description" column="description"/>
+        <result property="buId" column="bu_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUser" column="create_user"/>
+    </resultMap>
+
+    <sql id="selectOdAdvertisementVo">
+        select adver_id,
+               type,
+               image_url,
+               web_url,
+               description,
+               bu_id,
+               create_time,
+               create_user
+        from od_advertisement
+    </sql>
+
+    <select id="selectOdAdvertisementList" parameterType="com.sinonc.orders.domain.OdAdvertisement" resultMap="OdAdvertisementResult">
+        <include refid="selectOdAdvertisementVo"/>
+        <where>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="imageUrl != null  and imageUrl != ''">
+                and image_url = #{imageUrl}
+            </if>
+            <if test="webUrl != null  and webUrl != ''">
+                and web_url = #{webUrl}
+            </if>
+            <if test="description != null  and description != ''">
+                and description = #{description}
+            </if>
+            <if test="buId != null ">
+                and bu_id = #{buId}
+            </if>
+            <if test="createUser != null  and createUser != ''">
+                and create_user = #{createUser}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOdAdvertisementById" parameterType="Long" resultMap="OdAdvertisementResult">
+        <include refid="selectOdAdvertisementVo"/>
+        where adver_id = #{adverId}
+    </select>
+
+    <insert id="insertOdAdvertisement" parameterType="com.sinonc.orders.domain.OdAdvertisement" useGeneratedKeys="true"
+            keyProperty="adverId">
+        insert into od_advertisement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">type,
+            </if>
+            <if test="imageUrl != null">image_url,
+            </if>
+            <if test="webUrl != null">web_url,
+            </if>
+            <if test="description != null">description,
+            </if>
+            <if test="buId != null">bu_id,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="createUser != null">create_user,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">#{type},
+            </if>
+            <if test="imageUrl != null">#{imageUrl},
+            </if>
+            <if test="webUrl != null">#{webUrl},
+            </if>
+            <if test="description != null">#{description},
+            </if>
+            <if test="buId != null">#{buId},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="createUser != null">#{createUser},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOdAdvertisement" parameterType="com.sinonc.orders.domain.OdAdvertisement">
+        update od_advertisement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="imageUrl != null">image_url =
+                #{imageUrl},
+            </if>
+            <if test="webUrl != null">web_url =
+                #{webUrl},
+            </if>
+            <if test="description != null">description =
+                #{description},
+            </if>
+            <if test="buId != null">bu_id =
+                #{buId},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="createUser != null">create_user =
+                #{createUser},
+            </if>
+        </trim>
+        where adver_id = #{adverId}
+    </update>
+
+    <delete id="deleteOdAdvertisementById" parameterType="Long">
+        delete
+        from od_advertisement
+        where adver_id = #{adverId}
+    </delete>
+
+    <delete id="deleteOdAdvertisementByIds" parameterType="String">
+        delete from od_advertisement where adver_id in
+        <foreach item="adverId" collection="array" open="(" separator="," close=")">
+            #{adverId}
+        </foreach>
+    </delete>
+
+</mapper>

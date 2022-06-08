@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.ec.mapper.EshopBrandMapper">
+
+    <resultMap type="com.sinonc.orders.ec.domain.EshopBrand" id="EshopBrandResult">
+        <result property="brandId" column="brand_id"/>
+        <result property="brandName" column="brand_name"/>
+        <result property="isFilter" column="is_filter"/>
+        <result property="brands" column="brands"/>
+        <result property="status" column="status"/>
+        <result property="defaultType" column="default_type"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+    </resultMap>
+
+    <sql id="selectEshopBrandVo">
+        select brand_id, brand_name, is_filter, brands, status, default_type, create_time, create_by        from eshop_brand
+    </sql>
+
+    <select id="selectEshopBrandList" parameterType="com.sinonc.orders.ec.domain.EshopBrand" resultMap="EshopBrandResult">
+        <include refid="selectEshopBrandVo"/>
+        <where>
+            <if test="brandName != null  and brandName != ''">
+                and brand_name like concat('%', #{brandName}, '%')
+            </if>
+            <if test="isFilter != null  and isFilter != ''">
+                and is_filter like concat('%', #{isFilter}, '%')
+            </if>
+            <if test="brands != null  and brands != ''">
+                and brands = #{brands}
+            </if>
+            <if test="status != null  and status != ''">
+                and status = #{status}
+            </if>
+            <if test="defaultType != null  and defaultType != ''">
+                and default_type = #{defaultType}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEshopBrandById" parameterType="Long" resultMap="EshopBrandResult">
+        <include refid="selectEshopBrandVo"/>
+        where brand_id = #{brandId}
+    </select>
+
+    <insert id="insertEshopBrand" parameterType="com.sinonc.orders.ec.domain.EshopBrand" useGeneratedKeys="true"
+            keyProperty="brandId">
+        insert into eshop_brand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandName != null">brand_name,
+            </if>
+            <if test="isFilter != null">is_filter,
+            </if>
+            <if test="brands != null">brands,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="defaultType != null">default_type,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandName != null">#{brandName},
+            </if>
+            <if test="isFilter != null">#{isFilter},
+            </if>
+            <if test="brands != null">#{brands},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="defaultType != null">#{defaultType},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateEshopBrand" parameterType="com.sinonc.orders.ec.domain.EshopBrand">
+        update eshop_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandName != null">brand_name =
+                #{brandName},
+            </if>
+            <if test="isFilter != null">is_filter = #{isFilter},
+            </if>
+            <if test="brands != null">brands =
+                #{brands},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="defaultType != null">default_type =
+                #{defaultType},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+        </trim>
+        where brand_id = #{brandId}
+    </update>
+
+    <delete id="deleteEshopBrandById" parameterType="Long">
+        delete
+        from eshop_brand where brand_id = #{brandId}
+    </delete>
+
+    <delete id="deleteEshopBrandByIds" parameterType="String">
+        delete from eshop_brand where brand_id in
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </delete>
+
+    <select id="selectEshopBrandByIds" parameterType="string" resultType="string">
+        select brands from eshop_brand
+        where brand_id in
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </select>
+
+    <select id="selectListDefault" resultMap="EshopBrandResult">
+        <include refid="selectEshopBrandVo"/>
+        where default_type = 0 and status = 0
+    </select>
+
+</mapper>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdCartMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdCart" id="OdCartResult">
+        <result property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="shopNameP" column="shop_name_p"/>
+        <result property="goodsIdP" column="goods_id_p"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="goodsImg" column="goods_img"/>
+        <result property="goodsType" column="goods_type"/>
+        <result property="goodsSpecsIdP" column="goods_specs_id_p"/>
+        <result property="goodsSpecsName" column="goods_specs_name"/>
+        <result property="goodsPrice" column="goods_price"/>
+        <result property="cartNum" column="cart_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isPay" column="is_pay"/>
+        <result property="isDel" column="is_del"/>
+        <result property="isInvalid" column="is_invalid"/>
+        <association property="shop" column="shop_id_p" select="com.sinonc.orders.mapper.ShopMapper.selectShopById"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.vo.ShopVo" id="ShopVoResult">
+        <result property="shopId" column="shop_id"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="shopCode" column="shop_code"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="ownerMemberid" column="owner_memberid"/>
+        <result property="shopLogo" column="shop_logo"/>
+        <result property="shopAddress" column="shop_address"/>
+        <result property="concats" column="concats"/>
+        <result property="concatNumber" column="concat_number"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="status" column="status"/>
+        <result property="isRecommend" column="is_recommend"/>
+        <collection property="carts" javaType="java.util.List" resultMap="CartResult"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.domain.OdCart" id="CartResult">
+        <result property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="shopNameP" column="shop_name_p"/>
+        <result property="goodsIdP" column="goods_id_p"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="goodsImg" column="goods_img"/>
+        <result property="goodsType" column="goods_type"/>
+        <result property="goodsSpecsIdP" column="goods_specs_id_p"/>
+        <result property="goodsSpecsName" column="goods_specs_name"/>
+        <result property="goodsPrice" column="goods_price"/>
+        <result property="cartNum" column="cart_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isPay" column="is_pay"/>
+        <result property="isDel" column="is_del"/>
+        <result property="isInvalid" column="is_invalid"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.vo.ShopVo" id="ShopVoResultP">
+        <result property="shopId" column="shop_id"/>
+        <result property="entityId" column="entity_id"/>
+        <result property="shopCode" column="shop_code"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="ownerMemberid" column="owner_memberid"/>
+        <result property="shopLogo" column="shop_logo"/>
+        <result property="shopAddress" column="shop_address"/>
+        <result property="concats" column="concats"/>
+        <result property="concatNumber" column="concat_number"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="status" column="status"/>
+        <result property="isRecommend" column="is_recommend"/>
+        <collection property="carts" javaType="java.util.List" resultMap="CartVoResult"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.vo.OdCartVo" id="CartVoResult">
+        <result property="id" column="id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="shopIdP" column="shop_id_p"/>
+        <result property="shopNameP" column="shop_name_p"/>
+        <result property="goodsIdP" column="goods_id_p"/>
+        <result property="goodsName" column="goods_name"/>
+        <result property="goodsImg" column="goods_img"/>
+        <result property="goodsType" column="goods_type"/>
+        <result property="goodsSpecsIdP" column="goods_specs_id_p"/>
+        <result property="goodsSpecsName" column="goods_specs_name"/>
+        <result property="goodsPrice" column="goods_price"/>
+        <result property="cartNum" column="cart_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="isPay" column="is_pay"/>
+        <result property="isDel" column="is_del"/>
+        <result property="isInvalid" column="is_invalid"/>
+    </resultMap>
+
+    <sql id="selectOdCartVo">
+        select id,
+               member_id,
+               shop_id_p,
+               shop_name_p,
+               goods_id_p,
+               goods_name,
+               goods_img,
+               goods_type,
+               goods_specs_id_p,
+               goods_specs_name,
+               goods_price,
+               cart_num,
+               create_time,
+               is_pay,
+               is_del,
+               is_invalid
+        from od_cart
+    </sql>
+
+    <select id="selectOdCartList" parameterType="com.sinonc.orders.domain.OdCart" resultMap="OdCartResult">
+        <include refid="selectOdCartVo"/>
+        <where>
+            <if test="memberId != null ">
+                and member_id = #{memberId}
+            </if>
+            <if test="shopIdP != null ">
+                and shop_id_p = #{shopIdP}
+            </if>
+            <if test="shopNameP != null  and shopNameP != ''">
+                and shop_name_p = #{shopNameP}
+            </if>
+            <if test="goodsIdP != null ">
+                and goods_id_p = #{goodsIdP}
+            </if>
+            <if test="goodsType != null ">
+                and goods_type = #{goodsType}
+            </if>
+            <if test="isPay != null ">
+                and is_pay = #{isPay}
+            </if>
+            <if test="isDel != null ">
+                and is_del = #{isDel}
+            </if>
+            <if test="isInvalid != null ">
+                and is_invalid = #{isInvalid}
+            </if>
+        </where>
+    </select>
+
+    <select id="listShopCart" parameterType="com.sinonc.orders.domain.OdCart" resultMap="ShopVoResultP">
+        SELECT t1.*,t2.* FROM `od_shop` t1 LEFT JOIN od_cart t2 ON t1.`shop_id` = t2.`shop_id_p`
+        <where>
+            <if test="memberId != null ">
+                and t2.member_id = #{memberId}
+            </if>
+            <if test="shopIdP != null ">
+                and t2.shop_id_p = #{shopIdP}
+            </if>
+            <if test="shopNameP != null  and shopNameP != ''">
+                and t2.shop_name_p = #{shopNameP}
+            </if>
+            <if test="goodsIdP != null ">
+                and t2.goods_id_p = #{goodsIdP}
+            </if>
+            <if test="goodsType != null ">
+                and t2.goods_type = #{goodsType}
+            </if>
+            <if test="isInvalid != null ">
+                and t2.is_invalid = #{isInvalid}
+            </if>
+            and t2.is_pay = 0
+            and t2.is_del = 0
+        </where>
+        ORDER BY t2.create_time DESC,t1.`shop_id` DESC
+    </select>
+
+    <select id="selectOdCartById" parameterType="Long" resultMap="OdCartResult">
+        <include refid="selectOdCartVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertOdCart" parameterType="com.sinonc.orders.domain.OdCart" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into od_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">member_id,
+            </if>
+            <if test="shopIdP != null">shop_id_p,
+            </if>
+            <if test="shopNameP != null">shop_name_p,
+            </if>
+            <if test="goodsIdP != null">goods_id_p,
+            </if>
+            <if test="goodsName !=null">goods_name,
+            </if>
+            <if test="goodsImg != null">goods_img,
+            </if>
+            <if test="goodsType != null">goods_type,
+            </if>
+            <if test="goodsSpecsIdP != null">goods_specs_id_p,
+            </if>
+            <if test="goodsSpecsName != null">goods_specs_name,
+            </if>
+            <if test="goodsPrice != null">goods_price,
+            </if>
+            <if test="cartNum != null">cart_num,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="isPay != null">is_pay,
+            </if>
+            <if test="isDel != null">is_del,
+            </if>
+            <if test="isInvalid != null">is_invalid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null">#{memberId},
+            </if>
+            <if test="shopIdP != null">#{shopIdP},
+            </if>
+            <if test="shopNameP != null">#{shopNameP},
+            </if>
+            <if test="goodsIdP != null">#{goodsIdP},
+            </if>
+            <if test="goodsName != null">#{goodsName},
+            </if>
+            <if test="goodsImg != null">#{goodsImg},
+            </if>
+            <if test="goodsType != null">#{goodsType},
+            </if>
+            <if test="goodsSpecsIdP != null">#{goodsSpecsIdP},
+            </if>
+            <if test="goodsSpecsName != null">#{goodsSpecsName},
+            </if>
+            <if test="goodsPrice != null">#{goodsPrice},
+            </if>
+            <if test="cartNum != null">#{cartNum},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="isPay != null">#{isPay},
+            </if>
+            <if test="isDel != null">#{isDel},
+            </if>
+            <if test="isInvalid != null">#{isInvalid},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOdCart" parameterType="com.sinonc.orders.dto.CartDto">
+        update od_cart
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cartNum != null">cart_num =
+                #{cartNum},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOdCartById" parameterType="Long">
+        delete
+        from od_cart
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteOdCartByIds" parameterType="String">
+        delete from od_cart where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="invalidCartByGoodsId" parameterType="Long">
+        update od_cart set is_invalid = 1
+        where goods_id_p = #{goodsId} and is_invalid = 0
+    </update>
+
+    <update id="payCartByGoodsId" parameterType="Long">
+        update od_cart set is_pay = 1
+        where goods_specs_id_p = #{specId} and member_id =#{memberId} and is_pay = 0
+    </update>
+
+    <update id="deleteCart" parameterType="String">
+        update od_cart set is_del = 1
+        where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="getHistoryCart" resultMap="CartResult">
+        <include refid="selectOdCartVo"/>
+        where member_id = #{memberId} and goods_specs_id_p = #{specId}
+        and is_del = 0 and is_pay = 0 and is_invalid = 0
+        order by id desc limit 1
+    </select>
+</mapper>

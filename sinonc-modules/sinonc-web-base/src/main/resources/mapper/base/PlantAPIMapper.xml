@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.PlantAPIMapper">
+
+
+    <select id="listFarmGrowInfoBy" resultType="java.util.Map" parameterType="java.lang.Long">
+        SELECT
+            sum(plant_number) as plantNum,
+            sum(plant_area) as plantArea,
+            ROUND(AVG( YEAR (NOW( )) - YEAR(plant_year))) AS plantAge,
+            GROUP_CONCAT(fru_type SEPARATOR ',') as types
+        FROM
+            fruiter_info
+        WHERE
+            orch_id = #{forchardId}
+        GROUP BY orch_id
+    </select>
+
+    <select id="listFarmGrowInfo" resultType="java.util.Map" parameterType="java.lang.Long">
+        SELECT
+            ( YEAR ( NOW( ) ) - YEAR(plant_year) ) AS treeAge,
+            sum( plant_area ) AS growArea,
+            sum( plant_number ) AS growStub
+        FROM
+            fruiter_info
+        WHERE
+            orch_id = #{forchardId}
+        GROUP BY
+            treeAge
+    </select>
+    <select id="selectFertilizerByageCode" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT organic_schema AS organicSchema,urea_schema AS ureaSchema,nitrogen_schema AS nitrogenSchema,acidity_soil_schema AS aciditySoilSchema,alkaline_soil_schema AS alkalineSoilSchema FROM k_fertilizer_schema
+        WHERE age_code = #{ageCode}
+    </select>
+    <select id="selectCurrentInsectInfo" resultType="java.util.Map" parameterType="int">
+        SELECT description,solar_time AS solarTime,period,insect_code AS insectCode,comm_schema AS commSchema FROM k_insect_period
+        WHERE period_month = #{month}
+    </select>
+    <select id="selectInsectByCode" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT insect_code AS insectCode,insect_name AS insectName,insect_image AS insectImage,cure_time AS cureTime,insect_feature AS insectFeature,insect_time AS insectTime FROM k_insect
+        WHERE insect_code = #{insectCode}
+    </select>
+    <select id="selectInsectByName" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT insect_code AS insectCode,insect_name AS insectName,insect_image AS insectImage,cure_time AS cureTime,insect_feature AS insectFeature,insect_time AS insectTime FROM k_insect
+        WHERE insect_name LIKE CONCAT("%",CONCAT(#{insectName},"%"))
+    </select>
+    <select id="listInsectPesticide" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT n.pesticide_code AS pesticideCode,n.max_time AS maxTime,n.safe_period AS safePeriod,n.index_sort AS indexSort,p.pesticide_name AS pesticideName,p.forbidden,p.remark FROM k_pesticide_norm n
+        LEFT JOIN k_pesticide p
+        ON n.pesticide_code = p.pesticide_code
+        WHERE n.insect_code = #{insectCode}
+    </select>
+    <select id="listFertilizerSkill" resultType="java.util.Map">
+        SELECT id,skill_type AS skillType,ele_name AS eleName,title,image_url AS imageUrl,content,DATE_FORMAT(create_time,'%Y-%m-%d %h:%m:%s') AS createTime  FROM k_fertilizer_skill
+    </select>
+    <select id="selectFertilizerSkillById" resultType="java.util.Map" parameterType="java.lang.Long">
+        SELECT id,skill_type AS skillType,ele_name AS eleName,title,image_url AS imageUrl,content,create_time AS createTime FROM k_fertilizer_skill
+        WHERE id = #{skillId}
+    </select>
+    <select id="selectFertilizerSkillByEleName" resultType="java.util.Map" parameterType="java.lang.String">
+        SELECT id,skill_type AS skillType,ele_name AS eleName,title,image_url AS imageUrl,content,create_time AS createTime FROM k_fertilizer_skill
+        WHERE skill_type = "1"
+        AND ele_name LIKE CONCAT('%',CONCAT(#{eleName},'%'))
+        LIMIT 1
+    </select>
+
+</mapper>

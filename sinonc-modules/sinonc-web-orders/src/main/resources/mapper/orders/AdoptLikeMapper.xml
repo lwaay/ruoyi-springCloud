@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.AdoptLikeMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.AdoptLike" id="AdoptLikeResult">
+        <result property="likeId"    column="like_id"    />
+        <result property="adoptionIdP"    column="adoption_id_p"    />
+        <result property="userIdP"    column="user_id_p"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="name"    column="name"    />
+        <result property="name"    column="name"    />
+    </resultMap>
+
+    <resultMap type="com.sinonc.orders.domain.AdoptLike" id="AdoptLikeResultTwo">
+        <result property="likeId"    column="like_id"    />
+        <result property="uid"    column="member_id"    />
+        <result property="name"    column="name"    />
+
+    </resultMap>
+	
+	<sql id="selectAdoptLikeVo">
+        select like_id, adoption_id_p, user_id_p, create_by, create_time, update_by, update_time from od_adopt_like
+    </sql>
+	
+    <select id="selectAdoptLikeList1" parameterType="com.sinonc.orders.domain.AdoptLike" resultMap="AdoptLikeResult">
+        <include refid="selectAdoptLikeVo"/>
+        <where>  
+            <if test="likeId != null "> and like_id = #{likeId}</if>
+             <if test="adoptionIdP != null "> and adoption_id_p = #{adoptionIdP}</if>
+             <if test="userIdP != null "> and user_id_p = #{userIdP}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+
+    </select>
+
+
+    <select id="listAdoptLike" parameterType="com.sinonc.orders.domain.AdoptLike" resultMap="AdoptLikeResult">
+        SELECT
+            odlike.like_id,
+            odlike.adoption_id_p,
+            odlike.user_id_p,
+            odlike.create_by,
+            odlike.create_time,
+            odlike.update_by,
+            odlike.update_time,
+            odmember.name,
+            adoptionCircle.content
+        FROM
+            od_adopt_like odlike
+        LEFT JOIN od_member odmember ON odlike.user_id_p = odmember.member_id
+        LEFT JOIN adoption_circle adoptionCircle ON odlike.adoption_id_p = adoptionCircle.adoption_id
+        <where>
+            <if test="likeId != null "> and like_id = #{likeId}</if>
+            <if test="adoptionIdP != null "> and adoption_id_p = #{adoptionIdP}</if>
+            <if test="userIdP != null "> and user_id_p = #{userIdP}</if>
+            <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+            <if test="updateTime != null "> and update_time = #{updateTime}</if>
+        </where>
+        order by like_id desc
+    </select>
+
+    <select id="selectAdoptLikeList" parameterType="com.sinonc.orders.domain.AdoptLike" resultMap="AdoptLikeResultTwo">
+        SELECT
+            odmember.member_id ,
+            odmember.name ,
+            odlike.like_id
+
+        FROM
+        od_adopt_like odlike
+        LEFT JOIN od_member odmember ON odlike.user_id_p = odmember.member_id
+
+        where  odlike.adoption_id_p = #{adoptionIdP}
+
+    </select>
+    
+    <select id="selectAdoptLikeById" parameterType="Long" resultMap="AdoptLikeResult">
+        <include refid="selectAdoptLikeVo"/>
+        where like_id = #{likeId}
+    </select>
+        
+    <insert id="insertAdoptLike" parameterType="com.sinonc.orders.domain.AdoptLike" useGeneratedKeys="true" keyProperty="likeId">
+        insert into od_adopt_like
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="adoptionIdP != null  ">adoption_id_p,</if>
+			<if test="userIdP != null  ">user_id_p,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="adoptionIdP != null  ">#{adoptionIdP},</if>
+			<if test="userIdP != null  ">#{userIdP},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateAdoptLike" parameterType="com.sinonc.orders.domain.AdoptLike">
+        update od_adopt_like
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="adoptionIdP != null  ">adoption_id_p = #{adoptionIdP},</if>
+            <if test="userIdP != null  ">user_id_p = #{userIdP},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where like_id = #{likeId}
+    </update>
+
+	<delete id="deleteAdoptLikeById" parameterType="Long">
+        delete from od_adopt_like where like_id = #{likeId}
+    </delete>
+	
+    <delete id="deleteAdoptLikeByIds" parameterType="String">
+        delete from od_adopt_like where like_id in 
+        <foreach item="likeId" collection="array" open="(" separator="," close=")">
+            #{likeId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAdoptLike" parameterType="com.sinonc.orders.domain.AdoptLike">
+        delete from od_adopt_like where user_id_p =#{userIdP}  and adoption_id_p=#{adoptionIdP}
+    </delete>
+    
+</mapper>

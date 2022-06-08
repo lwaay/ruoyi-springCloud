@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.AppSuggestMapper">
+    
+    <resultMap type="com.sinonc.agriculture.domain.AppSuggest" id="AppSuggestResult">
+        <result property="suggestId"    column="suggest_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="suggestType"    column="suggest_type"    />
+        <result property="suggestCotent"    column="suggest_cotent"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="suggestStatus"    column="suggest_status"    />
+        <result property="dealWith"    column="deal_with"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="dealTime"    column="deal_time"    />
+    </resultMap>
+
+    <sql id="selectAppSuggestVo">
+        select suggest_id, member_id, suggest_type, suggest_cotent, image_url, suggest_status, deal_with, create_time, deal_time from app_suggest
+    </sql>
+
+    <select id="selectAppSuggestList" parameterType="com.sinonc.agriculture.domain.AppSuggest" resultMap="AppSuggestResult">
+        <include refid="selectAppSuggestVo"/>
+        <where>  
+            <if test="memberId != null "> and member_id = #{memberId}</if>
+            <if test="suggestType != null  and suggestType != ''"> and suggest_type = #{suggestType}</if>
+            <if test="suggestCotent != null  and suggestCotent != ''"> and suggest_cotent = #{suggestCotent}</if>
+            <if test="imageUrl != null  and imageUrl != ''"> and image_url = #{imageUrl}</if>
+            <if test="suggestStatus != null  and suggestStatus != ''"> and suggest_status = #{suggestStatus}</if>
+            <if test="dealWith != null  and dealWith != ''"> and deal_with = #{dealWith}</if>
+            <if test="dealTime != null "> and deal_time = #{dealTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectAppSuggestById" parameterType="Long" resultMap="AppSuggestResult">
+        <include refid="selectAppSuggestVo"/>
+        where suggest_id = #{suggestId}
+    </select>
+        
+    <insert id="insertAppSuggest" parameterType="com.sinonc.agriculture.domain.AppSuggest" useGeneratedKeys="true" keyProperty="suggestId">
+        insert into app_suggest
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null ">member_id,</if>
+            <if test="suggestType != null  and suggestType != ''">suggest_type,</if>
+            <if test="suggestCotent != null  and suggestCotent != ''">suggest_cotent,</if>
+            <if test="imageUrl != null  and imageUrl != ''">image_url,</if>
+            <if test="suggestStatus != null  and suggestStatus != ''">suggest_status,</if>
+            <if test="dealWith != null  and dealWith != ''">deal_with,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="dealTime != null ">deal_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="suggestType != null  and suggestType != ''">#{suggestType},</if>
+            <if test="suggestCotent != null  and suggestCotent != ''">#{suggestCotent},</if>
+            <if test="imageUrl != null  and imageUrl != ''">#{imageUrl},</if>
+            <if test="suggestStatus != null  and suggestStatus != ''">#{suggestStatus},</if>
+            <if test="dealWith != null  and dealWith != ''">#{dealWith},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="dealTime != null ">#{dealTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAppSuggest" parameterType="com.sinonc.agriculture.domain.AppSuggest">
+        update app_suggest
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="suggestType != null  and suggestType != ''">suggest_type = #{suggestType},</if>
+            <if test="suggestCotent != null  and suggestCotent != ''">suggest_cotent = #{suggestCotent},</if>
+            <if test="imageUrl != null  and imageUrl != ''">image_url = #{imageUrl},</if>
+            <if test="suggestStatus != null  and suggestStatus != ''">suggest_status = #{suggestStatus},</if>
+            <if test="dealWith != null  and dealWith != ''">deal_with = #{dealWith},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="dealTime != null ">deal_time = #{dealTime},</if>
+        </trim>
+        where suggest_id = #{suggestId}
+    </update>
+
+    <delete id="deleteAppSuggestById" parameterType="Long">
+        delete from app_suggest where suggest_id = #{suggestId}
+    </delete>
+
+    <delete id="deleteAppSuggestByIds" parameterType="String">
+        delete from app_suggest where suggest_id in 
+        <foreach item="suggestId" collection="array" open="(" separator="," close=")">
+            #{suggestId}
+        </foreach>
+    </delete>
+    
+</mapper>

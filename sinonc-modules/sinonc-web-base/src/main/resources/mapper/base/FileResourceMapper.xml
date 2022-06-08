@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.FileResourceMapper">
+
+    <resultMap type="com.sinonc.base.api.domain.FileResource" id="FileResourceResult">
+        <result property="fileId" column="file_id"/>
+        <result property="fileName" column="file_name"/>
+        <result property="ossPath" column="oss_path"/>
+        <result property="ossName" column="oss_name"/>
+        <result property="fileSuffix" column="file_suffix"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="uploadDate" column="upload_date"/>
+        <result property="uploadIp" column="upload_ip"/>
+        <result property="uploadClient" column="upload_client"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <sql id="selectFileResourceVo">
+        select file_id, file_name, oss_path, oss_name, file_suffix, file_size, upload_date, upload_ip, upload_client, del_flag        from file_resource
+    </sql>
+
+    <select id="selectFileResourceList" parameterType="FileResource" resultMap="FileResourceResult">
+        <include refid="selectFileResourceVo"/>
+        <where>
+            <if test="fileName != null  and fileName != ''">
+                and file_name like concat('%', #{fileName}, '%')
+            </if>
+            <if test="ossPath != null  and ossPath != ''">
+                and oss_path = #{ossPath}
+            </if>
+            <if test="ossName != null  and ossName != ''">
+                and oss_name like concat('%', #{ossName}, '%')
+            </if>
+            <if test="beginTime != null ">
+                and upload_date >= #{beginTime}
+            </if>
+            <if test="endTime != null">
+                and #{endTime} >= upload_date
+            </if>
+            <if test="uploadClient != null  and uploadClient != ''">
+                and upload_client = #{uploadClient}
+            </if>
+        </where>
+    </select>
+
+    <select id="findFileResourceByOssName" parameterType="String" resultMap="FileResourceResult">
+        <include refid="selectFileResourceVo"/>
+        where oss_name = #{ossName}
+        order by upload_date desc limit 1
+    </select>
+
+    <select id="selectFileResourceById" parameterType="Long" resultMap="FileResourceResult">
+        <include refid="selectFileResourceVo"/>
+        where file_id = #{fileId}
+    </select>
+
+    <insert id="insertFileResource" parameterType="FileResource" useGeneratedKeys="true"
+            keyProperty="fileId">
+        insert into file_resource
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fileName != null">file_name,
+            </if>
+            <if test="ossPath != null">oss_path,
+            </if>
+            <if test="ossName != null">oss_name,
+            </if>
+            <if test="fileSuffix != null">file_suffix,
+            </if>
+            <if test="fileSize != null">file_size,
+            </if>
+            <if test="uploadDate != null">upload_date,
+            </if>
+            <if test="uploadIp != null">upload_ip,
+            </if>
+            <if test="uploadClient != null">upload_client,
+            </if>
+            <if test="delFlag != null">del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fileName != null">#{fileName},
+            </if>
+            <if test="ossPath != null">#{ossPath},
+            </if>
+            <if test="ossName != null">#{ossName},
+            </if>
+            <if test="fileSuffix != null">#{fileSuffix},
+            </if>
+            <if test="fileSize != null">#{fileSize},
+            </if>
+            <if test="uploadDate != null">#{uploadDate},
+            </if>
+            <if test="uploadIp != null">#{uploadIp},
+            </if>
+            <if test="uploadClient != null">#{uploadClient},
+            </if>
+            <if test="delFlag != null">#{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateFileResource" parameterType="FileResource">
+        update file_resource
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fileName != null">file_name =
+                #{fileName},
+            </if>
+            <if test="ossPath != null">oss_path =
+                #{ossPath},
+            </if>
+            <if test="ossName != null">oss_name =
+                #{ossName},
+            </if>
+            <if test="fileSuffix != null">file_suffix =
+                #{fileSuffix},
+            </if>
+            <if test="fileSize != null">file_size =
+                #{fileSize},
+            </if>
+            <if test="uploadDate != null">upload_date =
+                #{uploadDate},
+            </if>
+            <if test="uploadIp != null">upload_ip =
+                #{uploadIp},
+            </if>
+            <if test="uploadClient != null">upload_client =
+                #{uploadClient},
+            </if>
+            <if test="delFlag != null">del_flag =
+                #{delFlag},
+            </if>
+        </trim>
+        where file_id = #{fileId}
+    </update>
+
+    <delete id="deleteFileResourceById" parameterType="Long">
+        delete
+        from file_resource where file_id = #{fileId}
+    </delete>
+
+    <delete id="deleteFileResourceByIds" parameterType="String">
+        delete from file_resource where file_id in
+        <foreach item="fileId" collection="array" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </delete>
+
+</mapper>

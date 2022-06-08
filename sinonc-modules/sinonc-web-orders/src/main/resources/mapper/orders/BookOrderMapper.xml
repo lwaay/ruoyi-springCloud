@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.BookOrderMapper">
+
+    <resultMap type="com.sinonc.orders.domain.BookOrder" id="BookOrderResult">
+        <result property="boId" column="bo_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="earnestNo" column="earnest_no"/>
+        <result property="earnestPrice" column="earnest_price"/>
+        <result property="restNo" column="rest_no"/>
+        <result property="restPrice" column="rest_price"/>
+        <result property="tradeStatus" column="trade_status"/>
+        <result property="settlement" column="settlement"/>
+        <result property="settlementAmount" column="settlement_amount"/>
+        <result property="settlementTime" column="settlement_time"/>
+        <result property="earnestTradeId" column="earnest_trade_id"/>
+        <result property="earnestTradeTime" column="earnest_trade_time"/>
+        <result property="restTradeId" column="rest_trade_id"/>
+        <result property="restTradeTime" column="rest_trade_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <resultMap id="bookOrderSettlementResult" type="com.sinonc.orders.dto.SettlementDto">
+        <id column="trade_id" property="tradeId"/>
+        <result column="receipt_amount" property="receiptAmount"/>
+        <association property="target" resultMap="BookOrderResult"/>
+    </resultMap>
+
+    <sql id="selectBookOrderVo">
+        select bo_id,
+               order_id,
+               shop_id,
+               earnest_no,
+               earnest_price,
+               rest_no,
+               rest_price,
+               trade_status,
+               settlement,
+               settlement_amount,
+               settlement_time,
+               earnest_trade_id,
+               earnest_trade_time,
+               rest_trade_id,
+               rest_trade_time,
+               create_time
+        from od_book_order
+    </sql>
+
+    <select id="selectBookOrderList" parameterType="com.sinonc.orders.domain.BookOrder" resultMap="BookOrderResult">
+        <include refid="selectBookOrderVo"/>
+        <where>
+            <if test="boId != null ">and bo_id = #{boId}</if>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="shopId != null ">and shop_id = #{shopId}</if>
+            <if test="earnestNo != null  and earnestNo != '' ">and earnest_no = #{earnestNo}</if>
+            <if test="earnestPrice != null ">and earnest_price = #{earnestPrice}</if>
+            <if test="restNo != null  and restNo != '' ">and rest_no = #{restNo}</if>
+            <if test="restPrice != null ">and rest_price = #{restPrice}</if>
+            <if test="tradeStatus != null ">and trade_status = #{tradeStatus}</if>
+            <if test="settlement != null ">and settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and settlement_amount = #{settlementAmount}</if>
+            <if test="settlementTime != null ">and settlement_time = #{settlementTime}</if>
+            <if test="earnestTradeId != null ">and earnest_trade_id = #{earnestTradeId}</if>
+            <if test="earnestTradeTime != null ">and earnest_trade_time = #{earnestTradeTime}</if>
+            <if test="restTradeId != null ">and rest_trade_id = #{restTradeId}</if>
+            <if test="restTradeTime != null ">and rest_trade_time = #{restTradeTime}</if>
+            <if test="createTime != null ">and create_time = #{createTime}</if>
+        </where>
+    </select>
+
+    <select id="selectBookOrderById" parameterType="Long" resultMap="BookOrderResult">
+        <include refid="selectBookOrderVo"/>
+        where bo_id = #{boId}
+    </select>
+    <select id="selectByOrderId" parameterType="Long" resultMap="BookOrderResult">
+        <include refid="selectBookOrderVo"/>
+        where order_id = #{orderId}
+    </select>
+    <select id="selectBookOrderByOrderIds" resultMap="BookOrderResult">
+        <include refid="selectBookOrderVo"/>
+        where order_id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectSettlementByOrderIds" resultMap="bookOrderSettlementResult">
+        select od_book_order.bo_id,
+        od_book_order.order_id,
+        od_book_order.shop_id,
+        od_book_order.earnest_trade_id,
+        od_book_order.earnest_no,
+        od_book_order.earnest_price,
+        od_book_order.rest_no,
+        od_book_order.rest_price,
+        od_book_order.trade_status,
+        od_book_order.settlement,
+        od_book_order.settlement_amount,
+        od_book_order.settlement_time,
+        od_book_order.earnest_trade_id,
+        od_book_order.earnest_trade_time,
+        od_book_order.rest_trade_id,
+        od_book_order.rest_trade_time,
+        od_book_order.create_time,
+        od_trade_info.receipt_amount
+        from od_book_order
+        inner join od_trade_info on od_book_order.earnest_trade_id = od_trade_info.trade_id
+        where od_trade_info.order_id_type = 0
+        and od_trade_info.trade_type = 0
+        and od_book_order.order_id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+
+    </select>
+    <select id="selectSettlementDto" parameterType="com.sinonc.orders.domain.BookOrder" resultMap="bookOrderSettlementResult">
+        select od_book_order.bo_id,
+        od_book_order.order_id,
+        od_book_order.shop_id,
+        od_book_order.earnest_trade_id,
+        od_book_order.earnest_no,
+        od_book_order.earnest_price,
+        od_book_order.rest_no,
+        od_book_order.rest_price,
+        od_book_order.trade_status,
+        od_book_order.settlement,
+        od_book_order.settlement_amount,
+        od_book_order.settlement_time,
+        od_book_order.earnest_trade_id,
+        od_book_order.earnest_trade_time,
+        od_book_order.rest_trade_id,
+        od_book_order.rest_trade_time,
+        od_book_order.create_time,
+        od_trade_info.trade_id,
+        od_trade_info.receipt_amount
+        from od_book_order
+        inner join od_trade_info on od_book_order.earnest_trade_id = od_trade_info.trade_id
+        <where>
+            and od_trade_info.order_id_type = 0
+            and od_trade_info.trade_type = 0
+            <if test="boId != null ">and od_book_order.bo_id = #{boId}</if>
+            <if test="orderId != null ">and od_book_order.order_id = #{orderId}</if>
+            <if test="shopId != null ">and od_book_order.shop_id = #{shopId}</if>
+            <if test="earnestNo != null  and earnestNo != '' ">and od_book_order.earnest_no = #{earnestNo}</if>
+            <if test="earnestPrice != null ">and od_book_order.earnest_price = #{earnestPrice}</if>
+            <if test="restNo != null  and restNo != '' ">and od_book_order.rest_no = #{restNo}</if>
+            <if test="restPrice != null ">and od_book_order.rest_price = #{restPrice}</if>
+            <if test="tradeStatus != null ">and od_book_order.trade_status = #{tradeStatus}</if>
+            <if test="settlement != null ">and od_book_order.settlement = #{settlement}</if>
+            <if test="settlementAmount != null ">and od_book_order.settlement_amount = #{settlementAmount}</if>
+            <if test="settlementTime != null ">and od_book_order.settlement_time = #{settlementTime}</if>
+            <if test="earnestTradeId != null ">and od_book_order.earnest_trade_id = #{earnestTradeId}</if>
+            <if test="earnestTradeTime != null ">and od_book_order.earnest_trade_time = #{earnestTradeTime}</if>
+            <if test="restTradeId != null ">and od_book_order.rest_trade_id = #{restTradeId}</if>
+            <if test="restTradeTime != null ">and od_book_order.rest_trade_time = #{restTradeTime}</if>
+            <if test="createTime != null ">and od_book_order.create_time = #{createTime}</if>
+        </where>
+
+    </select>
+
+    <insert id="insertBookOrder" parameterType="com.sinonc.orders.domain.BookOrder" useGeneratedKeys="true"
+            keyProperty="boId">
+        insert into od_book_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null  ">order_id,</if>
+            <if test="shopId != null  ">shop_id,</if>
+            <if test="earnestNo != null  and earnestNo != ''  ">earnest_no,</if>
+            <if test="earnestPrice != null  ">earnest_price,</if>
+            <if test="restNo != null  and restNo != ''  ">rest_no,</if>
+            <if test="restPrice != null  ">rest_price,</if>
+            <if test="tradeStatus != null  ">trade_status,</if>
+            <if test="settlement != null  ">settlement,</if>
+            <if test="settlementAmount != null  ">settlement_amount,</if>
+            <if test="settlementTime != null  ">settlement_time,</if>
+            <if test="earnestTradeId != null  ">earnest_trade_id,</if>
+            <if test="earnestTradeTime != null  ">earnest_trade_time,</if>
+            <if test="restTradeId != null  ">rest_trade_id,</if>
+            <if test="restTradeTime != null  ">rest_trade_time,</if>
+            <if test="createTime != null  ">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null  ">#{orderId},</if>
+            <if test="shopId != null  ">#{shopId},</if>
+            <if test="earnestNo != null  and earnestNo != ''  ">#{earnestNo},</if>
+            <if test="earnestPrice != null  ">#{earnestPrice},</if>
+            <if test="restNo != null  and restNo != ''  ">#{restNo},</if>
+            <if test="restPrice != null  ">#{restPrice},</if>
+            <if test="tradeStatus != null  ">#{tradeStatus},</if>
+            <if test="settlement != null  ">#{settlement},</if>
+            <if test="settlementAmount != null  ">#{settlementAmount},</if>
+            <if test="settlementTime != null  ">#{settlementTime},</if>
+            <if test="earnestTradeId != null  ">#{earnestTradeId},</if>
+            <if test="earnestTradeTime != null  ">#{earnestTradeTime},</if>
+            <if test="restTradeId != null  ">#{restTradeId},</if>
+            <if test="restTradeTime != null  ">#{restTradeTime},</if>
+            <if test="createTime != null  ">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBookOrder" parameterType="com.sinonc.orders.domain.BookOrder">
+        update od_book_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null  ">order_id = #{orderId},</if>
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="earnestNo != null  and earnestNo != ''  ">earnest_no = #{earnestNo},</if>
+            <if test="earnestPrice != null  ">earnest_price = #{earnestPrice},</if>
+            <if test="restNo != null  and restNo != ''  ">rest_no = #{restNo},</if>
+            <if test="restPrice != null  ">rest_price = #{restPrice},</if>
+            <if test="tradeStatus != null  ">trade_status = #{tradeStatus},</if>
+            <if test="earnestTradeId != null  ">earnest_trade_id = #{earnestTradeId},</if>
+            <if test="earnestTradeTime != null  ">earnest_trade_time = #{earnestTradeTime},</if>
+            <if test="restTradeId != null  ">rest_trade_id = #{restTradeId},</if>
+            <if test="restTradeTime != null  ">rest_trade_time = #{restTradeTime},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="settlement != null  ">settlement = #{settlement},</if>
+            <if test="settlementAmount != null  ">settlement_amount = #{settlementAmount},</if>
+            <if test="settlementTime != null  ">settlement_time = #{settlementTime},</if>
+        </trim>
+        where bo_id = #{boId}
+    </update>
+
+    <delete id="deleteBookOrderById" parameterType="Long">
+        delete
+        from od_book_order
+        where bo_id = #{boId}
+    </delete>
+
+    <delete id="deleteBookOrderByIds" parameterType="String">
+        delete from od_book_order where bo_id in
+        <foreach item="boId" collection="array" open="(" separator="," close=")">
+            #{boId}
+        </foreach>
+    </delete>
+
+</mapper>

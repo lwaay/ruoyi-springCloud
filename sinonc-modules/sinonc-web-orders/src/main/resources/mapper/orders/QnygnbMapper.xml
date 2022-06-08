@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.QnygnbMapper">
+    
+    <resultMap type="com.sinonc.orders.domain.Qnygnb" id="QnygnbResult">
+        <result property="qnyId"    column="qny_id"    />
+        <result property="shopId"    column="shop_id"    />
+        <result property="questionId"    column="question_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="expretId"    column="expret_id"    />
+    </resultMap>
+	
+	<sql id="selectQnygnbVo">
+        select qny_id, shop_id, question_id, user_id, create_time, expret_id from od_qnygnb
+    </sql>
+	
+    <select id="selectQnygnbList" parameterType="com.sinonc.orders.domain.Qnygnb" resultMap="QnygnbResult">
+        <include refid="selectQnygnbVo"/>
+        <where>  
+            <if test="qnyId != null "> and qny_id = #{qnyId}</if>
+             <if test="shopId != null "> and shop_id = #{shopId}</if>
+             <if test="questionId != null "> and question_id = #{questionId}</if>
+             <if test="userId != null "> and user_id = #{userId}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="expretId != null "> and expret_id = #{expretId}</if>
+         </where>
+    </select>
+    
+    <select id="selectQnygnbById" parameterType="Long" resultMap="QnygnbResult">
+        <include refid="selectQnygnbVo"/>
+        where qny_id = #{qnyId}
+    </select>
+        
+    <insert id="insertQnygnb" parameterType="com.sinonc.orders.domain.Qnygnb" useGeneratedKeys="true" keyProperty="qnyId">
+        insert into od_qnygnb
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="shopId != null  ">shop_id,</if>
+			<if test="questionId != null  ">question_id,</if>
+			<if test="userId != null  ">user_id,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="expretId != null  ">expret_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="shopId != null  ">#{shopId},</if>
+			<if test="questionId != null  ">#{questionId},</if>
+			<if test="userId != null  ">#{userId},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="expretId != null  ">#{expretId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateQnygnb" parameterType="com.sinonc.orders.domain.Qnygnb">
+        update od_qnygnb
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="shopId != null  ">shop_id = #{shopId},</if>
+            <if test="questionId != null  ">question_id = #{questionId},</if>
+            <if test="userId != null  ">user_id = #{userId},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="expretId != null  ">expret_id = #{expretId},</if>
+        </trim>
+        where qny_id = #{qnyId}
+    </update>
+
+	<delete id="deleteQnygnbById" parameterType="Long">
+        delete from od_qnygnb where qny_id = #{qnyId}
+    </delete>
+	
+    <delete id="deleteQnygnbByIds" parameterType="String">
+        delete from od_qnygnb where qny_id in 
+        <foreach item="qnyId" collection="array" open="(" separator="," close=")">
+            #{qnyId}
+        </foreach>
+    </delete>
+
+    <select id="selectQnyGnbListByShopId" parameterType="long" resultMap="QnygnbResult">
+        SELECT * FROM od_qnygnb WHERE shop_id  = #{shopId}
+    </select>
+
+    <select id="selectQnyGnbListByShopIdForYearAndMonth" resultMap="QnygnbResult">
+        SELECT * FROM od_qnygnb
+        <where>
+            <if test="shopId !=null and shopId != ''">
+               and shop_id = #{shopId}
+            </if>
+            <if test="year !=null and year != ''">
+                and DATE_FORMAT(create_time,'%Y') = #{year}
+            </if>
+            <if test="month !=null and month != ''">
+                and DATE_FORMAT(create_time,'%c') = #{month}
+            </if>
+        </where>
+    </select>
+    
+</mapper>

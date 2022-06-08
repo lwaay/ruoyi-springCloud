@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.base.mapper.BaseFarmMapper">
+
+    <resultMap type="com.sinonc.base.api.domain.BaseFarm" id="BaseFarmResult">
+        <result property="farmId" column="farm_id"/>
+        <result property="farmCode" column="farm_code"/>
+        <result property="farmName" column="farm_name"/>
+        <result property="forShort" column="for_short"/>
+        <result property="legalIdcard" column="legal_idcard"/>
+        <result property="baseArea" column="base_area"/>
+        <result property="principal" column="principal"/>
+        <result property="phone" column="phone"/>
+        <result property="baseCreateDate" column="base_create_date"/>
+        <result property="hasMonitor" column="has_monitor"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="hasIot" column="has_iot"/>
+        <result property="deviceIds" column="device_ids"/>
+        <result property="farmLng" column="farm_lng"/>
+        <result property="farmLat" column="farm_lat"/>
+        <result property="pictures" column="pictures"/>
+
+        <result property="forestPic" column="forest_pic"/>
+
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="deptIdP" column="dept_id_p"/>
+        <result property="cropNames" column="crop_names"/>
+        <result property="monitorIds" column="monitor_ids"/>
+        <result property="address" column="address"/>
+        <result property="entityId" column="entity_id"/>
+
+        <result property="gradeScore" column="grade_score"/>
+        <result property="gradeRate" column="grade_rate"/>
+        <result property="yieldEst" column="yield_est"/>
+        <result property="plotInfo" column="plot_info"/>
+        <result property="growEnv" column="grow_env"/>
+    </resultMap>
+
+    <sql id="selectBaseFarmVo">
+        select farm_id, farm_code, farm_name, for_short, legal_idcard, base_area, principal, phone, base_create_date, has_monitor, area_code, has_iot, device_ids,  farm_lng, farm_lat, pictures, forest_pic, remark, del_flag, create_time, create_by, update_time, update_by, dept_id_p, crop_names, monitor_ids, address,entity_id , grade_score, grade_rate, yield_est, plot_info, grow_env       from base_farm
+    </sql>
+
+    <select id="selectBaseFarmList" parameterType="com.sinonc.base.api.domain.BaseFarm" resultMap="BaseFarmResult">
+        <include refid="selectBaseFarmVo"/>
+        <where>
+            <if test="farmName != null  and farmName != ''">
+                and farm_name like concat('%', #{farmName}, '%')
+            </if>
+            <if test="forShort != null  and forShort != ''">
+                and for_short = #{forShort}
+            </if>
+            <if test="baseArea != null ">
+                and base_area = #{baseArea}
+            </if>
+            <if test="principal != null  and principal != ''">
+                and principal = #{principal}
+            </if>
+            <if test="phone != null  and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="baseCreateDate != null ">
+                and base_create_date = #{baseCreateDate}
+            </if>
+            <if test="hasMonitor != null ">
+                and has_monitor = #{hasMonitor}
+            </if>
+            <if test="areaCode != null ">
+                and area_code = #{areaCode}
+            </if>
+            <if test="hasIot != null ">
+                and has_iot = #{hasIot}
+            </if>
+            <if test="deviceIds != null  and deviceIds != ''">
+                and device_ids = #{deviceIds}
+            </if>
+            <if test="farmLng != null  and farmLng != ''">
+                and farm_lng = #{farmLng}
+            </if>
+            <if test="farmLat != null  and farmLat != ''">
+                and farm_lat = #{farmLat}
+            </if>
+            <if test="pictures != null  and pictures != ''">
+                and pictures = #{pictures}
+            </if>
+            <if test="deptIdP != null ">
+                and dept_id_p = #{deptIdP}
+            </if>
+            <if test="cropNames != null  and cropNames != ''">
+                and crop_names = #{cropNames}
+            </if>
+            <if test="monitorIds != null  and monitorIds != ''">
+                and monitor_ids = #{monitorIds}
+            </if>
+            <if test="address != null  and address != ''">
+                and address = #{address}
+            </if>
+            <if test="entityId != null  and entityId != ''">
+                and entity_id = #{entityId}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <select id="selectBaseFarmListByEntityId" parameterType="com.sinonc.base.api.domain.BaseFarm"
+            resultMap="BaseFarmResult">
+        <include refid="selectBaseFarmVo"/>
+        <where>
+            entity_id = #{entityId}
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectBaseFarmById" parameterType="Long" resultMap="BaseFarmResult">
+        <include refid="selectBaseFarmVo"/>
+        where farm_id = #{farmId}
+    </select>
+
+    <insert id="insertBaseFarm" parameterType="com.sinonc.base.api.domain.BaseFarm" useGeneratedKeys="true"
+            keyProperty="farmId">
+        insert into base_farm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="farmCode != null">farm_code,
+            </if>
+            <if test="farmName != null">farm_name,
+            </if>
+            <if test="forShort != null">for_short,
+            </if>
+            <if test="legalIdcard != null">legal_idcard,
+            </if>
+            <if test="baseArea != null">base_area,
+            </if>
+            <if test="principal != null">principal,
+            </if>
+            <if test="phone != null">phone,
+            </if>
+            <if test="baseCreateDate != null">base_create_date,
+            </if>
+            <if test="hasMonitor != null">has_monitor,
+            </if>
+            <if test="areaCode != null">area_code,
+            </if>
+            <if test="hasIot != null">has_iot,
+            </if>
+            <if test="deviceIds != null">device_ids,
+            </if>
+            <if test="farmLng != null">farm_lng,
+            </if>
+            <if test="farmLat != null">farm_lat,
+            </if>
+            <if test="pictures != null">pictures,
+            </if>
+            <if test="forestPic != null">forest_pic,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="delFlag != null">del_flag,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="updateBy != null">update_by,
+            </if>
+            <if test="deptIdP != null">dept_id_p,
+            </if>
+            <if test="cropNames != null">crop_names,
+            </if>
+            <if test="monitorIds != null">monitor_ids,
+            </if>
+            <if test="address != null">address,
+            </if>
+            <if test="entityId != null">entity_id,
+            </if>
+            <if test="gradeScore != null">grade_score,
+            </if>
+            <if test="gradeRate != null">grade_rate,
+            </if>
+            <if test="yieldEst != null">yield_est,
+            </if>
+            <if test="plotInfo != null">plot_info,
+            </if>
+            <if test="growEnv != null">grow_env,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="farmCode != null">#{farmCode},
+            </if>
+            <if test="farmName != null">#{farmName},
+            </if>
+            <if test="forShort != null">#{forShort},
+            </if>
+            <if test="legalIdcard != null">#{legalIdcard},
+            </if>
+            <if test="baseArea != null">#{baseArea},
+            </if>
+            <if test="principal != null">#{principal},
+            </if>
+            <if test="phone != null">#{phone},
+            </if>
+            <if test="baseCreateDate != null">#{baseCreateDate},
+            </if>
+            <if test="hasMonitor != null">#{hasMonitor},
+            </if>
+            <if test="areaCode != null">#{areaCode},
+            </if>
+            <if test="hasIot != null">#{hasIot},
+            </if>
+            <if test="deviceIds != null">#{deviceIds},
+            </if>
+            <if test="farmLng != null">#{farmLng},
+            </if>
+            <if test="farmLat != null">#{farmLat},
+            </if>
+            <if test="pictures != null">#{pictures},
+            </if>
+            <if test="forestPic != null">#{forestPic},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="delFlag != null">#{delFlag},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="updateBy != null">#{updateBy},
+            </if>
+            <if test="deptIdP != null">#{deptIdP},
+            </if>
+            <if test="cropNames != null">#{cropNames},
+            </if>
+            <if test="monitorIds != null">#{monitorIds},
+            </if>
+            <if test="address != null">#{address},
+            </if>
+            <if test="entityId != null">#{entityId},
+            </if>
+            <if test="gradeScore != null">#{gradeScore},
+            </if>
+            <if test="gradeRate != null">#{gradeRate},
+            </if>
+            <if test="yieldEst != null">#{yieldEst},
+            </if>
+            <if test="plotInfo != null">#{plotInfo},
+            </if>
+            <if test="growEnv != null">#{growEnv},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBaseFarm" parameterType="com.sinonc.base.api.domain.BaseFarm">
+        update base_farm
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="farmCode != null">farm_code =
+                #{farmCode},
+            </if>
+            <if test="farmName != null">farm_name =
+                #{farmName},
+            </if>
+            <if test="forShort != null">for_short =
+                #{forShort},
+            </if>
+            <if test="legalIdcard != null">legal_idcard =
+                #{legalIdcard},
+            </if>
+            <if test="baseArea != null">base_area =
+                #{baseArea},
+            </if>
+            <if test="principal != null">principal =
+                #{principal},
+            </if>
+            <if test="phone != null">phone =
+                #{phone},
+            </if>
+            <if test="baseCreateDate != null">base_create_date =
+                #{baseCreateDate},
+            </if>
+            <if test="hasMonitor != null">has_monitor =
+                #{hasMonitor},
+            </if>
+            <if test="areaCode != null">area_code =
+                #{areaCode},
+            </if>
+            <if test="hasIot != null">has_iot =
+                #{hasIot},
+            </if>
+            <if test="deviceIds != null">device_ids =
+                #{deviceIds},
+            </if>
+            <if test="farmLng != null">farm_lng =
+                #{farmLng},
+            </if>
+            <if test="farmLat != null">farm_lat =
+                #{farmLat},
+            </if>
+            <if test="pictures != null">pictures =
+                #{pictures},
+            </if>
+            <if test="forestPic != null">forest_pic =
+                #{forestPic},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="delFlag != null">del_flag =
+                #{delFlag},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="updateBy != null">update_by =
+                #{updateBy},
+            </if>
+            <if test="deptIdP != null">dept_id_p =
+                #{deptIdP},
+            </if>
+            <if test="cropNames != null">crop_names =
+                #{cropNames},
+            </if>
+            <if test="monitorIds != null">monitor_ids =
+                #{monitorIds},
+            </if>
+            <if test="address != null">address =
+                #{address},
+            </if>
+            <if test="entityId != null">entity_id =
+                #{entityId},
+            </if>
+            <if test="gradeScore != null">grade_score =
+                #{gradeScore},
+            </if>
+            <if test="gradeRate != null">grade_rate =
+                #{gradeRate},
+            </if>
+            <if test="yieldEst != null">yield_est =
+                #{yieldEst},
+            </if>
+            <if test="plotInfo != null">plot_info =
+                #{plotInfo},
+            </if>
+            <if test="growEnv != null">grow_env =
+                #{growEnv},
+            </if>
+        </trim>
+        where farm_id = #{farmId}
+    </update>
+
+    <delete id="deleteBaseFarmById" parameterType="Long">
+        delete
+        from base_farm
+        where farm_id = #{farmId}
+    </delete>
+
+    <delete id="deleteBaseFarmByIds" parameterType="String">
+        delete from base_farm where farm_id in
+        <foreach item="farmId" collection="array" open="(" separator="," close=")">
+            #{farmId}
+        </foreach>
+    </delete>
+    <select id="getFarmCount" resultType="integer">
+        select count(farm_id)
+        from base_farm
+    </select>
+
+    <select id="getFarmAreaCount" resultType="double">
+        select sum(base_area)
+        from base_farm;
+    </select>
+
+    <select id="getFarmNameList" resultType="string">
+        select farm_name
+        from base_farm
+        where area_code = '360721'
+    </select>
+
+    <select id="getMaxAreaCode" parameterType="string" resultType="java.lang.Long">
+        SELECT MAX(farm_code) + 1
+        FROM base_farm t
+        WHERE t.area_code = #{areaCode}
+    </select>
+
+</mapper>

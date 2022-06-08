@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.ser.mapper.BizGoodSellMapper">
+
+    <resultMap type="com.sinonc.service.domain.BizGoodSell" id="BizGoodSellResult">
+        <result property="sellId"    column="sell_id"    />
+        <result property="infoIdP"    column="info_id_p"    />
+        <result property="passion" column="passion"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="shipAddress" column="ship_address"/>
+        <result property="shipDetail" column="ship_detail"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.ser.dto.BizGoodSellBackDto" id="BizGoodSellBackDtoResult">
+        <result property="sellId" column="sell_id"/>
+        <result property="infoIdP" column="info_id_p"/>
+        <result property="passion" column="passion"/>
+        <result property="issueTime" column="issue_time"/>
+        <result property="shipAddress" column="ship_address"/>
+        <result property="shipDetail" column="ship_detail"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+
+        <result property="infoName" column="info_name"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.ser.dto.BizGoodSellDto" id="BizGoodSellDtoResult">
+        <result property="sellId" column="sell_id"/>
+        <result property="infoId" column="info_id"/>
+        <result property="infoName" column="info_name"/>
+        <result property="infoType" column="info_type"/>
+        <result property="imageUrl" column="image_url"/>
+        <result property="content" column="content"/>
+        <result property="detailImages" column="detail_images"/>
+        <result property="minPrice" column="min_price"/>
+        <result property="maxPrice" column="max_price"/>
+        <result property="breed" column="breed"/>
+        <result property="infoName" column="info_name"/>
+        <result property="topFlag" column="top_flag"/>
+        <result property="saleAble" column="sale_able"/>
+
+        <result property="phone" column="phone"/>
+        <result property="memberId" column="member_id"/>
+
+        <result property="passion" column="passion"/>
+        <result property="shipAddress" column="ship_address"/>
+        <result property="shipDetail" column="ship_detail"/>
+
+        <result property="issueTime" column="issue_time"/>
+        <result property="realName" column="real_name"/>
+        <result property="avatar" column="avatar"/>
+        <collection property="goodSpecsList" javaType="java.util.ArrayList" ofType="com.sinonc.service.domain.BizGoodSpecs" select="selectBizGoodSpecsList" column="productId=info_id"></collection>
+
+    </resultMap>
+
+    <resultMap type="com.sinonc.service.domain.BizGoodSpecs" id="BizGoodSpecsResult">
+        <result property="specsId"    column="specs_id"    />
+        <result property="infoIdP"    column="info_id_p"    />
+        <result property="specsName"    column="specs_name"    />
+        <result property="specsPrice"    column="specs_price"    />
+        <result property="stock"    column="stock"    />
+        <result property="imagesUrl"    column="images_url"    />
+    </resultMap>
+
+    <sql id="selectBizGoodSpecsVo">
+        select specs_id, info_id_p, specs_name, specs_price, stock, images_url from biz_good_specs
+    </sql>
+
+    <select id="selectBizGoodSpecsList" resultMap="BizGoodSpecsResult">
+        <include refid="selectBizGoodSpecsVo"/>
+        where info_id_p = #{productId} and del_flag = 1
+    </select>
+
+    <sql id="selectBizGoodSellVo">
+        select sell_id, info_id_p, passion,issue_time, ship_address,ship_detail, del_flag, create_time, update_time from biz_good_sell
+    </sql>
+
+    <select id="selectBizGoodSellList" parameterType="com.sinonc.service.domain.BizGoodSell"
+            resultMap="BizGoodSellBackDtoResult">
+        SELECT
+        biz_good_sell.sell_id,
+        biz_good_sell.info_id_p,
+        biz_good_sell.passion,
+        biz_good_sell.issue_time,
+        biz_good_sell.ship_address,
+        biz_good_sell.ship_detail,
+        biz_good_sell.del_flag,
+        biz_good_sell.create_time,
+        biz_good_sell.update_time,
+        biz_good_info.info_name
+        FROM
+        biz_good_sell
+        LEFT JOIN biz_good_info ON biz_good_sell.info_id_p=biz_good_info.info_id
+        <where>
+            <if test="infoIdP != null ">and info_id_p = #{infoIdP}</if>
+            <if test="passion != null  and passion != ''">and passion = #{passion}</if>
+            <if test="issueTime != null ">and issue_time = #{issueTime}</if>
+            <if test="shipAddress != null  and shipAddress != ''">and ship_address = #{shipAddress}</if>
+            <if test="infoName !=null and infoName != ''">and biz_good_info.info_name like concat('%',#{infoName},'%')</if>
+        </where>
+    </select>
+
+    <select id="selectBizGoodSellById" parameterType="Long" resultMap="BizGoodSellResult">
+        <include refid="selectBizGoodSellVo"/>
+        where sell_id = #{sellId}
+    </select>
+
+    <insert id="insertBizGoodSell" parameterType="com.sinonc.service.domain.BizGoodSell" useGeneratedKeys="true" keyProperty="sellId">
+        insert into biz_good_sell
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="infoIdP != null">info_id_p,</if>
+            <if test="passion != null and passion != ''">passion,</if>
+            <if test="issueTime != null">issue_time,</if>
+            <if test="shipAddress != null">ship_address,</if>
+            <if test="shipDetail != null">ship_detail,</if>
+            <if test="delFlag != null and delFlag != ''">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="phone != null">phone,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="infoIdP != null">#{infoIdP},</if>
+            <if test="passion != null and passion != ''">#{passion},</if>
+            <if test="issueTime != null">#{issueTime},</if>
+            <if test="shipAddress != null">#{shipAddress},</if>
+            <if test="shipDetail != null">#{shipDetail},</if>
+            <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="phone != null">#{phone},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBizGoodSell" parameterType="com.sinonc.service.domain.BizGoodSell">
+        update biz_good_sell
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="infoIdP != null">info_id_p = #{infoIdP},</if>
+            <if test="passion != null and passion != ''">passion = #{passion},</if>
+            <if test="issueTime != null">issue_time = #{issueTime},</if>
+            <if test="shipAddress != null">ship_address = #{shipAddress},</if>
+            <if test="shipDetail != null">ship_detail = #{shipDetail},</if>
+            <if test="delFlag != null and delFlag != ''">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="phone != null">phone = #{phone},</if>
+        </trim>
+        where sell_id = #{sellId}
+    </update>
+
+    <delete id="deleteBizGoodSellById" parameterType="Long">
+        delete from biz_good_sell where sell_id = #{sellId}
+    </delete>
+
+    <delete id="deleteBizGoodSellByIds" parameterType="Long">
+        delete from biz_good_sell where sell_id in
+        <foreach item="sellId" collection="array" open="(" separator="," close=")">
+            #{sellId}
+        </foreach>
+    </delete>
+
+    <select id="selectBizGoodSellForPage"  resultMap="BizGoodSellDtoResult">
+        SELECT DISTINCT
+        biz_good_info.info_id,
+        biz_good_info.info_name,
+        biz_good_info.info_type,
+        biz_good_info.image_url,
+        biz_good_info.content,
+        biz_good_info.detail_images,
+        biz_good_info.min_price,
+        biz_good_info.max_price,
+        biz_good_info.sale_able,
+        biz_good_info.breed,
+        biz_good_info.top_flag,
+        biz_good_info.member_id_p AS member_id,
+        biz_good_sell.passion,
+        biz_good_sell.ship_address,
+        biz_good_sell.ship_detail,
+        biz_good_sell.issue_time,
+        biz_good_sell.phone
+        FROM
+        biz_good_sell
+        LEFT JOIN biz_good_info ON biz_good_sell.info_id_p = biz_good_info.info_id
+        LEFT JOIN biz_good_specs ON biz_good_specs.info_id_p = biz_good_info.info_id
+        LEFT JOIN (
+        SELECT
+        MIN(specs_price) AS min_price,
+        MAX(specs_price) AS max_Price,
+        biz_good_specs.info_id_p
+        FROM
+        biz_good_specs
+        GROUP BY
+        info_id_p
+        ) AS specMinMax ON biz_good_info.info_id = specMinMax.info_id_p
+        <where>
+            <if test="memberIdP != null ">and biz_good_info.member_id_p = #{memberIdP}</if>
+            <if test="saleAble != null and saleAble != ''">and biz_good_info.sale_able = #{saleAble}</if>
+            <if test="passion != null and passion != ''">and biz_good_sell.passion = #{passion}</if>
+            <if test="infoName != null and infoName != ''">
+                and biz_good_info.info_name like concat('%', #{infoName}, '%')
+            </if>
+
+            <if test="minPrice != null and minPrice != 0">and specMinMax.min_price <![CDATA[>= ]]>  #{minPrice}</if>
+            <if test="maxPrice != null and maxPrice != 0">and specMinMax.max_Price <![CDATA[<= ]]>  #{maxPrice}</if>
+
+            <if test="breedsArray != null and breedsArray.length != 0">
+                and biz_good_info.breed in
+                <foreach collection="breedsArray" item="breed" index="index" open="(" close=")" separator=",">
+                    #{breed}
+                </foreach>
+            </if>
+
+            <if test="shipAddressArray != null ">
+                and biz_good_sell.ship_address in
+                <foreach collection="shipAddressArray" item="shipAddress" index="index" open="(" close=")"
+                         separator=",">
+                    #{shipAddress}
+                </foreach>
+            </if>
+
+            <if test="goodSpecsArray != null and goodSpecsArray.length != 0">
+                and biz_good_specs.specs_name in
+                <foreach collection="goodSpecsArray" item="goodSpecs" index="index" open="(" close=")" separator=",">
+                    #{goodSpecs}
+                </foreach>
+            </if>
+
+        </where>
+
+        order by biz_good_sell.issue_time desc
+
+    </select>
+
+
+    <select id="selectBizGoodSellByInfoId"  resultMap="BizGoodSellDtoResult">
+        SELECT
+        biz_good_info.info_id,
+        biz_good_info.info_name,
+        biz_good_info.info_type,
+        biz_good_info.image_url,
+        biz_good_info.content,
+        biz_good_info.detail_images,
+        biz_good_info.min_price,
+        biz_good_info.max_price,
+        biz_good_info.sale_able,
+        biz_good_info.breed,
+        biz_good_info.member_id_p member_id,
+        biz_good_sell.sell_id,
+        biz_good_sell.passion,
+        biz_good_sell.ship_address,
+        biz_good_sell.ship_detail,
+        biz_good_sell.issue_time,
+        biz_good_sell.phone
+        FROM
+        biz_good_sell
+        LEFT JOIN biz_good_info ON biz_good_sell.info_id_p = biz_good_info.info_id
+        <where>
+            biz_good_info.info_id= #{infoId}
+        </where>
+
+    </select>
+
+
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.QuestionAnswerDtoMapper">
+
+    <resultMap type="com.sinonc.agriculture.dto.QuestionAnswerDto" id="QuestionAnswerDtoResult">
+        <result property="answerId" column="answer_id"/>
+        <result property="nikeName" column="nike_name"/>
+        <result property="memberId" column="member_id"/>
+        <result property="questionId" column="question_id"/>
+        <result property="content" column="content"/>
+        <result property="img" column="img"/>
+        <result property="favorCount" column="favor_count"/>
+        <result property="opposeCount" column="oppose_count"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="areaName" column="area_name"/>
+        <result property="bestFlag" column="best_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="sysName" column="sys_name"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.agriculture.domain.MemberInfo" id="MemberInfoResult">
+        <id property="memberId" column="member_id"/>
+        <result property="nikeName" column="nike_name"/>
+        <result property="sex" column="sex"/>
+        <result property="birthday" column="birthday"/>
+        <result property="personalSignature" column="personal_signature"/>
+        <result property="headImg" column="head_img"/>
+        <result property="mobilePhone" column="mobile_phone"/>
+        <result property="city" column="city"/>
+        <result property="experience" column="experience"/>
+        <result property="role" column="role"/>
+        <result property="unionid" column="unionid"/>
+        <result property="mpOpenid" column="mp_openid"/>
+        <result property="appOpenid" column="app_openid"/>
+        <result property="sysUuid" column="sys_uuid"/>
+        <result property="focusTags" column="focus_tags"/>
+        <result property="expertTags" column="expert_tags"/>
+        <result property="score" column="score"/>
+        <result property="rank" column="rank"/>
+        <result property="status" column="status"/>
+        <result property="lastLoginTime" column="last_login_time"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="regSys" column="reg_sys"/>
+    </resultMap>
+
+    <sql id="selectQuestionAnswerVo">
+        select answer_id,
+               nike_name,
+               member_id,
+               question_id,
+               content,
+               img,
+               favor_count,
+               oppose_count,
+               area_code,
+               area_name,
+               best_flag,
+               create_time,
+               update_time,
+               sys_name
+        from question_answer
+    </sql>
+
+    <select id="selectQuestionAnswerDtoList" parameterType="com.sinonc.agriculture.domain.QuestionAnswer"
+            resultMap="QuestionAnswerDtoResult">
+        <include refid="selectQuestionAnswerVo"/>
+        <where>
+            <if test="nikeName != null  and nikeName != ''">and nike_name like concat('%', #{nikeName}, '%')</if>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="questionId != null ">and question_id = #{questionId}</if>
+            <if test="content != null  and content != ''">and content = #{content}</if>
+            <if test="img != null  and img != ''">and img = #{img}</if>
+            <if test="areaCode != null  and areaCode != ''">and area_code = #{areaCode}</if>
+            <if test="areaName != null  and areaName != ''">and area_name like concat('%', #{areaName}, '%')</if>
+            <if test="bestFlag != null ">and best_flag = #{bestFlag}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name like concat('%', #{sysName}, '%')</if>
+        </where>
+        order by favor_count desc,create_time desc
+    </select>
+
+    <select id="selectQuestionAnswerById" parameterType="Long" resultMap="QuestionAnswerDtoResult">
+        <include refid="selectQuestionAnswerVo"/>
+        where answer_id = #{answerId}
+    </select>
+
+
+    <select id="getQuestionAnswerByMemberId" parameterType="long" resultType="java.util.Map">
+        SELECT *
+        FROM question_answer
+        WHERE member_id = #{memberId}
+    </select>
+
+    <select id="selectBestAnswer" resultMap="QuestionAnswerDtoResult">
+        <include refid="selectQuestionAnswerVo"/>
+        where quetion_id = #{value} and best_flag = 1
+    </select>
+
+</mapper>

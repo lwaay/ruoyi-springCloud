@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.OdGoodsSpecsMapper">
+
+    <resultMap type="com.sinonc.orders.domain.OdGoodsSpecs" id="OdGoodsSpecsResult">
+        <result property="goodsSpecId" column="goods_spec_id"/>
+        <result property="goodsIdP" column="goods_id_p"/>
+        <result property="specsIdP" column="specs_id_p"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectOdGoodsSpecsVo">
+        select goods_spec_id, goods_id_p, specs_id_p, create_by, create_time, update_time
+        from od_goods_specs
+    </sql>
+
+    <select id="selectOdGoodsSpecsList" parameterType="com.sinonc.orders.domain.OdGoodsSpecs" resultMap="OdGoodsSpecsResult">
+        <include refid="selectOdGoodsSpecsVo"/>
+        <where>
+            <if test="goodsIdP != null ">
+                and goods_id_p = #{goodsIdP}
+            </if>
+            <if test="specsIdP != null ">
+                and specs_id_p = #{specsIdP}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectOdGoodsSpecsById" parameterType="Long" resultMap="OdGoodsSpecsResult">
+        <include refid="selectOdGoodsSpecsVo"/>
+        where goods_spec_id = #{goodsSpecId}
+    </select>
+
+    <insert id="insertOdGoodsSpecs" parameterType="com.sinonc.orders.domain.OdGoodsSpecs" useGeneratedKeys="true"
+            keyProperty="goodsSpecId">
+        insert into od_goods_specs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsIdP != null">goods_id_p,
+            </if>
+            <if test="specsIdP != null">specs_id_p,
+            </if>
+            <if test="createBy != null">create_by,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsIdP != null">#{goodsIdP},
+            </if>
+            <if test="specsIdP != null">#{specsIdP},
+            </if>
+            <if test="createBy != null">#{createBy},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateOdGoodsSpecs" parameterType="com.sinonc.orders.domain.OdGoodsSpecs">
+        update od_goods_specs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsIdP != null">goods_id_p =
+                #{goodsIdP},
+            </if>
+            <if test="specsIdP != null">specs_id_p =
+                #{specsIdP},
+            </if>
+            <if test="createBy != null">create_by =
+                #{createBy},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where goods_spec_id = #{goodsSpecId}
+    </update>
+
+    <delete id="deleteOdGoodsSpecsById" parameterType="Long">
+        delete
+        from od_goods_specs
+        where goods_spec_id = #{goodsSpecId}
+    </delete>
+
+    <delete id="deleteOdGoodsSpecsByIds" parameterType="String">
+        delete from od_goods_specs where goods_spec_id in
+        <foreach item="goodsSpecId" collection="array" open="(" separator="," close=")">
+            #{goodsSpecId}
+        </foreach>
+    </delete>
+
+</mapper>

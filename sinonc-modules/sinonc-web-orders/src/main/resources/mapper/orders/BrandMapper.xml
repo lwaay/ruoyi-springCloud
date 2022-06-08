@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.orders.mapper.BrandMapper">
+
+    <resultMap type="com.sinonc.orders.domain.Brand" id="BrandResult">
+        <result property="brandId"    column="brand_id"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="image"    column="image"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+	<sql id="selectBrandVo">
+        select brand_id, brand_name, remark, image, create_by, create_time, update_time from od_brand
+    </sql>
+
+    <select id="selectBrandList" parameterType="com.sinonc.orders.domain.Brand" resultMap="BrandResult">
+        <include refid="selectBrandVo"/>
+        <where>
+            <if test="brandId != null "> and brand_id = #{brandId}</if>
+             <if test="brandName != null  and brandName != '' "> and brand_name = #{brandName}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="image != null  and image != '' "> and image = #{image}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+         </where>
+         order by create_time desc
+    </select>
+
+    <select id="selectBrandById" parameterType="Long" resultMap="BrandResult">
+        <include refid="selectBrandVo"/>
+        where brand_id = #{brandId}
+    </select>
+
+    <insert id="insertBrand" parameterType="com.sinonc.orders.domain.Brand" useGeneratedKeys="true" keyProperty="brandId">
+        insert into od_brand
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="brandName != null  and brandName != ''  ">brand_name,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="image != null  and image != ''  ">image,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateTime != null  ">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="brandName != null  and brandName != ''  ">#{brandName},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="image != null  and image != ''  ">#{image},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBrand" parameterType="com.sinonc.orders.domain.Brand">
+        update od_brand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandName != null  and brandName != ''  ">brand_name = #{brandName},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="image != null  and image != ''  ">image = #{image},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+        </trim>
+        where brand_id = #{brandId}
+    </update>
+
+	<delete id="deleteBrandById" parameterType="Long">
+        delete from od_brand where brand_id = #{brandId}
+    </delete>
+
+    <delete id="deleteBrandByIds" parameterType="String">
+        delete from od_brand where brand_id in
+        <foreach item="brandId" collection="array" open="(" separator="," close=")">
+            #{brandId}
+        </foreach>
+    </delete>
+
+    <select id="listSelectBrand" resultMap="BrandResult">
+        <include refid="selectBrandVo"/>
+    </select>
+</mapper>

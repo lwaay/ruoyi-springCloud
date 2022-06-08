@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.iot.mapper.DevicePropertyMapper">
+
+    <resultMap type="DeviceProperty" id="DevicePropertyResult">
+        <result property="propertyId" column="property_id"/>
+        <result property="property" column="property"/>
+        <result property="value" column="value"/>
+        <result property="name" column="name"/>
+        <result property="deviceTypeId" column="device_type_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="unit" column="unit"/>
+        <result property="imageUrl" column="image_url"/>
+
+        <result property="deviceIdp" column="device_id"/>
+        <result property="deviceName" column="device_name"/>
+    </resultMap>
+
+    <resultMap type="com.sinonc.iot.api.vo.DevicePropertyVo" id="DevicePropertyVoResult">
+        <result property="propertyId" column="property_id"/>
+        <result property="property" column="property"/>
+        <result property="name" column="name"/>
+        <result property="typeName" column="type_name"/>
+        <result property="value" column="value"/>
+        <result property="unit" column="unit"/>
+        <result property="imageUrl" column="image_url"/>
+    </resultMap>
+    <sql id="selectDevicePropertyVo">
+        select property_id,
+               property,
+               value,
+               name,
+               device_type_id,
+               create_time,
+               update_time,
+               unit,
+               image_url
+        from device_property
+    </sql>
+
+    <select id="selectDevicePropertyList" parameterType="DeviceProperty" resultMap="DevicePropertyResult">
+        <include refid="selectDevicePropertyVo"/>
+        <where>
+            <if test="property != null  and property != ''">
+                and property = #{property}
+            </if>
+            <if test="value != null  and value != ''">
+                and value = #{value}
+            </if>
+            <if test="name != null  and name != ''">
+                and name like concat('%', #{name}, '%')
+            </if>
+            <if test="deviceTypeId != null  and deviceTypeId != ''">
+                and device_type_id = #{deviceTypeId}
+            </if>
+            <if test="unit != null  and unit != ''">
+                and unit = #{unit}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDevicePropertyById" parameterType="Long" resultMap="DevicePropertyResult">
+        <include refid="selectDevicePropertyVo"/>
+        where property_id = #{propertyId}
+    </select>
+
+    <insert id="insertDeviceProperty" parameterType="DeviceProperty" useGeneratedKeys="true"
+            keyProperty="propertyId">
+        insert into device_property
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="property != null">property,
+            </if>
+            <if test="value != null">value,
+            </if>
+            <if test="name != null">name,
+            </if>
+            <if test="deviceTypeId != null">device_type_id,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="unit != null">unit,
+            </if>
+            <if test="imageUrl !=null">
+                image_url,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="property != null">#{property},
+            </if>
+            <if test="value != null">#{value},
+            </if>
+            <if test="name != null">#{name},
+            </if>
+            <if test="deviceTypeId != null">#{deviceTypeId},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="unit != null">#{unit},
+            </if>
+            <if test="imageUrl !=null">
+                #{imageUrl},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateDeviceProperty" parameterType="DeviceProperty">
+        update device_property
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="property != null">property =
+                #{property},
+            </if>
+            <if test="value != null">value =
+                #{value},
+            </if>
+            <if test="name != null">name =
+                #{name},
+            </if>
+            <if test="deviceTypeId != null">device_type_id =
+                #{deviceTypeId},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="unit != null">unit =
+                #{unit},
+            </if>
+            <if test="imageUrl !=null">image_url =
+                #{imageUrl},
+            </if>
+        </trim>
+        where property_id = #{propertyId}
+    </update>
+
+    <delete id="deleteDevicePropertyById" parameterType="Long">
+        delete
+        from device_property
+        where property_id = #{propertyId}
+    </delete>
+
+    <delete id="deleteDevicePropertyByIds" parameterType="String">
+        delete from device_property where property_id in
+        <foreach item="propertyId" collection="array" open="(" separator="," close=")">
+            #{propertyId}
+        </foreach>
+    </delete>
+    <select id="getPropertyByType" parameterType="string" resultMap="DevicePropertyResult">
+        <include refid="selectDevicePropertyVo"/> where device_type_id = #{deviceTypeId}
+    </select>
+    <select id="getAllProperty" resultMap="DevicePropertyVoResult" parameterType="DeviceProperty">
+        select dp.property_id,dp.property,dp.name,dp.value,dp.unit,dt.name as type_name,dp.image_url from device_property dp,device_type dt
+        where dp.device_type_id=dt.id
+        <if test="property != null  and property != ''">
+            and dp.property like  concat('%',#{property},'%')
+        </if>
+        <if test="name != null  and name != ''">
+            and dp.name like concat('%', #{name}, '%')
+        </if>
+        <if test="deviceTypeId != null">
+            and device_Type_id =#{deviceTypeId}
+        </if>
+    </select>
+
+
+    <!--根据要素名称搜索物联网传感器设备信息-->
+    <select id="listPropertysForEmelKey"   resultMap="DevicePropertyResult" >
+        SELECT t.`property`,t.`name`,t.`device_type_id`,t.`unit`,b.`device_id`,b.`device_name`
+        FROM device_property t
+        LEFT JOIN  device_info b ON t.`device_type_id` = b.`device_type_id`
+        WHERE 1=1
+        <if test="deviceIds != null">
+            AND b.`device_id` IN
+            <foreach item="deviceId" collection="deviceIds" open="(" separator="," close=")">
+                #{deviceId}
+            </foreach>
+        </if>
+        <if test="emelKeys != null and emelKeys.size()>0">
+            AND
+            <foreach item="keyStr" collection="emelKeys" index="index" separator="or" open="(" close=")">
+                t.name LIKE CONCAT('%',#{keyStr},'%')
+            </foreach>
+        </if>
+        ORDER BY t.property_id DESC
+    </select>
+
+</mapper>

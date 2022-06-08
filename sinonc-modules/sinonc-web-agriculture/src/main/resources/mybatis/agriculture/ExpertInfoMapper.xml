@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.ExpertInfoMapper">
+
+    <resultMap type="com.sinonc.agriculture.domain.ExpertInfo" id="ExpertInfoResult">
+        <result property="expertId" column="expert_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="personalPhoto" column="personal_photo"/>
+        <result property="realName" column="real_name"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="cropCode" column="crop_code"/>
+        <result property="regionCode" column="region_code"/>
+        <result property="personalProfile" column="personal_profile"/>
+        <result property="verifyStatus" column="verify_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="sysName" column="sys_name"/>
+
+        <result property="idenCard" column="iden_card"/>
+        <result property="roleType" column="role_type"/>
+        <result property="jobCompany" column="job_company"/>
+        <result property="certification" column="certification"/>
+
+        <!--2022-05-11新增字段：现从事专业、职务/职称-->
+        <result property="currMajor" column="curr_major"/>
+        <result property="postName" column="post_name"/>
+
+    </resultMap>
+
+    <resultMap type="com.sinonc.agriculture.dto.ExperInfoDto" id="ExperInfoDtoResult">
+        <result property="expertId" column="expert_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="personalPhoto" column="personal_photo"/>
+        <result property="realName" column="real_name"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="areaCode" column="area_code"/>
+        <result property="cropCode" column="crop_code"/>
+        <result property="regionCode" column="region_code"/>
+        <result property="personalProfile" column="personal_profile"/>
+        <result property="verifyStatus" column="verify_status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="sysName" column="sys_name"/>
+
+        <result property="idenCard" column="iden_card"/>
+        <result property="roleType" column="role_type"/>
+        <result property="jobCompany" column="job_company"/>
+
+        <!--2022-05-11新增字段：现从事专业、职务/职称-->
+        <result property="currMajor" column="curr_major"/>
+        <result property="postName" column="post_name"/>
+    </resultMap>
+
+
+    <sql id="selectExpertInfoVo">
+        select expert_id,
+               member_id,
+               personal_photo,
+               real_name,
+               phone,
+               email,
+               area_code,
+               crop_code,
+               region_code,
+               personal_profile,
+               verify_status,
+               create_time,
+               update_time,
+               create_by,
+               update_by,
+               sys_name,
+               iden_card,
+               role_type,
+               job_company,
+               certification,
+               curr_major,
+               post_name
+        from expert_info
+    </sql>
+
+    <select id="selectExpertInfoList" parameterType="com.sinonc.agriculture.domain.ExpertInfo"
+            resultMap="ExperInfoDtoResult">
+        <include refid="selectExpertInfoVo"/>
+        <where>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">and personal_photo = #{personalPhoto}</if>
+            <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="areaCode != null  and areaCode != ''">and area_code = #{areaCode}</if>
+            <if test="cropCode != null  and cropCode != ''">and crop_code like concat('%', #{cropCode}, '%')</if>
+            <if test="regionCode != null  and regionCode != ''">and region_code = #{regionCode}</if>
+            <if test="personalProfile != null  and personalProfile != ''">and personal_profile = #{personalProfile}</if>
+            <if test="verifyStatus != null ">and verify_status = #{verifyStatus}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name like concat('%', #{sysName}, '%')</if>
+
+            <if test="roleType != null ">and role_type = #{roleType}</if>
+        </where>
+        ORDER BY expert_id DESC
+    </select>
+
+
+    <select id="selectExpertInfoNoPageList" parameterType="com.sinonc.agriculture.domain.ExpertInfo"
+            resultMap="ExperInfoDtoResult">
+        <include refid="selectExpertInfoVo"/>
+        <where>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">and personal_photo = #{personalPhoto}</if>
+            <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="areaCode != null  and areaCode != ''">and area_code = #{areaCode}</if>
+            <if test="cropCode != null  and cropCode != ''">and crop_code like concat('%', #{cropCode}, '%')</if>
+            <if test="regionCode != null  and regionCode != ''">and region_code = #{regionCode}</if>
+            <if test="personalProfile != null  and personalProfile != ''">and personal_profile = #{personalProfile}</if>
+            <if test="verifyStatus != null ">and verify_status = #{verifyStatus}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name like concat('%', #{sysName}, '%')</if>
+
+            <if test="roleType != null ">and role_type = #{roleType}</if>
+        </where>
+    </select>
+
+
+    <select id="selectExpertInfoNoPageListFilter" parameterType="com.sinonc.agriculture.vo.ExpertInfoVo"
+            resultMap="ExperInfoDtoResult">
+        SELECT
+        distinct
+        expert_info.expert_id,
+        expert_info.member_id,
+        expert_info.personal_photo,
+        expert_info.real_name,
+        expert_info.phone,
+        expert_info.email,
+        expert_info.area_code,
+        expert_info.crop_code,
+        expert_info.region_code,
+        expert_info.personal_profile,
+        expert_info.verify_status,
+        expert_info.create_time,
+        expert_info.update_time,
+        expert_info.create_by,
+        expert_info.update_by,
+        expert_info.sys_name,
+        expert_info.iden_card,
+        expert_info.role_type,
+        expert_info.job_company,
+        expert_info.certification
+        FROM
+        expert_info
+        LEFT JOIN baise_base.crop_dict ON FIND_IN_SET(
+        crop_dict.crop_id,
+        expert_info.crop_code
+        )
+        <where>
+
+            <if test="parentCropId != null ">and crop_dict.parent_id = #{parentCropId}</if>
+
+            <if test="cropCode != null  and cropCode != ''">and FIND_IN_SET(#{cropCode},crop_code)</if>
+
+            <if test="verifyStatus != null ">and verify_status = #{verifyStatus}</if>
+
+            <if test="roleType != null ">and role_type = #{roleType}</if>
+
+            <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+        </where>
+    </select>
+
+
+    <select id="selectExpertInfoListMap" parameterType="com.sinonc.agriculture.domain.ExpertInfo"
+            resultType="java.util.Map">
+        <include refid="selectExpertInfoVo"/>
+        <where>
+            <if test="memberId != null ">and member_id = #{memberId}</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">and personal_photo = #{personalPhoto}</if>
+            <if test="realName != null  and realName != ''">and real_name like concat('%', #{realName}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="email != null  and email != ''">and email = #{email}</if>
+            <if test="areaCode != null  and areaCode != ''">and area_code = #{areaCode}</if>
+            <if test="cropCode != null  and cropCode != ''">and crop_code = #{cropCode}</if>
+            <if test="regionCode != null  and regionCode != ''">and region_code = #{regionCode}</if>
+            <if test="personalProfile != null  and personalProfile != ''">and personal_profile = #{personalProfile}</if>
+            <if test="verifyStatus != null ">and verify_status = #{verifyStatus}</if>
+            <if test="sysName != null  and sysName != ''">and sys_name like concat('%', #{sysName}, '%')</if>
+
+            <if test="roleType != null ">and role_type = #{roleType}</if>
+            and verify_status = 1
+        </where>
+    </select>
+
+
+    <select id="selectExpertInfoById" parameterType="Long" resultMap="ExpertInfoResult">
+        <include refid="selectExpertInfoVo"/>
+        where expert_id = #{expertId}
+    </select>
+
+
+    <select id="selectExpertInfoMemberId" parameterType="Long" resultType="java.util.Map">
+        <include refid="selectExpertInfoVo"/>
+        where expert_id = #{expertId}
+    </select>
+
+    <select id="selectExpertInfoByUserId" resultMap="ExpertInfoResult">
+        <include refid="selectExpertInfoVo"/>
+        where member_id = #{userId}
+    </select>
+
+    <insert id="insertExpertInfo" parameterType="com.sinonc.agriculture.domain.ExpertInfo" useGeneratedKeys="true"
+            keyProperty="expertId">
+        insert into expert_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memberId != null ">member_id,</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">personal_photo,</if>
+            <if test="realName != null  and realName != ''">real_name,</if>
+            <if test="phone != null  and phone != ''">phone,</if>
+            <if test="email != null  and email != ''">email,</if>
+            <if test="areaCode != null  and areaCode != ''">area_code,</if>
+            <if test="cropCode != null  and cropCode != ''">crop_code,</if>
+            <if test="regionCode != null  and regionCode != ''">region_code,</if>
+            <if test="personalProfile != null  and personalProfile != ''">personal_profile,</if>
+            <if test="verifyStatus != null ">verify_status,</if>
+            <if test="createTime != null ">create_time,</if>
+            <if test="updateTime != null ">update_time,</if>
+            <if test="createBy != null  and createBy != ''">create_by,</if>
+            <if test="updateBy != null  and updateBy != ''">update_by,</if>
+            <if test="sysName != null  and sysName != ''">sys_name,</if>
+
+            <if test="idenCard != null  and idenCard != ''">iden_card,</if>
+            <if test="roleType != null ">role_type,</if>
+            <if test="jobCompany != null  and jobCompany != ''">job_company,</if>
+            <if test="certification != null and certification != ''">certification,</if>
+
+            <if test="currMajor != null and currMajor != ''">curr_major,</if>
+            <if test="postName != null and postName != ''">post_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memberId != null ">#{memberId},</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">#{personalPhoto},</if>
+            <if test="realName != null  and realName != ''">#{realName},</if>
+            <if test="phone != null  and phone != ''">#{phone},</if>
+            <if test="email != null  and email != ''">#{email},</if>
+            <if test="areaCode != null  and areaCode != ''">#{areaCode},</if>
+            <if test="cropCode != null  and cropCode != ''">#{cropCode},</if>
+            <if test="regionCode != null  and regionCode != ''">#{regionCode},</if>
+            <if test="personalProfile != null  and personalProfile != ''">#{personalProfile},</if>
+            <if test="verifyStatus != null ">#{verifyStatus},</if>
+            <if test="createTime != null ">#{createTime},</if>
+            <if test="updateTime != null ">#{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">#{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">#{updateBy},</if>
+            <if test="sysName != null  and sysName != ''">#{sysName},</if>
+
+            <if test="idenCard != null  and idenCard != ''">#{idenCard},</if>
+            <if test="roleType != null  and roleType != ''">#{roleType},</if>
+            <if test="jobCompany != null  and jobCompany != ''">#{jobCompany},</if>
+            <if test="certification != null and certification != ''">#{certification},</if>
+
+            <if test="currMajor != null and currMajor != ''">#{currMajor},</if>
+            <if test="postName != null and postName != ''">#{postName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateExpertInfo" parameterType="com.sinonc.agriculture.domain.ExpertInfo">
+        update expert_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="memberId != null ">member_id = #{memberId},</if>
+            <if test="personalPhoto != null  and personalPhoto != ''">personal_photo = #{personalPhoto},</if>
+            <if test="realName != null  and realName != ''">real_name = #{realName},</if>
+            <if test="phone != null  and phone != ''">phone = #{phone},</if>
+            <if test="email != null  and email != ''">email = #{email},</if>
+            <if test="areaCode != null  and areaCode != ''">area_code = #{areaCode},</if>
+            <if test="cropCode != null  and cropCode != ''">crop_code = #{cropCode},</if>
+            <if test="regionCode != null  and regionCode != ''">region_code = #{regionCode},</if>
+            <if test="personalProfile != null  and personalProfile != ''">personal_profile = #{personalProfile},</if>
+            <if test="verifyStatus != null ">verify_status = #{verifyStatus},</if>
+            <if test="createTime != null ">create_time = #{createTime},</if>
+            <if test="updateTime != null ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''">create_by = #{createBy},</if>
+            <if test="updateBy != null  and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="sysName != null  and sysName != ''">sys_name = #{sysName},</if>
+
+            <if test="idenCard != null  and idenCard != ''">iden_card = #{idenCard},</if>
+            <if test="roleType != null ">role_type = #{roleType},</if>
+            <if test="jobCompany != null  and jobCompany != ''">job_company = #{jobCompany},</if>
+            <if test="certification != null and certification != ''">certification = #{certification},</if>
+
+            <if test="currMajor != null and currMajor != ''">curr_major = #{currMajor},</if>
+            <if test="postName != null and postName != ''">post_name = #{postName},</if>
+        </trim>
+        where expert_id = #{expertId}
+    </update>
+
+    <delete id="deleteExpertInfoById" parameterType="Long">
+        delete
+        from expert_info
+        where expert_id = #{expertId}
+    </delete>
+
+    <delete id="deleteExpertInfoByIds" parameterType="String">
+        delete from expert_info where expert_id in
+        <foreach item="expertId" collection="array" open="(" separator="," close=")">
+            #{expertId}
+        </foreach>
+    </delete>
+
+
+    <select id="selectExpertInfoListNotInConcern" resultMap="ExpertInfoResult">
+        SELECT expert_id,
+               expert_info.member_id,
+               personal_photo,
+               real_name,
+               phone,
+               email,
+               area_code,
+               crop_code,
+               region_code,
+               personal_profile,
+               verify_status,
+               expert_info.create_time,
+               update_time,
+               create_by,
+               update_by,
+               sys_name,
+               iden_card,
+               role_type,
+               job_company
+        FROM expert_info
+        WHERE expert_info.expert_id NOT IN (
+            SELECT concern_info.target_id
+            FROM concern_info
+            WHERE concern_info.target_type = 3
+        )
+    </select>
+
+    <select id="selectAllExpertInfoList" resultMap="ExperInfoDtoResult">
+        SELECT expert_id,
+               expert_info.member_id,
+               personal_photo,
+               real_name,
+               phone,
+               email,
+               area_code,
+               crop_code,
+               region_code,
+               personal_profile,
+               verify_status,
+               expert_info.create_time,
+               update_time,
+               create_by,
+               update_by,
+               sys_name,
+               iden_card,
+               role_type,
+               job_company,
+               curr_major,
+               post_name
+        FROM expert_info
+        WHERE 1=1
+        AND expert_info.verify_status = 1
+        ORDER BY expert_id DESC
+
+    </select>
+
+    <select id="selectExpertInfoByMemberId" resultMap="ExpertInfoResult">
+        <include refid="selectExpertInfoVo"/>
+        where member_id = #{value}
+    </select>
+
+    <select id="selectExpertCount" resultType="int">
+        select COUNT(expert_id)
+        from expert_info
+    </select>
+
+</mapper>

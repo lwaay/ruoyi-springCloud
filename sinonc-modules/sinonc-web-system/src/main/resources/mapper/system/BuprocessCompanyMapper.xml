@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.system.mapper.BuprocessCompanyMapper">
+
+    <resultMap type="BuprocessCompany" id="BuprocessCompanyResult">
+        <result property="proceId" column="proce_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="companyCode" column="company_code"/>
+        <result property="legalPerson" column="legal_person"/>
+        <result property="legalIdcard" column="legal_idcard"/>
+        <result property="bulicensePic" column="bulicense_pic"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectBuprocessCompanyVo">
+        select proce_id, company_name, company_code, legal_person, legal_idcard, bulicense_pic, create_time, update_time        from buprocess_company
+    </sql>
+
+    <select id="selectBuprocessCompanyList" parameterType="BuprocessCompany" resultMap="BuprocessCompanyResult">
+        <include refid="selectBuprocessCompanyVo"/>
+        <where>
+            <if test="companyName != null  and companyName != ''">
+                and company_name like concat('%', #{companyName}, '%')
+            </if>
+            <if test="companyCode != null  and companyCode != ''">
+                and company_code = #{companyCode}
+            </if>
+            <if test="legalPerson != null  and legalPerson != ''">
+                and legal_person = #{legalPerson}
+            </if>
+            <if test="legalIdcard != null  and legalIdcard != ''">
+                and legal_idcard = #{legalIdcard}
+            </if>
+            <if test="bulicensePic != null  and bulicensePic != ''">
+                and bulicense_pic = #{bulicensePic}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBuprocessCompanyById" parameterType="Long" resultMap="BuprocessCompanyResult">
+        <include refid="selectBuprocessCompanyVo"/>
+        where proce_id = #{proceId}
+    </select>
+
+    <insert id="insertBuprocessCompany" parameterType="BuprocessCompany" useGeneratedKeys="true"
+            keyProperty="proceId">
+        insert into buprocess_company
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="companyName != null">company_name,
+            </if>
+            <if test="companyCode != null">company_code,
+            </if>
+            <if test="legalPerson != null">legal_person,
+            </if>
+            <if test="legalIdcard != null">legal_idcard,
+            </if>
+            <if test="bulicensePic != null">bulicense_pic,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="companyName != null">#{companyName},
+            </if>
+            <if test="companyCode != null">#{companyCode},
+            </if>
+            <if test="legalPerson != null">#{legalPerson},
+            </if>
+            <if test="legalIdcard != null">#{legalIdcard},
+            </if>
+            <if test="bulicensePic != null">#{bulicensePic},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateBuprocessCompany" parameterType="BuprocessCompany">
+        update buprocess_company
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="companyName != null">company_name =
+                #{companyName},
+            </if>
+            <if test="companyCode != null">company_code =
+                #{companyCode},
+            </if>
+            <if test="legalPerson != null">legal_person =
+                #{legalPerson},
+            </if>
+            <if test="legalIdcard != null">legal_idcard =
+                #{legalIdcard},
+            </if>
+            <if test="bulicensePic != null">bulicense_pic =
+                #{bulicensePic},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+        </trim>
+        where proce_id = #{proceId}
+    </update>
+
+    <delete id="deleteBuprocessCompanyById" parameterType="Long">
+        delete
+        from buprocess_company where proce_id = #{proceId}
+    </delete>
+
+    <delete id="deleteBuprocessCompanyByIds" parameterType="String">
+        delete from buprocess_company where proce_id in
+        <foreach item="proceId" collection="array" open="(" separator="," close=")">
+            #{proceId}
+        </foreach>
+    </delete>
+
+</mapper>

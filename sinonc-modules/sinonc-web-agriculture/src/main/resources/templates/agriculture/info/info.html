@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('专家信息列表')"/>
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <p>姓名：</p>
+                                <input type="text" name="realName"/>
+                            </li>
+                            <li>
+                                <p>手机号：</p>
+                                <input type="text" name="phone"/>
+                            </li>
+                            <li>
+                                <p>所在地编码：</p>
+                                <input type="text" name="areaCode"/>
+                            </li>
+                            <li>
+                                <p>擅长专业作物编码：</p>
+                                <input type="text" name="cropCode"/>
+                            </li>
+
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+
+                <a class="btn btn-primary btn-edit " onclick="audit()" shiro:hasPermission="agriculture:info:edit">
+                    <i class="fa fa-edit"></i> 审核
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('agriculture:info:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('agriculture:info:remove')}]];
+        var prefix = ctx + "agriculture/info";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "专家信息",
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'expertId',
+                        title: '专家ID',
+                        visible: false
+                    },
+                    {
+                        field: 'memberId',
+                    title : '会员ID'
+                },
+                    {
+                        field: 'personalPhoto',
+                        title: '个人照片',
+                        visible: false
+                    },
+                {
+                    field : 'realName', 
+                    title : '真实姓名'
+                },
+                {
+                    field : 'phone', 
+                    title : '手机号'
+                },
+                {
+                    field : 'email', 
+                    title : '邮箱'
+                },
+                {
+                    field : 'areaCode', 
+                    title : '所在地编码'
+                },
+                {
+                    field : 'cropCode', 
+                    title : '擅长专业作物编码'
+                },
+                {
+                    field : 'regionCode', 
+                    title : '擅长领域编码'
+                },
+                {
+                    field : 'personalProfile', 
+                    title : '个人简介'
+                },
+                    {
+                        field: 'verifyStatus',
+                        title: '状态',
+                        formatter: function (value, row, index) {
+                            if (value == 0) {
+                                return "审核中";
+                            }
+                            if (value == 1) {
+                                return "审核通过";
+                            }
+                            if (value == 2) {
+                                return "审核不通过";
+                            }
+                            return "未知";
+                        }
+                    },
+                {
+                    field : 'sysName', 
+                    title : '专家注册时所属系统名称'
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+        function audit() {
+
+            var rows = $('#bootstrap-table').bootstrapTable('getSelections');
+            if (rows.length == 0) {
+                alertFail('请选择要审核的数据!');
+            } else {
+                $.modal.openTab("审核专家信息", prefix + "/audit/" + rows[0].expertId);
+            }
+        }
+
+
+    </script>
+</body>
+</html>

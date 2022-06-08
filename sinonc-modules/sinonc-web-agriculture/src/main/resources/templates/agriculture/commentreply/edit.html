@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改评论回复')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-commentreply-edit" th:object="${commentReply}">
+            <input name="replyId" th:field="*{replyId}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">回复内容：</label>
+                <div class="col-sm-8">
+                    <input name="replyContent" th:field="*{replyContent}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script type="text/javascript">
+        var prefix = ctx + "agriculture/commentreply";
+        $("#form-commentreply-edit").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-commentreply-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

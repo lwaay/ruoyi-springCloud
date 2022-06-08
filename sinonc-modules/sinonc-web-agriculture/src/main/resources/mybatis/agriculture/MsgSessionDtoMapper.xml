@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sinonc.agriculture.mapper.MsgSessionDtoMapper">
+    <resultMap id="BaseResultMap" type="com.sinonc.agriculture.dto.MsgSessionDto">
+        <id column="msg_sid" jdbcType="BIGINT" property="msgSid"/>
+        <result column="session_id" jdbcType="VARCHAR" property="sessionId"/>
+        <result column="session_name" jdbcType="VARCHAR" property="sessionName"/>
+        <result column="member_id" jdbcType="BIGINT" property="memberId"/>
+        <result column="unread_count" jdbcType="INTEGER" property="unreadCount"/>
+        <result column="last_msg_content" jdbcType="VARCHAR" property="lastMsgContent"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+        <result column="member_id" jdbcType="BIGINT" property="fromMemberId"/>
+        <association property="toMemberId" select="selectToMemberId"
+                     column="{prop1=member_id,prop2=session_id}"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        msg_sid, session_id, session_name, member_id, unread_count, last_msg_content, create_time,
+    update_time, del_flag
+    </sql>
+
+    <select id="selectToMemberId" resultType="long">
+        select member_id
+        from msg_session
+        where session_id = #{prop2}
+          and member_id != #{prop1}
+    </select>
+
+    <select id="selectAvatarUrl" resultType="string">
+        select head_img from member_info where member_id = #{toMemberId}
+    </select>
+
+    <select id="selectListByMemberId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from msg_session where member_id = #{param1} and del_flag = 0
+        order by create_time desc
+    </select>
+
+</mapper>
