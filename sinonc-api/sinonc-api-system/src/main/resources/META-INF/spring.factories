@@ -1,0 +1,8 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sinonc.system.api.factory.RemoteUserFallbackFactory,\
+  com.sinonc.system.api.factory.RemoteDictFactory,\
+  com.sinonc.system.api.factory.RemoteLogFallbackFactory,\
+  com.sinonc.system.api.factory.RemoteConfigFallbackFactory,\
+  com.sinonc.system.api.factory.RemoteWxUserFallbackFactory,\
+  com.sinonc.consume.api.factory.RemoteWxUserConsumeFallbackFactory,\
+  com.sinonc.system.api.factory.RemoteEntityFallbackFactory

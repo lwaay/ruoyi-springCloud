@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.sinonc.cloud</groupId>
+        <artifactId>sinonc-cloud</artifactId>
+        <version>2.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>sinonc-api-system</module>
+        <module>sinonc-api-iot</module>
+        <module>sinonc-api-base</module>
+        <module>sinonc-api-job</module>
+        <module>sinonc-api-origins</module>
+        <module>sinonc-api-service</module>
+        <module>sinonc-api-agri</module>
+        <module>sinonc-api-order</module>
+    </modules>
+
+    <artifactId>sinonc-api</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        sinonc-api系统接口
+    </description>
+    <dependencies>
+
+        <!-- RuoYi Common Core-->
+        <dependency>
+            <groupId>com.sinonc.cloud</groupId>
+            <artifactId>sinonc-common-core</artifactId>
+        </dependency>
+
+    </dependencies>
+</project>

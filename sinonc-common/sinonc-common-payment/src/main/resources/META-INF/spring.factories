@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sinonc.common.payment.configuraion.AliPayConfiguration,\
+  com.sinonc.common.payment.configuraion.WechatPayConfiguration

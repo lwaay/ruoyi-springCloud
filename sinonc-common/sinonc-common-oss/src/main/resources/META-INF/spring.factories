@@ -1,0 +1,9 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sinonc.common.oss.configuration.OSSClientConfiguration,\
+  com.sinonc.common.oss.properties.OSSProperties,\
+  com.sinonc.common.oss.properties.ORCProperties,\
+  com.sinonc.common.oss.service.UploadUtil,\
+  com.sinonc.common.oss.configuration.ORCClient,\
+  com.sinonc.common.oss.service.OCRUtil
+
+  

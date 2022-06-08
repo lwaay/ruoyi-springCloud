@@ -1,0 +1,5 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sinonc.origins.api.factory.RemotePmBusinessFallbackFactory,\
+  com.sinonc.origins.api.factory.RemoteProOriginsInfoFallbackFactory,\
+  com.sinonc.origins.api.factory.RemoteProProductInfoFallbackFactory,\
+  com.sinonc.origins.api.factory.RemoteProVisitFallbackFactory

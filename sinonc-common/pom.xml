@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.sinonc.cloud</groupId>
+        <artifactId>sinonc-cloud</artifactId>
+        <version>2.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>sinonc-common-log</module>
+        <module>sinonc-common-core</module>
+        <module>sinonc-common-redis</module>
+        <module>sinonc-common-swagger</module>
+        <module>sinonc-common-security</module>
+        <module>sinonc-common-datascope</module>
+        <module>sinonc-common-oss</module>
+        <module>sinonc-common-sms</module>
+        <module>sinonc-common-payment</module>
+    </modules>
+
+    <artifactId>sinonc-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+        sinonc-common通用模块
+    </description>
+
+</project>

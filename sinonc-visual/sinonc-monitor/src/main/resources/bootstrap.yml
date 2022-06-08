@@ -1,0 +1,28 @@
+# Tomcat
+server:
+  port: 9100
+
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: sinonc-monitor
+  profiles:
+    # 环境配置
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        # server-addr: http://192.168.130.10:8848/nacos
+        #本地服务注册地址
+        server-addr: 192.168.130.15:8848
+      config:
+        # 配置中心地址
+        # server-addr: http://192.168.130.10:8848/nacos
+        #本地配置中心地址
+        server-addr: 192.168.130.15:8848
+        # 配置文件格式
+        file-extension: yml
+        # 共享配置
+        shared-dataids: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}

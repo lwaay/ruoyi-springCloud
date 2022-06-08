@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sinonc.common.sms.SmsService,\
+  com.sinonc.common.sms.config.AliSmsConfiguration

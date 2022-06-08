@@ -1,0 +1,11 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sinonc.base.api.factory.RemoteFruitServiceFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteBaseFarmFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteResourceFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteOriginsFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteYSellFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteBaseApiFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteYSellFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteWhitelistFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteCorpDictFallbackFactory,\
+  com.sinonc.base.api.factory.RemoteAreaCodeServiceFallbackFactory

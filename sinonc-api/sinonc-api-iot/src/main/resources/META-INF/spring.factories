@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.sinonc.iot.api.factory.RemoteIotFallbackFactory,\
+  com.sinonc.iot.api.factory.RemoteIotApiFallbackFactory
